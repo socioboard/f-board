@@ -1,4 +1,4 @@
-![](http://i.imgur.com/W1zWB5O.png)
+![](http://i.imgur.com/0XE6SbI.png)
 **i-board** is a multiple instagram account management app, it helps you to login to multiple instagram accounts from your  iOS or Android device and do various instagram activities like follow, unfollow,comment,like, scheduling posts etc. Its a a very powerful instagram marketing automation app.
 
 Features:
