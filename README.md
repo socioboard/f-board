@@ -5,7 +5,8 @@ Features:
 ===========
 
 > **Multi accounts manager:** You can manage your multiple instagram accounts and easily switch between accounts without logging in again and again        ![](http://i.imgur.com/1bAINYl.png)
-    
+> **Schedular:** Update status with photo or without photo, set time and date, sit back and relax , f-boardpro will post it on facebook. ![](http://i.imgur.com/epXonbP.png)
+> **Groups:** You will get all feeds of group, and you will be able to like or comment to any feed. ![](http://i.imgur.com/epXonbP.png)
 Installation guide for android:
 ============================
 
