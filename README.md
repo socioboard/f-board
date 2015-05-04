@@ -6,3 +6,16 @@ Features:
 
 > **Multi accounts manager:** You can manage your multiple instagram accounts and easily switch between accounts without logging in again and again        ![](http://i.imgur.com/1bAINYl.png)
     
+Installation guide for android:
+============================
+
+The easiest way to build is to install Android IDE, Once installed, then you can import the project into Android Studio:
+1.	Open File
+2.	Import Project
+3.	Select fboardpro, Facebook library and android support library.
+4.	Click OK.
+ ![](http://i.imgur.com/mJCRabE.png)
+
+ ![](http://i.imgur.com/RSqSYvq.png)
+ 
+ After building the project while running on your device ,you might find that your device doesn't let you install your build if you already have the version from Google Play installed. This is standard Android security as it it won't let you directly replace an app that's been signed with a different key. Manually uninstall fboardpro from your device and you will then be able to install your own built version.
