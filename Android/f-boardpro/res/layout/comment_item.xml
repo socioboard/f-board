@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="10:10:10"
+        android:textSize="8sp" />
+
+    <com.socioboard.f_board_pro.viewlibary.AccountImageView
+        android:id="@+id/profilepic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/datetime"
+        android:layout_margin="5dp"
+        android:src="@drawable/profile"
+        app:maskDrawable="@drawable/circle_mask" />
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/datetime"
+        android:layout_toRightOf="@+id/profilepic"
+        android:text="raghav Ragz"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/from"
+        android:layout_toRightOf="@+id/profilepic"
+        android:text="asdaafsddgfg gfgfgh hghgjhkhg"
+        android:textSize="10sp" />
+
+</RelativeLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">f-boardpro</string>
+    <string name="app_id">xxxxxxxxxxxxxxxxxx</string>
+    <string name="app_secret">xxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+    <string name="hello_world"> </string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
+    <plurals name="numberOfNewArticles">
+        <item quantity="one">%d new</item>
+        <item quantity="other">%d new</item>
+    </plurals>
+
+    <string-array name="drawer_titles">
+        <item>My Profile</item>
+        <item>Home Feeds</item>
+        <item>My Feeds</item>
+        <item>My Friends</item>
+        <item>Pages</item>
+        <item>Schedules</item>
+    </string-array>
+
+    <array name="drawer_icons">
+        <item>@drawable/ic_userprofile</item>
+        <item>@drawable/feeds</item>
+        <item>@drawable/my_feeds</item>
+        <item>@drawable/friends</item>
+        <item>@drawable/display_page</item>
+        <item>@drawable/post_schedule</item>
+    </array>
+
+    <string-array name="footer_titles">
+        <item>Add Account</item>
+        <item>Settings</item>
+        <item>Feedback</item>
+    </string-array>
+
+    <array name="footer_icons">
+        <item>@drawable/ic_sales</item>
+        <item>@drawable/ic_settings</item>
+        <item>@drawable/ic_help</item>
+    </array>
+
+    <string name="title_activity_splash">Faceboardpro</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+
+</resources>

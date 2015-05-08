@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	<ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+    <ImageView
+        android:id="@+id/usercoverpic"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/header_image"
+        android:layout_marginBottom="5dp" />
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:paddingBottom="@dimen/drawer_grouping_padding"
+        android:paddingLeft="@dimen/drawer_left"
+        android:paddingRight="@dimen/drawer_right"
+        android:paddingTop="@dimen/drawer_top" 
+        android:layout_marginBottom="5dp">
+
+        <com.socioboard.f_board_pro.viewlibary.AccountImageView
+            android:id="@+id/userprofilepic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/headerText"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/profile"
+            app:maskDrawable="@drawable/circle_mask" />
+
+        <LinearLayout
+            android:id="@+id/headerText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/drawer_header_text"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Daniel van der Valk"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/useremail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="d4ddylild4rk@gmail.com"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+<LinearLayout
+        android:id="@+id/userwork"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:orientation="horizontal"
+        android:background="@color/White" 
+      android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp">
+
+        <ImageView
+            android:id="@+id/work_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/briefcase" 
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/work"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="works at "
+            android:textColor="@color/text"
+            android:textSize="14sp" 
+            android:layout_margin="5dp"/>
+
+       
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/usertown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userwork"
+        android:orientation="horizontal"
+        android:background="@color/White" 
+       android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp">
+
+        <ImageView
+            android:id="@+id/town_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/home"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/town"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="from "
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            android:layout_margin="5dp" />
+
+    
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/userlocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usertown"
+        android:orientation="horizontal"
+        android:background="@color/White" 
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp"
+        >
+
+        <ImageView
+            android:id="@+id/loc_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/place"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lives in "
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            android:layout_margin="5dp" />
+
+      
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/usergender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userlocation"
+        android:orientation="horizontal"
+        android:background="@color/White" 
+       android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp">
+
+        <ImageView
+            android:id="@+id/gender_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/male" 
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="male "
+            android:textColor="@color/text"
+            android:textSize="14sp" 
+            android:layout_margin="5dp"/>
+
+      
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/userbirthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usergender"
+        android:orientation="horizontal"
+        android:background="@color/White" 
+       android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:id="@+id/birthday_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/birthday" 
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Birth Day "
+            android:textColor="@color/text"
+            android:textSize="14sp" 
+            android:layout_margin="5dp"/>
+
+      
+    </LinearLayout>
+
+    <GridView 
+        android:id="@+id/userphoto"
+        android:layout_below="@+id/userbirthday"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:numColumns="3"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="2dp"
+        />
+</RelativeLayout>

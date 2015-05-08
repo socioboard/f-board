@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/contents"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/editbox_background_normal" >
+
+        <ImageView
+            android:id="@+id/pageImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/profile_pic_white_border" />
+
+        <TextView
+            android:id="@+id/pageNAme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+            android:text="FirstName LastName"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/pagecategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pageNAme"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+            android:text="FirstName LastName"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/likebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pagecategory"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/pageImage"
+            android:background="@drawable/rectangle"
+            android:padding="5dp"
+            android:text="Liked"
+            android:textColor="@android:color/black"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/followingbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pagecategory"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/likebtn"
+            android:background="@drawable/rectangle"
+            android:padding="5dp"
+            android:text="following"
+            android:textColor="@android:color/black"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+</RelativeLayout>

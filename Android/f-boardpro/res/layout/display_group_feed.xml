@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <RelativeLayout
+        android:id="@+id/rlt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/White" >
+
+        <TextView
+            android:id="@+id/people_liked_you"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Awesome"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+           
+            android:padding="5dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/no_comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="5dp"
+        android:text="No Comments"
+        android:textSize="15dp"
+        android:textStyle="italic" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <com.socioboard.f_board_pro.database.util.LoadMoreListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/rlt1"
+        android:layout_below="@+id/rlt"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp"
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/White" >
+
+        <EditText
+            android:id="@+id/usercomment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:focusable="true"
+            android:hint="Enter your Text"
+            android:textAlignment="center"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            android:padding="10dp" >
+        </EditText>
+        <!-- <requestFocus /> -->
+
+        <ImageButton
+            android:id="@+id/enter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/White"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/enter1" />
+    </RelativeLayout>
+
+</RelativeLayout>
