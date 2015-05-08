@@ -41,3 +41,7 @@ The easiest way to build is to install Android IDE, Once installed, then you can
  ![](http://i.imgur.com/RSqSYvq.png)
  
  After building the project while running on your device ,you might find that your device doesn't let you install your build if you already have the version from Google Play installed. This is standard Android security as it it won't let you directly replace an app that's been signed with a different key. Manually uninstall fboardpro from your device and you will then be able to install your own built version.
+ 
+ 
+ 5. After that configure facebook app id , Visit this link to know how to configure app id in facebook developer console.
+              https://github.com/socioboard/f-board/wiki
