@@ -4,9 +4,16 @@
 Features:
 ===========
 
-> **Multi accounts manager:** You can manage your multiple instagram accounts and easily switch between accounts without logging in again and again        ![](http://i.imgur.com/1bAINYl.png)
-> **Schedular:** Update status with photo or without photo, set time and date, sit back and relax , f-boardpro will post it on facebook. ![](http://i.imgur.com/epXonbP.png)
-> **Groups:** You will get all feeds of group, and you will be able to like or comment to any feed. ![](http://i.imgur.com/epXonbP.png)
+> **Multi accounts manager:** You can manage your multiple facebook accounts and easily switch between accounts without logging in again and again ![](http://i.imgur.com/g33IHgB.png)
+> **Home feeds:** You can check your all home feeds in this section, click on particuler feed to to get the list of comments.
+ ![](http://i.imgur.com/EGNHTdi.png)
+
+>**comments view:** You can see all the comments of particuler feed and click on like image to like the feed and click on people liked text to see the list of people who liked this feed ![](http://i.imgur.com/9cjlPE6.png)
+
+>*people liked:* In this section you can see the list of people who liked this particuler feed. ![](http://i.imgur.com/6MVmndT.png)
+
+
+
 Installation guide for android:
 ============================
 
