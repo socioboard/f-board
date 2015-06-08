@@ -51,6 +51,16 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)fetchGroupFeeds{
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+
+    
     NSIndexPath *userIndex=[SingletonClass sharedState].selectedUserIndex;
     FBSDKAccessToken *token = [SUCache itemForSlot:userIndex.row+userIndex.section].token;
     if (token) {
@@ -60,15 +70,6 @@
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
 
-    
-    
-//    
-//    FBRequest *friendRequest = [FBRequest requestForGraphPath:@"me/groups"];
-//    // FBRequest *friendRequest = [FBRequest requestForGraphPath:@"1443163789294538/likes"];
-//    
-//    [friendRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//        
-//        NSLog(@"result is %@",result);
         
         for (NSDictionary *dic in [result objectForKey:@"data"] ) {
             NSString *str1 = [dic objectForKey:@"administrator"];
@@ -147,9 +148,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSError * error=nil;
-    NSURLResponse * urlReponse=nil;
-    NSString *accessToken1=[[NSUserDefaults standardUserDefaults]objectForKey:@"accessToken"];
+//    NSError * error=nil;
+//    NSURLResponse * urlReponse=nil;
+//    NSString *accessToken1=[[NSUserDefaults standardUserDefaults]objectForKey:@"accessToken"];
     NSString *str1 =[self.grpIdArray objectAtIndex:indexPath.row];
     NSIndexPath *indexPaths=[SingletonClass sharedState].selectedUserIndex;
     FBSDKAccessToken *token = [SUCache itemForSlot:indexPaths.section+indexPaths.row].token;

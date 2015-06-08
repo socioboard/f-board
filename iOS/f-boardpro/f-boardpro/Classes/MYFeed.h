@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "MYFeed.h"
+#import "PAPPhotoDetailsViewController.h"
 
 @interface MYFeed : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView * followTableView;
-    UIToolbar *toolBar;
+    UIToolbar *toolBar1;
+    UIToolbar *toolBar2;
 
    }
+@property(nonatomic,strong) PAPPhotoDetailsViewController *photoDetail;
 @property(nonatomic,strong)NSMutableArray *feedsArray;
 @property(nonatomic,strong)NSMutableArray *msgArray;
 @property(nonatomic,strong) NSMutableArray *descArray;

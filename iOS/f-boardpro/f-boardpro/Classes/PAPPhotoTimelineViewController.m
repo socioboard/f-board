@@ -64,14 +64,14 @@
     [refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
      [self.tableView addSubview:refreshControl];
 
-    NSArray *itemArray=[NSArray arrayWithObjects:@"Status",@"Photo", nil];
-    self.segmentControl = [[UISegmentedControl alloc] initWithItems:itemArray];
-    self.segmentControl.frame =CGRectMake(-4,5,self.view.frame.size.width,30);
-    [self.segmentControl addTarget:self action:@selector(mySegmentControlAction:) forControlEvents: UIControlEventValueChanged];
-    self.tableView.tableHeaderView=self.segmentControl;
-  [self.segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
-    [self.segmentControl setBackgroundColor:[UIColor whiteColor]];
-    [self.segmentControl setTintColor:[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f]];
+//    NSArray *itemArray=[NSArray arrayWithObjects:@"Status",@"Photo", nil];
+//    self.segmentControl = [[UISegmentedControl alloc] initWithItems:itemArray];
+//    self.segmentControl.frame =CGRectMake(-4,5,self.view.frame.size.width,30);
+//    [self.segmentControl addTarget:self action:@selector(mySegmentControlAction:) forControlEvents: UIControlEventValueChanged];
+//    self.tableView.tableHeaderView=self.segmentControl;
+//  [self.segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+//    [self.segmentControl setBackgroundColor:[UIColor whiteColor]];
+//    [self.segmentControl setTintColor:[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f]];
 
     
     UIView *texturedBackgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -123,6 +123,15 @@
 }
 
 -(void)fetchFeeds{
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+
     self.grpIdArray=[[NSMutableArray alloc] init];
     [[AppDelegate sharedAppDelegate]showHUDLoadingView:@""];
     NSIndexPath *index=[SingletonClass sharedState].selectedUserIndex;
@@ -131,7 +140,7 @@
     if (token) {
         
         [FBSDKAccessToken setCurrentAccessToken:token];
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/home" parameters:nil];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/feed" parameters:nil];
         
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             

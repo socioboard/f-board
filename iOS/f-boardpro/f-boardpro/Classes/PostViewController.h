@@ -9,13 +9,21 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 
-@interface PostViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface PostViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     UIDatePicker *datepicker;
     NSString *databasePath;
-    sqlite3 *contactDB;
+    sqlite3 *_databaseHandle;
+
 UIImagePickerController *picker;
 }
+@property(nonatomic,strong)NSString * accesstokenString;
+@property(nonatomic,strong)UITableView *groupTableView;
+@property(nonatomic,strong)NSMutableArray *dataArray;
+@property(nonatomic,strong)NSMutableArray *fbIDArray;
+@property(nonatomic,strong)NSMutableArray *TextArray;
+@property(nonatomic,strong)NSMutableArray *TimeArray;
+
 @property(nonatomic,strong) UIButton *postImgButton;
 @property(nonatomic,strong) UIButton *textPostButton;
 @property(nonatomic,strong) UIButton *videoPostButton;

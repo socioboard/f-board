@@ -27,20 +27,28 @@
     [self createFollowTable];
     // Do any additional setup after loading the view.
 }
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fetchUserLikedPages) name:@"CurrentUserChangedNotification" object:nil];
     self.navigationController.navigationBarHidden=YES;
     
 }
 
+-(void)viewDidDisappear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"CurrentUserChangedNotification" object:nil];
+    
+}
+
+
 -(void)createFollowTable
 {
-    feedTable=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height) style:UITableViewStylePlain];
+    feedTable=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height-50) style:UITableViewStylePlain];
     feedTable.dataSource=self;
     feedTable.delegate=self;
     feedTable.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:feedTable];
-     [feedTable reloadData];
+//     [feedTable reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -72,12 +80,12 @@
     }else{
         cell.userNameDesc.text=@"nothing";
     }
-    
+    cell.userNameDesc.numberOfLines=0;
+    cell.userNameDesc.lineBreakMode=NSLineBreakByWordWrapping;
+//    [cell.userNameDesc sizeToFit];
     NSString *str2 = [self.categoryArray objectAtIndex:indexPath.row];
     cell.fromLabel.text = str2;
     
-    //cell.likeCountLabel.text=@"";
-    //cell.commentCountLabel.hidden =@"";
     return cell;
 }
 
@@ -117,12 +125,14 @@
     NSLog(@"reponse is %@",response);
     NSString *str2=  [self.idArray objectAtIndex:indexPath.row];
     
-    
-    FeedDisplayViewController *disp = [[FeedDisplayViewController alloc]init];
-    disp.idStr=str2;
+        if (self.disp) {
+            self.disp=nil;
+        }
+         self.disp = [[FeedDisplayViewController alloc]init];
+    self.disp.idStr=str2;
     
     self.navigationController.navigationBarHidden=NO;
-    [self.navigationController pushViewController:disp animated:YES];
+    [self.navigationController pushViewController:self.disp animated:YES];
     }
 }
 
@@ -139,14 +149,31 @@
 {
     return 250;
 }
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 -(void)fetchUserLikedPages{
+    if (self.categoryArray&&self.nameArray&&self.idArray) {
+        self.idArray=nil;
+       self.nameArray=nil;
+        self.categoryArray=nil;
+    }
+    
+    self.categoryArray=[[NSMutableArray alloc] init];
+     self.nameArray=[[NSMutableArray alloc] init];
+     self.idArray=[[NSMutableArray alloc] init];
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+    
+
     NSIndexPath *indexpath=[SingletonClass sharedState].selectedUserIndex;
     
     FBSDKAccessToken *token = [SUCache itemForSlot:indexpath.row+indexpath.section].token;
@@ -185,9 +212,8 @@
                                   }
                                   
                               }
-            //NSLog(@"id array is %@",self.idArray);
-
-                          }];
+            [feedTable reloadData];
+        }];
     }
 }
 

@@ -52,21 +52,16 @@
 
         }else{
             
-
-        
             self.description=[[UILabel alloc] initWithFrame:CGRectMake( 20.0f, 13.0f,self.frame.size.width-40, 100.0f)];
             self.description.backgroundColor=[UIColor whiteColor];
             self.description.textColor=[UIColor blackColor];
             self.description.lineBreakMode=NSLineBreakByCharWrapping;
             self.description.numberOfLines=0;
-//           self.description.text=@"Hello how are you";
             [self.contentView addSubview:self.description];
-//            [self bringSubviewToFront:self.description];
 
-        
         }
 
-          }
+    }
 
     return self;
 }

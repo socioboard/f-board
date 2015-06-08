@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SUAccountsViewController.h"
+#import "AccountViewController.h"
 
 @interface CustomMenuViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITabBarDelegate> {
     
@@ -30,8 +30,9 @@
     CGRect screenSize;
     UIView * rejectView;
 }
+@property(nonatomic,strong) UIButton *deleteButton ;
 
-
+@property(nonatomic,strong)AccountViewController *account;
 @property(nonatomic,strong)NSMutableArray *tableDatalist;
 
 @property (nonatomic, assign) BOOL isSignIn;

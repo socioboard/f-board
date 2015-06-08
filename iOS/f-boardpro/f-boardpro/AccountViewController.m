@@ -5,7 +5,7 @@
 
 //  Copyright (c) 2015 socioboard. All rights reserved.
 //
-
+#import "SingletonClass.h"
 #import "AccountViewController.h"
 #import "ScheduledPostController.h"
 #import "CustomMenuViewController.h"
@@ -17,7 +17,7 @@
 #import "ProfileViewController.h"
 #import "SUProfileTableViewCell.h"
 #import "ProfileTableViewCell.h"
-//#import "SUAccountsViewController.h"
+#import "InviteFriendController.h"
 #import "MYFeed.h"
 #import "PageViewController.h"
 #import "PostScheduleController.h"
@@ -25,7 +25,6 @@
 #import "PostViewController.h"
 #import "GroupViewController.h"
 #import "FBAutomationViewController.h"
-
 
 @interface AccountViewController ()
 
@@ -38,27 +37,18 @@
 
     if (IS_IPHONE_4_OR_LESS) {
         self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_view.png"]];
-        
     }else if(IS_IPHONE_5){
         self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_view_iphone5.png"]];
-
-    
     }else if(IS_IPHONE_6){
         self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_view_iphone6@2x.png"]];
-
-        
     }else if(IS_IPHONE_6P){
         self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_view@3x.png"]];
-
-        
     }
     
-    
-    
     UIButton *createAccount = [UIButton buttonWithType:UIButtonTypeCustom];
-    createAccount.frame = CGRectMake(60, self.view.frame.size.height/2, 200, 35);
+    createAccount.frame = CGRectMake(self.view.frame.size.width/2-100, self.view.frame.size.height/2, 200, 35);
     createAccount.titleLabel.font = [UIFont systemFontOfSize:9.0f];
-    [createAccount setImage:[UIImage imageNamed:@"facebookButton.png"] forState:UIControlStateNormal];
+    [createAccount setImage:[UIImage imageNamed:@"connect_withfb.png"] forState:UIControlStateNormal];
     createAccount.titleLabel.shadowOffset = CGSizeMake(0.0f, 0.0f);
     
         //self.menuButton.titleLabel.layer.
@@ -98,7 +88,7 @@
         [self _deselectRow];
     } else {
         
-        NSInteger slot =0;
+        NSInteger slot =[SingletonClass sharedState].selectedUserIndex.row;
         NSLog(@"Accounts Token change %ld",(long)slot);
         SUCacheItem *item = [SUCache itemForSlot:slot] ?: [[SUCacheItem alloc] init];
         if (![item.token isEqualToAccessToken:token]) {
@@ -120,7 +110,7 @@
     // The profile information has changed, update the cell and cache.
 - (void)_currentProfileChange:(NSNotification *)notification
 {
-    NSInteger slot = 0;
+    NSInteger slot = [SingletonClass sharedState].selectedUserIndex.row;
     NSLog(@"profile  change %ld",(long)slot);
     FBSDKProfile *profile = notification.userInfo[FBSDKProfileChangeNewKey];
     if (profile) {
@@ -132,25 +122,39 @@
 }
 
 -(void)createNewAccount{
+
+// NSArray *permissions =  [[NSArray alloc] initWithObjects:@"publish_actions", @"user_likes", nil];
+    NSArray *permissions =  [[NSArray alloc] initWithObjects:
+                             @"user_birthday",
+                             @"user_work_history",
+                             @"user_likes",
+                             @"user_posts",
+                             @"user_hometown",
+                             @"user_photos",
+                             @"user_about_me",
+                             @"public_profile",
+                             @"user_location",
+                             @"user_friends",
+                             @"email",
+                             nil];
     
-   
-    NSArray *permissions =  [[NSArray alloc] initWithObjects:@"publish_actions", nil];
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         login.loginBehavior = FBSDKLoginBehaviorWeb;
     
-    [login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-        if (result) {
-            NSLog(@"Login permission granted");
-        }
-        if (!error) {
-            
-            NSLog(@"result grand permission - %@  declinedPermissions - %@",result.grantedPermissions,result.declinedPermissions);
-            [[NSUserDefaults standardUserDefaults]setInteger:1 forKey:@"PrimaryUser"];
+     [login logInWithReadPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+         if (error || result.isCancelled) {
+             
+   NSLog(@"result grand permission - %@  declinedPermissions - %@",result.grantedPermissions,result.declinedPermissions);
+             
+         }else {
+           NSLog(@"Login permission granted");
+            [[NSUserDefaults standardUserDefaults]setInteger:1 forKey:@"LoggedInUser"];
             [[NSUserDefaults standardUserDefaults]synchronize];
             
             MYFeed *follow = [[MYFeed alloc]init];
             follow.title=@"My Feeds";
             NSLog(@"Title =- %@",follow.title);
+            
             PAPPhotoTimelineViewController *unfollow=[[PAPPhotoTimelineViewController alloc] initWithStyle:UITableViewStylePlain];
             unfollow.title=@"Home Feeds";
             
@@ -160,42 +164,44 @@
             PostViewController *post = [[PostViewController alloc] init];
             post.title = @"Post schedule";
             
-            GroupViewController *grp = [[GroupViewController alloc]init];
-            grp.title = @"Group details";
             UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
             [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
             [layout setItemSize:CGSizeMake(150, 50)];
             
-            
             FBAutomationViewController *automaton=[[FBAutomationViewController alloc] initWithCollectionViewLayout:layout];
-            automaton.title=@"Friend List";
-            
-            ScheduledPostController *schedule=[[ScheduledPostController alloc] init];
-            schedule.title=@"Scheduled";
+            automaton.title=@"Friends";
             
             ProfileViewController *profileView=[[ProfileViewController alloc] init];
             profileView.title=@"Profile";
 
+             InviteFriendController *inviteFriend=[[InviteFriendController alloc]init];
+             inviteFriend.title=@"Invite Friend";
+
+             
             [[NSNotificationCenter defaultCenter]removeObserver:self];
             CustomMenuViewController *customMenu=[[CustomMenuViewController alloc] init];
-            customMenu.viewControllers = @[follow,unfollow,profile,post,grp,automaton,profileView];
+            customMenu.viewControllers = @[follow,unfollow,profile,post,automaton,profileView,inviteFriend];
             self.navigationController.navigationBarHidden=YES;
-            [self.navigationController pushViewController:customMenu animated:YES];
-        }
-    }];
+           [self.navigationController pushViewController:customMenu animated:YES];
+            }
+    }]; 
 }
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-
 }
-
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:YES];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKAccessTokenDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKProfileDidChangeNotification object:nil];
 
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+
+    [super viewWillAppear:YES];
+     self.navigationController.navigationBarHidden=YES;
 }
 
 - (void)didReceiveMemoryWarning {

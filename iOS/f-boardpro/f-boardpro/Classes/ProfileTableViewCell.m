@@ -14,7 +14,7 @@ static const CGFloat leftMargin = 10;
 static const CGFloat topMargin = 5;
 static const CGFloat rightMargin = 30;
 static const CGFloat pictureWidth = 50;
-static const CGFloat pictureHeight = 50;
+static const CGFloat pictureHeight = 35;
 
 @interface ProfileTableViewCell()
 
@@ -54,14 +54,18 @@ static const CGFloat pictureHeight = 50;
                                            initWithFrame:CGRectMake(
                                                                     leftMargin,
                                                                     topMargin,
-                                                                    pictureWidth,
+                                                                    pictureHeight,
                                                                     pictureHeight)];
 //    profilePic.profileID=@"280959705428924";
+    profilePic.layer.cornerRadius=pictureHeight/2;
+      profilePic.clipsToBounds=YES;
+     self.profilePic.layer.cornerRadius=pictureHeight/2;
     [self addSubview:profilePic];
     self.profilePic = profilePic;
+    self.profilePic.clipsToBounds=YES;
     
     self.clipsToBounds = YES;
-    self.autoresizesSubviews = YES;
+   self.autoresizesSubviews = YES;
 }
 
 - (void)layoutSubviews {

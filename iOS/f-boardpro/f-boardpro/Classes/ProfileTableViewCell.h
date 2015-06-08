@@ -11,9 +11,6 @@
 
 #import <UIKit/UIKit.h>
 
-
-
-
 @interface ProfileTableViewCell : UITableViewCell
 
 @property (copy, nonatomic) NSString *userID;

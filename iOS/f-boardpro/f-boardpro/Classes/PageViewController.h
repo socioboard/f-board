@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TableCustomCell.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import "FeedDisplayViewController.h"
 #import "UIImageView+WebCache.h"
 
 @interface PageViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
@@ -20,6 +21,6 @@
 @property(nonatomic,strong)NSMutableArray *nameArray;
 @property(nonatomic,strong)NSMutableArray *idArray;
 
-
+@property(nonatomic,strong) FeedDisplayViewController *disp;
 
 @end

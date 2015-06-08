@@ -16,6 +16,7 @@
  UIDatePicker *datepicker;
     sqlite3 *_databaseHandle;
     UIView *pickerView;
+    NSDate *dateToFire;
 }
 @property(nonatomic,strong)UIImage *selectedImage;
 @property(nonatomic,strong)NSString *type;

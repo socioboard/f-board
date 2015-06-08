@@ -29,6 +29,7 @@
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fetchFeeds:) name:@"CurrentUserChangedNotification" object:nil];
 
     // Do any additional setup after loading the view.
+    self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
    }
 
@@ -58,14 +59,20 @@
         followTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height) style:UITableViewStylePlain];
         followTableView.dataSource=self;
         followTableView.delegate=self;
-        followTableView.backgroundColor=[UIColor whiteColor];
+        followTableView.backgroundColor=[UIColor clearColor];
         [self.view addSubview:followTableView];
     }else{
         [followTableView reloadData];
     }
 }
 -(void)fetchFeeds:(NSString *)accessToken{
+     BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
     
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
     [[AppDelegate sharedAppDelegate]showHUDLoadingView:@""];
     self.feedsArray = [[NSMutableArray alloc]init];
     self.msgArray = [[NSMutableArray alloc]init];
@@ -184,10 +191,6 @@
               
               });
             
-          
-            
-            
-            
         }];
     }
 }
@@ -195,7 +198,7 @@
 
 -(void)fetchHomeFeeds:(NSString *)accessToken{
     
-    NSError * error=nil;
+    /*NSError * error=nil;
     NSURLResponse * urlReponse=nil;
     NSString *accessTokn = [[NSUserDefaults standardUserDefaults]objectForKey:@"accessToken"];
     
@@ -236,13 +239,14 @@
     
     NSLog(@"response is=========================== %@",response);
     
+     */
     
     
 }
 
 -(void)getLikesCount{
     
-    NSError * error=nil;
+  /*  NSError * error=nil;
     NSURLResponse * urlReponse=nil;
     NSString *accessTokn = [[NSUserDefaults standardUserDefaults]objectForKey:@"LaccessToken"];
     
@@ -280,7 +284,7 @@
     id response=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     
     
-    NSLog(@"response is=========================== %@",response);
+    NSLog(@"response is=========================== %@",response);*/
 
 }
 
@@ -338,7 +342,7 @@
     
     CGSize maximumLabelSize = CGSizeMake(296, FLT_MAX);
     
-    
+    if (cell.userNameDesc.text) {
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:cell.userNameDesc.text];
         // Add Background Color for Smooth rendering
@@ -369,7 +373,7 @@
        CGRect rect=cell.userImage.frame;
     cell.userImage.frame=CGRectMake(rect.origin.x,cell.userNameDesc.frame.origin.y+cell.userNameDesc.frame.size.height+5, rect.size.width, rect.size.height);
     
-   
+    }
     
      return cell;
 }
@@ -409,12 +413,58 @@
 }
 
 
--(void)commentButton:(UIButton *)button{
+-(void)commentButton:(UIBarButtonItem *)button{
+button.image=[[UIImage imageNamed:@"comment.png"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    NSIndexPath *index=[SingletonClass sharedState].selectedUserIndex;
+    
+    FBSDKAccessToken *token = [SUCache itemForSlot:index.section+index.row].token;
+    
+    if (token) {
+        
+        [FBSDKAccessToken setCurrentAccessToken:token];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"/%@",[self.grpIdArray objectAtIndex:button.tag]] parameters:nil];
+        
+        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error3) {
+            
+            
+            PAPPhotoDetailsViewController *photoDetail=[[PAPPhotoDetailsViewController alloc] initWithDict:result];
+            self.navigationController.navigationBarHidden=NO;
+            [self.navigationController pushViewController:photoDetail animated:YES];
+            
+            
+        }];
+        
+    }
 
 }
 
--(void)likeButton:(UIButton *)button{
-
+-(void)likeButton:(UIBarButtonItem *)button{
+    
+    
+//button.image=[[UIImage imageNamed:@"like.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+////    button.image=[UIImage imageNamed:@"like.png"];
+    NSArray *likeArr=[[[self.feedDictArray objectAtIndex:button.tag] objectForKey:@"likes"] objectForKey:@"data"];
+    NSArray *commentArr=[[[self.feedDictArray objectAtIndex:button.tag] objectForKey:@"comments"] objectForKey:@"data"];
+    NSString *idValue= [self.grpIdArray objectAtIndex:button.tag];
+    NSIndexPath *index=[SingletonClass sharedState].selectedUserIndex;
+        //    NSLog(@"index path %d",index.section+index.row);
+    FBSDKAccessToken *token = [SUCache itemForSlot:index.section+index.row].token;
+    [FBSDKAccessToken setCurrentAccessToken:token];
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/likes",idValue] parameters:nil HTTPMethod:@"POST"];
+    
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id response, NSError *error) {
+        NSString *str=[response valueForKey:@"success"];
+        NSLog(@"%@",str);
+        
+      
+        if ([response valueForKey:@"success"]) {
+            
+            button.title=[NSString stringWithFormat:@"likes %u ",likeArr.count+1];
+        }
+        
+    }];
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -431,11 +481,12 @@
         
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error3) {
             
-
-            PAPPhotoDetailsViewController *photoDetail=[[PAPPhotoDetailsViewController alloc] initWithDict:result];
+            if (self.photoDetail) {
+                self.photoDetail=nil;
+            }
+            self.photoDetail=[[PAPPhotoDetailsViewController alloc] initWithDict:result];
             self.navigationController.navigationBarHidden=NO;
-            [self.navigationController pushViewController:photoDetail animated:YES];
-            
+            [self.navigationController pushViewController:self.photoDetail animated:YES];
             
         }];
         
@@ -454,45 +505,81 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 35;
+    NSArray *likeArr=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"likes"] objectForKey:@"data"];
+    NSArray *commentArr=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"comments"] objectForKey:@"data"];
+    
+        return 45;
+
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width,35)];
-    view.backgroundColor=[UIColor blackColor];
-    NSArray *likeArr=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"likes"] objectForKey:@"data"];
-    NSArray *commentArr=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"comments"] objectForKey:@"data"];
-    NSString *likeTitle=[NSString stringWithFormat:@"Likes %lu",(unsigned long)likeArr.count];
     
+    UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width,45)];
+    view.backgroundColor=[UIColor clearColor];
+    
+       NSArray *likeArr=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"likes"] objectForKey:@"data"];
+    NSArray *commentArr=[[[self.feedDictArray objectAtIndex:section]  objectForKey:@"comments"] objectForKey:@"data"];
+    NSString *likeTitle=[NSString stringWithFormat:@"Likes %lu",(unsigned long)likeArr.count];
+    NSString *shareCount=[[[self.feedDictArray objectAtIndex:section] objectForKey:@"shares"] objectForKey:@"count"];
     NSString *commentTitle=[NSString stringWithFormat:@"Comments %lu",(unsigned long)commentArr.count];
     
-    toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width , 30)];
-    [toolBar setBarStyle:UIBarStyleDefault];
+    toolBar1 = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width , 30)];
+    [toolBar1 setBarStyle:UIBarStyleDefault];
+    toolBar1.backgroundColor=[UIColor whiteColor];
+//    toolBar1.tintColor=[UIColor blueColor];
+    
     
          NSMutableArray *barItems = [[NSMutableArray alloc] init];
     
-    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc] initWithTitle:likeTitle  style:UIBarButtonItemStyleBordered target:self action:@selector(likeButton:)];
+    UIBarButtonItem *likeButton = [[UIBarButtonItem alloc]initWithTitle:likeTitle style:UIBarButtonItemStyleBordered target:self action:@selector(likeButton:)];
     likeButton.tag=section;
-//    CGSize newSize = CGSizeMake(20.0f, 20.0f);
     [barItems addObject:likeButton];
     
     
-    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(commentButton:)];
-    [flexibleSpace setTitle:@"Comments"];
+    UIBarButtonItem *flexibleSpace1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(commentButton:)];
+    [flexibleSpace1 setTitle:@"Comments"];
     
-    [barItems addObject:flexibleSpace];
+    [barItems addObject:flexibleSpace1];
     
-    UIBarButtonItem *commentButton = [[UIBarButtonItem alloc] initWithTitle:commentTitle  style:UIBarButtonItemStyleBordered target:self action:@selector(commentButton:)];
+    UIBarButtonItem *commentButton = [[UIBarButtonItem alloc]initWithTitle:commentTitle style:UIBarButtonItemStyleBordered target:self action:@selector(commentButton:)];
+ 
     commentButton.tag=section;
     [barItems addObject:commentButton];
     
-    [toolBar setItems:barItems animated:YES];
-    [view addSubview:toolBar];
+    UIBarButtonItem *flexibleSpace2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(commentButton:)];
+    [flexibleSpace2 setTitle:@"Comments"];
+    
+    [barItems addObject:flexibleSpace2];
+    
+    if (shareCount) {
+        UIBarButtonItem *shareButton = [[UIBarButtonItem alloc]initWithTitle:[NSString stringWithFormat:@"Shares %@",shareCount]  style:UIBarButtonItemStyleBordered target:self action:@selector(commentButton:)];
+        
+        shareButton.tag=section;
+        [barItems addObject:shareButton];
+    }else{
+    
+        UIBarButtonItem *shareButton = [[UIBarButtonItem alloc]initWithTitle:@"Shares 0"   style:UIBarButtonItemStyleBordered target:self action:@selector(commentButton:)];
+        
+        shareButton.tag=section;
+        [barItems addObject:shareButton];
+    
+    
+    }
+   
+
+
+    
+    [toolBar1 setItems:barItems animated:YES];
+    [view addSubview:toolBar1];
     
     return view;
 
 }
 
+-(void)didTapLikeComment:(UIBarButtonItem *)bar{
+
+
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -504,21 +591,18 @@
 
     NSString *msgStr;
     if (![str1 isEqualToString:@"nil"]) {
-        
-//         expectedLabelSize = [str1 sizeWithFont:[UIFont fontWithName:@"ariel" size:5] constrainedToSize:maximumLabelSize lineBreakMode: NSLineBreakByWordWrapping];
         msgStr=str1;
     }else{
     if (![str2 isEqualToString:@"nil"]) {
-//        expectedLabelSize = [str2 sizeWithFont:[UIFont fontWithName:@"ariel" size:5] constrainedToSize:maximumLabelSize lineBreakMode: NSLineBreakByWordWrapping];
+
         msgStr=str2;
     }else{
-        msgStr=str3;
-//    expectedLabelSize = [str3 sizeWithFont:[UIFont fontWithName:@"ariel" size:5] constrainedToSize:maximumLabelSize lineBreakMode: NSLineBreakByWordWrapping];
-    
+        msgStr=str3;    
     }
     }
     
-    
+    if (msgStr) {
+        
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:msgStr];
         // Add Background Color for Smooth rendering
     [attributedString setAttributes:@{NSBackgroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
@@ -531,18 +615,24 @@
         // Add Font
     [attributedString setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} range:NSMakeRange(0, attributedString.length)];
         // And finally set the text on the label to use this
-        //    label.attributedText = attributedString;
     
         // Phew. Now let's make the Bounding Rect
     CGRect boundingRect = [attributedString boundingRectWithSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
     
     
     if (![str isEqualToString:@"nil"]) {
-        return 60+boundingRect.size.height+110+65;
+        return boundingRect.size.height+110+65;
     }else{
-      return 60+boundingRect.size.height+65;
+      return boundingRect.size.height+65;
     }
+    }else {
     
+        if (![str isEqualToString:@"nil"]) {
+            return 110+65;
+        }else{
+            return 65;
+        }
+    }
    
 }
 

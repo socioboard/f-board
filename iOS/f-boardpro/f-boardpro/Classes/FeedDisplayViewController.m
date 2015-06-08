@@ -49,7 +49,7 @@
     button.frame = CGRectMake(0, 10.0, 160.0, 40.0);
     [self.view addSubview:button];
     
-    [self fetchFeeds];
+   
     
     [self createFollowTable];
 
@@ -57,13 +57,24 @@
 }
 -(void)createFollowTable
 {
-    feedTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 60, self.view.frame.size.width,self.view.frame.size.height-60) style:UITableViewStylePlain];
+    feedTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 40, self.view.frame.size.width,self.view.frame.size.height-40) style:UITableViewStylePlain];
     feedTableView.dataSource=self;
     feedTableView.delegate=self;
     feedTableView.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:feedTableView];
 }
 -(void)fetchFeeds{
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+    
+
+    
     NSIndexPath *path=[SingletonClass sharedState].selectedUserIndex;
     FBSDKAccessToken *token = [SUCache itemForSlot:path.row+path.section].token;
     if (token) {
@@ -119,7 +130,11 @@
         }
 }
 
+-(void)viewWillAppear:(BOOL)animated{
 
+[self fetchFeeds];
+
+}
 -(void)aMethod{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -173,6 +188,24 @@
     cell.fromLabel.text = fromLabel1;
     
     
+//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:cell.fromLabel.text];
+//        // Add Background Color for Smooth rendering
+//    [attributedString setAttributes:@{NSBackgroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
+//        // Add Main Font Color
+//    [attributedString setAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithWhite:0.23 alpha:1.0]} range:NSMakeRange(0, attributedString.length)];
+//        // Add paragraph style
+//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//    [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+//    [attributedString setAttributes:@{NSParagraphStyleAttributeName:paragraphStyle} range:NSMakeRange(0, attributedString.length)];
+//        // Add Font
+//    [attributedString setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} range:NSMakeRange(0, attributedString.length)];
+//        // And finally set the text on the label to use this
+//        //    label.attributedText = attributedString;
+//    
+//        // Phew. Now let's make the Bounding Rect
+//    CGRect expectedLabelSize= [attributedString boundingRectWithSize:CGSizeMake(cell.fromLabel.frame.size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+//    
+//    cell.fromLabel.frame= expectedLabelSize;
     return cell;
 }
 

@@ -9,6 +9,8 @@
 #import "PostViewController.h"
 #import "SUCache.h"
 #import "PostScheduleController.h"
+#import "ScheduledPostController.h"
+#import "TableCustomCell.h"
 #import "SingletonClass.h"
 #import <FacebookSDK/FacebookSDK.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -23,59 +25,211 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.view.backgroundColor = [UIColor colorWithRed:(CGFloat)23/255 green:(CGFloat)142/255 blue:(CGFloat)210/255 alpha:1];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
+
+    self.view.backgroundColor = [UIColor colorWithRed:250.0f/255.0f green:250.0f/255.0f blue:250.0f/255.0f alpha:.8f];
    
 
+    UIView *labelView=[[UIView alloc] initWithFrame:CGRectMake(5, 10, self.view.frame.size.width-10, 50)];
+    labelView.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:labelView];
+    
     self.postImgButton =  [UIButton buttonWithType:UIButtonTypeCustom];
-    self.postImgButton.frame = CGRectMake(20, 90, 100, 130);
-    [self.postImgButton setImage:[UIImage imageNamed:@"photo.png"]  forState:UIControlStateNormal] ;
+    self.postImgButton.frame = CGRectMake(labelView.frame.size.width+2-50,5, 50, 50);
+    [self.postImgButton setImage:[UIImage imageNamed:@"newpost@3x.png"]  forState:UIControlStateNormal] ;
     [self.postImgButton addTarget:self
                            action:@selector(pickFromLibrary:)
                  forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.postImgButton];
+    [labelView addSubview:self.postImgButton];
 
     
     self.textPostButton =  [UIButton buttonWithType:UIButtonTypeCustom];
-    self.textPostButton.frame = CGRectMake(200, 90, 100, 130);
-    [self.textPostButton setImage:[UIImage imageNamed:@"text.png"]  forState:UIControlStateNormal] ;
+    self.textPostButton.frame = CGRectMake(0, 10, 200, 30);
+    self.textPostButton.backgroundColor=[UIColor whiteColor];
+    [self.textPostButton setTitle:@"Scheduled posts : 0"   forState:UIControlStateNormal] ;
     [self.textPostButton addTarget:self
-                           action:@selector(textPostButton:)
+                           action:@selector(textPostButtonClick:)
                  forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.textPostButton];
+    [self.textPostButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.textPostButton.titleLabel setFont:[UIFont fontWithName:@"" size:2.0f]];
+    [labelView addSubview:self.textPostButton];
+    [self createFollowTable];
+    }
 
-    self.videoPostButton =  [UIButton buttonWithType:UIButtonTypeCustom];
-    self.videoPostButton.frame = CGRectMake(200, 250, 100, 130);
-    [self.videoPostButton setImage:[UIImage imageNamed:@"video.png"]  forState:UIControlStateNormal] ;
-    [self.videoPostButton addTarget:self
-                            action:@selector(VideoPostButton:)
-                  forControlEvents:UIControlEventTouchUpInside];
-        //[self.view addSubview:self.videoPostButton];
-
+-(void)retriveAllSchedulePostCount{
     
-    // Do any additional setup after loading the view.
-    sharePostBtn = [[UIButton alloc]init];
-    sharePostBtn.frame = CGRectMake(200, 90, 100, 130);
-    [sharePostBtn setImage:[UIImage imageNamed:@"event.png"]  forState:UIControlStateNormal] ;
-//    sharePostBtn.backgroundColor = [UIColor colorWithRed:(CGFloat)70/255 green:(CGFloat)98/255 blue:(CGFloat)158/255 alpha:1];
-    [sharePostBtn addTarget:self
-                     action:@selector(eventPostButton:)
-           forControlEvents:UIControlEventTouchUpInside];
-        // [self.view addSubview:sharePostBtn];
+    NSString* sqliteQuery = [NSString stringWithFormat:@"SELECT * FROM IMAGES"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSLog(@"-------%@",paths);
+//    sqlite3_stmt *stmt=nil;
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    databasePath = [documentsDirectory stringByAppendingPathComponent:@"ImageDataBase.sqlite"];
+    
+    sqlite3_stmt* statement;
+    if(sqlite3_open([databasePath UTF8String], &_databaseHandle)==SQLITE_OK){
+        if( sqlite3_prepare_v2(_databaseHandle, [sqliteQuery UTF8String], -1, &statement, NULL) == SQLITE_OK )
+        {
+            while( sqlite3_step(statement) == SQLITE_ROW )
+            {
+                 int length = sqlite3_column_int(statement, 0);
+                NSString *string1=[NSString stringWithFormat:@"Scheduled posts : %d",length];
+                  [self.textPostButton setTitle:string1   forState:UIControlStateNormal] ;
+//                NSString *strURl = [NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, 0)];
+               
+                NSLog(@"name string %@",string1);
+                
+            }
+        }else{
+            NSLog( @"SaveBody: Failed from sqlite3_prepare_v2. Error is:  %s", sqlite3_errmsg(_databaseHandle) );
+        }
+    }
+        // Finalize and close database.
+    sqlite3_finalize(statement);
+    sqlite3_close(_databaseHandle);
+
     
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize maximumLabelSize = CGSizeMake(296, FLT_MAX);
+    NSString *strMsg=[self.TextArray objectAtIndex:indexPath.row];
+    
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:strMsg];
+        // Add Background Color for Smooth rendering
+    [attributedString setAttributes:@{NSBackgroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
+        // Add Main Font Color
+    [attributedString setAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithWhite:0.23 alpha:1.0]} range:NSMakeRange(0, attributedString.length)];
+        // Add paragraph style
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+    [attributedString setAttributes:@{NSParagraphStyleAttributeName:paragraphStyle} range:NSMakeRange(0, attributedString.length)];
+        // Add Font
+    [attributedString setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} range:NSMakeRange(0, attributedString.length)];
+        // And finally set the text on the label to use this
+        //    label.attributedText = attributedString;
+    
+        // Phew. Now let's make the Bounding Rect
+    CGRect boundingRect = [attributedString boundingRectWithSize:CGSizeMake(tableView.frame.size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+    
+        // Now let's set the label size from there
+        //    CGFloat frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, boundingRect.size.width, boundingRect.size.height);
+    
+    return 60 +boundingRect.size.height;
+}
+
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return self.fbIDArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Follow";
+    
+    TableCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (cell == nil)
+    {
+        cell = [[TableCustomCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    NSString *fromIdImage = [self.fbIDArray objectAtIndex:indexPath.row];
+    
+    if (![fromIdImage isEqualToString:@"nil"]) {
+        [cell.fromUserImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=small",fromIdImage]] placeholderImage:[UIImage imageNamed:@"hel.jpeg"]];
+    }else{
+        [cell.fromUserImage setImageWithURL:[NSURL URLWithString:fromIdImage] placeholderImage:[UIImage imageNamed:@"hel.jpeg"]];
+    }
+    cell.fromUserImage.frame=CGRectMake(10, 22, 40, 40);
+    cell.userNameDesc.text=[self.TextArray objectAtIndex:indexPath.row];
+    CGSize maximumLabelSize = CGSizeMake(296, FLT_MAX);
+    CGSize expectedLabelSize = [cell.userNameDesc.text sizeWithFont:[UIFont fontWithName:@"ariel" size:5] constrainedToSize:maximumLabelSize lineBreakMode: NSLineBreakByWordWrapping];
+        //adjust the label the the new height.
+    CGRect newFrame = cell.userNameDesc.frame;
+    newFrame.size.height = expectedLabelSize.height;
+    newFrame.size.width = cell.userNameDesc.frame.size.width;
+        //    cell.userNameDesc.frame = newFrame;
+    cell.userNameDesc.frame=CGRectMake(65, 12,tableView.frame.size.width-115, newFrame.size.height);
+    [cell.userNameDesc sizeToFit];
+    cell.likeCountLabel.text = [self.TimeArray objectAtIndex:indexPath.row];
+   
+
+    cell.commentCountLabel.text = @"";
+    UIImage *Postedimage = [UIImage imageWithData:[self.dataArray objectAtIndex:indexPath.row]];
+    
+    cell.userImage.image=Postedimage;
+    cell.userImage.frame=CGRectMake(tableView.frame.size.width-60, 15, 50, 50);
+     cell.likeCountLabel.frame=CGRectMake(65, cell.userNameDesc.frame.size.height+15,tableView.frame.size.width-115, 10);
+    [cell.likeCountLabel setTextColor:[UIColor grayColor]];
+    return cell;
+}
+
+
+-(void)retriveAllSchedulePost{
+    self.TextArray=[[NSMutableArray alloc] init];
+    self.dataArray=[[NSMutableArray alloc] init];
+    self.fbIDArray=[[NSMutableArray alloc] init];
+    self.TimeArray=[[NSMutableArray alloc] init];
+    NSData* data = nil;
+    NSString* sqliteQuery = [NSString stringWithFormat:@"SELECT * FROM IMAGES"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSLog(@"-------%@",paths);
+     NSString *documentsDirectory = [paths objectAtIndex:0];
+     databasePath = [documentsDirectory stringByAppendingPathComponent:@"ImageDataBase.sqlite"];
+    
+    sqlite3_stmt* statement;
+    if(sqlite3_open([databasePath UTF8String], &_databaseHandle)==SQLITE_OK){
+        if( sqlite3_prepare_v2(_databaseHandle, [sqliteQuery UTF8String], -1, &statement, NULL) == SQLITE_OK )
+        {
+            while( sqlite3_step(statement) == SQLITE_ROW )
+            {
+                
+                NSString *strURl = [NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, 0)];
+                [self.fbIDArray addObject:strURl];
+                int length = sqlite3_column_bytes(statement, 1);
+                data       = [NSData dataWithBytes:sqlite3_column_blob(statement, 1) length:length];
+                [self.dataArray addObject:data];
+                self.accesstokenString = [NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, 2)];
+                NSLog(@"access Token string %@",self.accesstokenString);
+                NSString *strText=[NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, 3)];
+                [self.TextArray addObject:strText];
+                
+                NSLog(@"name string %f",[self.accesstokenString doubleValue]);
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.accesstokenString doubleValue]];
+                NSDateFormatter *formatter= [[NSDateFormatter alloc] init];
+                [formatter setDateFormat:@"dd/MMM/yyyy hh:mm:ss a"];
+               
+              [self.TimeArray addObject:[formatter stringFromDate:date]];
+            }
+        }else{
+            NSLog( @"SaveBody: Failed from sqlite3_prepare_v2. Error is:  %s", sqlite3_errmsg(_databaseHandle) );
+        }
+    }
+        // Finalize and close database.
+    sqlite3_finalize(statement);
+    sqlite3_close(_databaseHandle);
+    
+    NSString *string1=[NSString stringWithFormat:@"Scheduled posts : %lu",(unsigned long)self.TextArray.count];
+    [self.textPostButton setTitle:string1   forState:UIControlStateNormal] ;
+
+    [self.groupTableView reloadData];
+    
+    
+}
+
+
 
 -(void)VideoPostButton:(UIButton *)button{
 
 }
 
 
--(void)textPostButton:(UIButton *)button{
-    PostScheduleController *postSchedule=[[PostScheduleController alloc] init];
-    postSchedule.type=@"Text";
-    postSchedule.title=@"Schedule Post";
-  [self.navigationController pushViewController:postSchedule animated:YES];
+-(void)textPostButtonClick:(UIButton *)button{
+//    ScheduledPostController *schedule=[[ScheduledPostController alloc] init];
+//    schedule.title=@"Scheduled";
+//    [self.navigationController pushViewController:schedule animated:YES];
 }
 
 
@@ -83,188 +237,20 @@
 -(void)eventPostButton:(UIButton *)button{
 
 }
+-(void)createFollowTable
+{
+    self.groupTableView=[[UITableView alloc]initWithFrame:CGRectMake(5, 70, self.view.frame.size.width-10,self.view.frame.size.height-130) style:UITableViewStylePlain];
+    self.groupTableView.dataSource=self;
+    self.groupTableView.delegate=self;
+    self.groupTableView.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:self.groupTableView];
+}
 
-//- (void)setupLocalNotifications:(NSString *)seconds {
-//    
-//    
-//    NSString *userId = @"265952946944590";
-//    
-//    self.localNotification = [[UILocalNotification alloc] init];
-//    if (self.pageTextField.text) {
-//        self.localNotification.alertBody = self.pageTextField.text;
-//    }else{
-//        self.localNotification.alertBody = @"Reminder to post";
-//    }
-//    
-//    time_t unixTime = (time_t) [[NSDate date] timeIntervalSince1970];
-//    NSNumber * numbToStore=[NSNumber numberWithInteger:unixTime];
-//    NSMutableDictionary * dictMessage=[[NSMutableDictionary alloc]init];
-//    [dictMessage setObject:self.localNotification.alertBody forKey:@"Text"];
-//    [dictMessage setObject:seconds forKey:@"TimeStamp"];
-//    [dictMessage setObject:userId forKey:@"UserId"];
-//    if (self.mediaCheck) {
-//        [dictMessage setObject:@"true" forKey:@"image"];
-//    }else{
-//        [dictMessage setObject:@"false" forKey:@"image"];
-//    }
-//    
-//    
-//    NSLog(@"notification body %@ and time stamp %@ and userId %@",self.localNotification.alertBody,numbToStore,userId);
-//    
-//    
-//    [self.localNotification setUserInfo:dictMessage];
-//    NSDate *now = [NSDate date];
-//
-////    NSDate *dateToFire = [now dateByAddingTimeInterval:[seconds doubleValue]];
-//    
-//    NSDate *dateToFire = [now dateByAddingTimeInterval:10];
-//
-//    NSLog(@"fire time: %@", dateToFire);
-//    self.localNotification.fireDate = dateToFire;
-//    self.localNotification.soundName = UILocalNotificationDefaultSoundName;
-//    
-//    [[UIApplication sharedApplication] scheduleLocalNotification: self.localNotification];
-//    
-//}
-
-
-//- (void)date:(id)sender {
-//    
-//    datepicker=[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 250, 325, 300)];
-//    datepicker.datePickerMode = UIDatePickerModeDateAndTime;
-//    datepicker.hidden = NO;
-//    datepicker.date = [NSDate date];
-//    
-//    [datepicker addTarget:self
-//                   action:@selector(LabelChange:)
-//         forControlEvents:UIControlEventValueChanged];
-//    [self.view addSubview:datepicker]; //this can set value of selected date to your label change according to your condition
-//    
-//    
-//    NSDateFormatter * df = [[NSDateFormatter alloc] init];
-//    [df setDateFormat:@"MM-dd-yyyy HH:mm:ss"]; // from here u can change format..
-//    
-//    _selectedDate = [[UILabel alloc]init];
-//    _selectedDate.frame=CGRectMake(100, 150, 250, 50);
-//        //[self.view addSubview:_selectedDate];
-//    _selectedDate.text=[df stringFromDate:datepicker.date];
-//}
-
-//- (void)LabelChange:(id)sender{
-//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-//    [df setDateFormat:@"MM-dd-yyyy HH:mm:ss"];
-//    _selectedDate.text = [NSString stringWithFormat:@"%@",
-//                          [df stringFromDate:datepicker.date]];
-//    [self getTimeDifferenceToFire];
-//    
-//        // [datepicker removeFromSuperview];
-//}
-
-//-(void)getTimeDifferenceToFire{
-//    NSDate *today = [NSDate date];
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//        // display in 12HR/24HR (i.e. 11:25PM or 23:25) format according to User Settings
-//    [dateFormatter setDateFormat:@"MM-dd-yyyy HH:mm:ss"];
-//    NSString *currentTime = [dateFormatter stringFromDate:today];
-//    
-//    NSLog(@"User's current time in their preference format:%@",currentTime);
-//    NSDate* date2 = datepicker.date;
-//    NSTimeInterval distanceBetweenDates = [date2 timeIntervalSinceDate:today];
-//    double secondsInAnHour = 3600;
-//    NSInteger hoursBetweenDates = distanceBetweenDates / secondsInAnHour;
-//    
-//    NSLog(@"=========== story will get posted in %ldhors and %f seconds",(long)hoursBetweenDates,secondsInAnHour);
-//    
-//    
-////    [self setupLocalNotifications:secondsInAnHour];
-//    
-//    
-//}
-
-//
-//-(void)alertPosted:(UIImage *)imageName withMessage:(NSString *)msg{
-//    
-//    NSIndexPath *path=[SingletonClass sharedState].selectedUserIndex;
-//    FBSDKAccessToken *token = [SUCache itemForSlot:path.section+path.row].token;
-//    [FBSDKAccessToken setCurrentAccessToken:token];
-//    NSLog(@"FBID %@",[FBSDKAccessToken currentAccessToken].userID);
-//    
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post scheduled successfully"
-//                                                    message:@""
-//                                                   delegate:self
-//                                          cancelButtonTitle:@"OK"
-//                                          otherButtonTitles:nil];
-//        //[alert show];
-//    
-//    UIImage *image = [UIImage imageNamed:@"hel.jpeg"];
-//    NSString *str= @"hello";
-//    
-//    NSLog(@"image- %@ and strs- %@",image,str);
-//    self.imageToPost=nil;
-//    self.stringToPost = nil;
-//    
-//        // [self setupLocalNotifications:1];
-//}
-
-
-//- (void) SaveImagesToSql: (NSData*) imgData withUrl:(NSString*)mainUrl withdate:(NSString *)myDate
-//{
-//    NSString *docsDir;
-//    NSArray *dirPaths;
-//    
-//    NSLog(@"intvalue %ld",(long)[myDate integerValue] );
-//    
-//    dirPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSLog(@"dirPath in load: %@",dirPaths);
-//    
-//    
-//    docsDir=[dirPaths objectAtIndex:0];
-//    NSLog(@"docsDir in load: %@",docsDir);
-//    databasePath =[[NSString alloc] initWithString:[docsDir stringByAppendingPathComponent:@"contacts.db"]];
-//    
-//    [self setupLocalNotifications:myDate];
-//    NSDate *mydate  = [NSDate date];
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-//    
-//    
-//    NSString  *dateString;
-//    [formatter setDateFormat:@"dd-MM-yyyy HH:mm:ss"];
-//    
-//    dateString = [formatter stringFromDate:[NSDate date]];
-//    
-//    
-//    sqlite3_stmt *statement;
-//    const char *dbpath=[databasePath UTF8String];
-//    
-//    
-//    if(sqlite3_open(dbpath, &contactDB)==SQLITE_OK)
-//    {
-//            //        NSData *imgdata=UIImagePNGRepresentation(self.images);
-//        
-//        
-//        
-//        const char *sql="insert into IMAGES(Url,IMAGE,CDATE) values(?,?,?)";
-//            //const char *string=[str UTF8String];
-//        if(sqlite3_prepare_v2(contactDB, sql, -1,&statement, NULL)==SQLITE_OK){
-//            sqlite3_bind_text(statement, 1, [mainUrl UTF8String], -1, NULL);
-//            
-////         sqlite3_bind_blob(statement, 2, [imgData bytes], [imgData length], NULL);
-//         sqlite3_bind_text(statement, 3, [myDate UTF8String], -1, NULL);
-//            
-//            NSLog(@"details saved");
-//                //            NSLog(@"saved succussfully");
-//        }
-//        if (sqlite3_step(statement)==SQLITE_DONE) {
-//                //            NSLog(@"details saved");
-//            NSLog(@"saved succussfully");
-//        }
-//            //        sqlite3_step(statement);
-//            //status.text=@"saved succussfully";
-//    }
-//}
 
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden=YES;
+//    [self retriveAllSchedulePostCount];
+    [self retriveAllSchedulePost];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -324,32 +310,37 @@
 
 -(BOOL)pickFromLibrary:(id)sender{
     
-    if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary] == NO
-         && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)) {
-        return NO;
-    }
+//    if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary] == NO
+//         && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)) {
+//        return NO;
+//    }
+//    
+//    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
+//    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]
+//        && [[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary] containsObject:(NSString *)kUTTypeImage]) {
+//        
+//        cameraUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//        cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
+//        
+//    } else if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]
+//               && [[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum] containsObject:(NSString *)kUTTypeImage]) {
+//        
+//        cameraUI.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+//        cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
+//        
+//    } else {
+//        return NO;
+//    }
+//    
+//    cameraUI.allowsEditing = YES;
+//    cameraUI.delegate = self;
+//    
+//    [self presentViewController:cameraUI animated:YES completion:nil];
     
-    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]
-        && [[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary] containsObject:(NSString *)kUTTypeImage]) {
-        
-        cameraUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
-        
-    } else if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]
-               && [[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum] containsObject:(NSString *)kUTTypeImage]) {
-        
-        cameraUI.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
-        
-    } else {
-        return NO;
-    }
-    
-    cameraUI.allowsEditing = YES;
-    cameraUI.delegate = self;
-    
-    [self presentViewController:cameraUI animated:YES completion:nil];
+    PostScheduleController *postSchedule=[[PostScheduleController alloc] init];
+    postSchedule.type=@"Text";
+    postSchedule.title=@"Schedule Post";
+    [self.navigationController pushViewController:postSchedule animated:YES];
     return YES;
     
 }

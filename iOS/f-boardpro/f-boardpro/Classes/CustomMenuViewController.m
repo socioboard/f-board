@@ -17,10 +17,8 @@
 #import "SUCache.h"
 #import "SUProfileTableViewCell.h"
 #import "ProfileTableViewCell.h"
-#import "SUAccountsViewController.h"
-//#import <objc/runtime.h>
-//#import "ViewController.h"
-//#import "AppDelegate.h"
+//#import "SUAccountsViewController.h"
+#import "AccountViewController.h"
 
 @interface CustomMenuViewController ()
 {
@@ -51,6 +49,9 @@
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKAccessTokenDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKProfileDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
@@ -164,7 +165,7 @@
     
     
     screenSize = [UIScreen mainScreen].bounds;
-    self.view.backgroundColor = [UIColor colorWithRed:(CGFloat)39/255 green:(CGFloat)39/255 blue:(CGFloat)41/255 alpha:1];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     userDefault = [NSUserDefaults standardUserDefaults];
     
@@ -180,6 +181,11 @@
     self.mainsubView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.screen_height-45)];
     NSLog(@"Main sub view frame X=-=- %f \n Y == %f",[UIScreen mainScreen].bounds.origin.x,[UIScreen mainScreen].bounds.origin.y);
     self.mainsubView.backgroundColor = [UIColor whiteColor];
+    self.mainsubView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.mainsubView.layer.shadowOpacity = 0.4f;
+    self.mainsubView.layer.shadowOffset = CGSizeMake(0.0f, 15.0f);
+    self.mainsubView.layer.shadowRadius = 10.0f;
+    self.mainsubView.layer.masksToBounds = NO;
     [self.view addSubview:self.mainsubView];
     
     //Add Header View
@@ -277,10 +283,16 @@
     //Adding Swipr Gesture
     
           //===============
-    self.swipeGestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeGesture:)];
+    self.swipeGestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeGestureRight:)];
    self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.mainsubView addGestureRecognizer:self.swipeGestureRight];
+    
+    self.swipeGestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeGestureLeft:)];
+    self.swipeGestureLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.mainsubView addGestureRecognizer:self.swipeGestureLeft];
+    
 }
+
 #pragma mark -
 #pragma mark -Create Table
 
@@ -327,7 +339,7 @@
         self.selectedIndex = 0;
         self.accountTableView = [[UITableView alloc] initWithFrame:CGRectMake(100, 0,screenSize.size.width-100,screenSize.size.height-50) style:UITableViewStylePlain];
         
-        self.accountTableView.backgroundColor =  [UIColor colorWithRed:(CGFloat)39/255 green:(CGFloat)39/255 blue:(CGFloat)41/255 alpha:1];
+        self.accountTableView.backgroundColor =  [UIColor whiteColor];
         
         self.accountTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.accountTableView.delegate = self;
@@ -335,25 +347,20 @@
         self.accountTableView.layer.borderColor=(__bridge CGColorRef)([UIColor blackColor]);
         self.accountTableView.layer.borderWidth=6.0;
         
-        
-//        [ self.accountTableView registerClass:[SUProfileTableViewCell class] forCellReuseIdentifier:@"SUProfileTableViewCel"];
+
         UIButton *createAccount = [UIButton buttonWithType:UIButtonTypeCustom];
         createAccount.frame = CGRectMake(0, 5, self.accountTableView.frame.size.width, 40);
         createAccount.titleLabel.font = [UIFont systemFontOfSize:12.0f];
         createAccount.backgroundColor=[UIColor clearColor];
-//        createAccount.titleLabel.shadowOffset = CGSizeMake(1.0f, 1.0f);
-        [createAccount setImage:[UIImage imageNamed:@"inner_follow.png"] forState:UIControlStateNormal];
-        createAccount.layer.borderColor=(__bridge CGColorRef)([UIColor whiteColor ]);
-        createAccount.layer.borderWidth=2.0;
-            //self.menuButton.titleLabel.layer.
+          [createAccount setTitle:@"  Add More Account"  forState:UIControlStateNormal];
+        createAccount.titleLabel.textColor=[UIColor blackColor];
+        [createAccount setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [createAccount setImage:[UIImage imageNamed:@"add_acount_icon.png"] forState:UIControlStateNormal];
+//        createAccount.layer.borderColor=(__bridge CGColorRef)([UIColor whiteColor ]);
+//        createAccount.layer.borderWidth=2.0;
+//            //self.menuButton.titleLabel.layer.
         [createAccount addTarget:self action:@selector(createNewAccount) forControlEvents:UIControlEventTouchUpInside];
-        [createAccount setTitle:@"  Add More Account"  forState:UIControlStateNormal];
-        
-        
-        
-        
-            //        createAccount.ta
-            //        [self.headerView addSubview:createAccount];
+      
         self.accountTableView.tableFooterView=createAccount;
         self.accountTableView.tableFooterView.userInteractionEnabled=YES;
         
@@ -403,10 +410,10 @@
     if (!self.menuTableView)
     {
         self.selectedIndex = 0;
-        self.menuTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,55,screenSize.size.width-150, self.screen_height-110) style:UITableViewStylePlain];
+        self.menuTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,55,screenSize.size.width-100, self.screen_height-110) style:UITableViewStylePlain];
         
-        self.menuTableView.backgroundColor =  [UIColor colorWithRed:(CGFloat)39/255 green:(CGFloat)39/255 blue:(CGFloat)41/255 alpha:1];
-        
+//        self.menuTableView.backgroundColor =  [UIColor colorWithRed:(CGFloat)39/255 green:(CGFloat)39/255 blue:(CGFloat)41/255 alpha:1];
+        self.menuTableView.backgroundColor =  [UIColor whiteColor];
         self.menuTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.menuTableView.delegate = self;
         self.menuTableView.dataSource = self;
@@ -422,13 +429,13 @@
     
     [self.view insertSubview:self.menuTableView belowSubview:self.mainsubView];
     UIView * viewLogoBg=[[UIView alloc]init];
-    viewLogoBg.frame=CGRectMake(0, 0, screenSize.size.width-150,55);
+    viewLogoBg.frame=CGRectMake(0, 0, screenSize.size.width-100,55);
     viewLogoBg.backgroundColor=[UIColor whiteColor];
     [self.view insertSubview:viewLogoBg belowSubview:self.mainsubView];
     
     
     UIView * viewLogo=[[UIView alloc]init];
-    viewLogo.frame=CGRectMake(5, 15, 150,24);
+    viewLogo.frame=CGRectMake(30, 15, 150,24);
    viewLogo.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"fbrandpro.png"]];
     [viewLogoBg insertSubview:viewLogo belowSubview:self.mainsubView];
     if (!lblUserName)
@@ -453,17 +460,34 @@
       [self _deselectRow];
       NSInteger val=[[NSUserDefaults standardUserDefaults] integerForKey:@"LoggedInUser"];
 
-   _currentIndexPath = [NSIndexPath indexPathForRow:val inSection:1];
+   _currentIndexPath = [NSIndexPath indexPathForRow:val inSection:0];
 //    _currentIndexPath =[NSIndexPath indexPathWithIndex:self.tableDatalist.count-1];
 
   NSInteger slot = [self _userSlotFromIndexPath:_currentIndexPath];
     NSLog(@"integer slot %ld",(long)slot);
-    NSArray *permissions =  [[NSArray alloc] initWithObjects:@"publish_actions", nil];
+//    NSArray *permissions =  [[NSArray alloc] initWithObjects:@"publish_actions", @"user_likes",
+// nil];
+    
+    NSArray *permissions =  [[NSArray alloc] initWithObjects:
+                             @"user_birthday",
+                             @"user_work_history",
+                             @"user_likes",
+                             @"user_posts",
+                             @"user_hometown",
+                             @"user_photos",
+                             @"user_about_me",
+                             @"public_profile",
+                             @"user_location",
+                             @"user_friends",
+                             @"email",
+                             nil];
+
+
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     login.loginBehavior = FBSDKLoginBehaviorWeb;
     
-    [login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-
+//    [login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+   [login logInWithReadPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
         
         NSLog(@"result grand permission - %@  declinedPermissions - %@",result.grantedPermissions,result.declinedPermissions);
         if (error || result.isCancelled) {
@@ -512,25 +536,66 @@
 
 #pragma mark -
 
--(void)handleSwipeGesture:(UISwipeGestureRecognizer *)swipeGesture
+-(void)handleSwipeGestureRight:(UISwipeGestureRecognizer *)swipeGesture
 {
 //    if (swipeGesture.direction==UISwipeGestureRecognizerDirectionLeft) {
-    
+    self.accountTableView.hidden=YES;
+    self.menuTableView.hidden=NO;
    if (self.mainsubView.frame.origin.x!=0) {
         
                         [UIView animateWithDuration:.5 animations:^{
                            self.mainsubView.frame = CGRectMake(0, 0,screenSize.size.width, screenSize.size.height-45);
                             
                         }completion:^(BOOL finish){
-                            self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
+//                            self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
                     }];
-   }else{
-   
+   }else {
+       NSLog(@"right");
+       [UIView animateWithDuration:.5 animations:^{
+           self.mainsubView.frame = CGRectMake(screenSize.size.width-100, 0,screenSize.size.width, screenSize.size.height-45);
+       }completion:^(BOOL finish){
+         self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
+       }];
+
+       
    }
     
 
 }
-                         
+
+-(void)handleSwipeGestureLeft:(UISwipeGestureRecognizer *)swipeGesture
+{
+        //    if (swipeGesture.direction==UISwipeGestureRecognizerDirectionLeft) {
+    self.accountTableView.hidden=NO;
+    self.menuTableView.hidden=YES;
+
+    if (self.mainsubView.frame.origin.x!=0) {
+        
+        [UIView animateWithDuration:.5 animations:^{
+            self.mainsubView.frame = CGRectMake(0, 0,screenSize.size.width, screenSize.size.height-45);
+            
+        }completion:^(BOOL finish){
+//            self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
+        }];
+    }else{
+        NSLog(@"left");
+        [UIView animateWithDuration:.5 animations:^{
+            
+            
+            self.mainsubView.frame = CGRectMake(100-screenSize.size.width, 0,screenSize.size.width, screenSize.size.height-45);
+
+        }completion:^(BOOL finish){
+          self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionRight;
+        }];
+
+        
+    }
+    
+    
+}
+
+
+
 #pragma mark -
 -(void) menuButtonClciked
 {
@@ -543,12 +608,12 @@
             
         }completion:^(BOOL finish){
             
-           self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
+//           self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
         }];
     }
     else{
         [UIView animateWithDuration:.5 animations:^{
-            self.mainsubView.frame = CGRectMake(screenSize.size.width-150, 0,screenSize.size.width, screenSize.size.height-45);
+            self.mainsubView.frame = CGRectMake(screenSize.size.width-100, 0,screenSize.size.width, screenSize.size.height-45);
             
         }completion:^(BOOL finish){
            self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -567,7 +632,7 @@
             
         }completion:^(BOOL finish){
             
-           self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionRight;
+//           self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionRight;
         }];
     }
     else{
@@ -587,7 +652,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (tableView==self.accountTableView) {
-        return 2;
+        return 1;
     }
     else
         return 1;
@@ -597,7 +662,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (tableView==self.accountTableView) {
-         return (section == 0 ? @"Primary User:" : @"Guest Users:");
+         return @"Primary User:";
     }else
         return nil;
    
@@ -615,12 +680,12 @@
     }
     else if (tableView==self.accountTableView)
     {
-        if (section==0) {
-            return 1;
-        }else{
+//        if (section==0) {
+//            return 1;
+//        }else{
             NSInteger account= [[NSUserDefaults standardUserDefaults]integerForKey:@"LoggedInUser"];
             return account;
-        }
+//        }
     }
     return 0;
 }
@@ -635,8 +700,8 @@
     layer.colors = [NSArray arrayWithObjects:(id)firstColor.CGColor,(id)secColor.CGColor, nil];
 //    cell.accessoryView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"tik.png"]];
     if (tableView==self.menuTableView) {
-         [cell.contentView.layer insertSublayer:layer atIndex:0];
-        cell.textLabel.textColor = [UIColor whiteColor];
+//         [cell.contentView.layer insertSublayer:layer atIndex:0];
+        cell.textLabel.textColor = [UIColor blackColor];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0f];
     }else{
         cell.textLabel.textColor = [UIColor blackColor];
@@ -651,13 +716,22 @@
     if (tableView==self.menuTableView) {
         return 2;
     }else
-    return 30.0;
+    {
+        if (section==0) {
+            return 55;
+        }else{
+            return 0;
+        }
+    
+    }
     
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 3.0;
 }
+
+
 -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
         //Check Section
@@ -680,12 +754,13 @@
        
     cell.textLabel.text=title;
         if ([title isEqualToString:@"Home Feeds"]) {
-             cell.imageView.image=[UIImage imageNamed:@"Feed.png"];
+            cell.imageView.image=[UIImage imageNamed:@"home_feeds_icon.png"];
         }else if([title isEqualToString:@"Pages"]){
-        cell.imageView.image=[UIImage imageNamed:@"display_page.png"];
+        cell.imageView.image=[UIImage imageNamed:@"pages_icon.png"];
         
         }else if([title isEqualToString:@"Post schedule"]){
-            cell.imageView.image=[UIImage imageNamed:@"post_schedule.png"];
+            cell.textLabel.text=@"Schedules";
+            cell.imageView.image=[UIImage imageNamed:@"schedule_icon.png"];
             
         }else if([title isEqualToString:@"Group details"]){
             cell.textLabel.text=@"Groups";
@@ -694,17 +769,23 @@
             
         }
         else if([title isEqualToString:@"My Feeds"]){
-            cell.imageView.image=[UIImage imageNamed:@"my_feeds.png"];
+            cell.imageView.image=[UIImage imageNamed:@"my_feeds_icon.png"];
         }else if([title isEqualToString:@"Scheduled"]){
-            cell.imageView.image=[UIImage imageNamed:@"photo_que.png"];
+            cell.imageView.image=[UIImage imageNamed:@""];
         }
         else if([title isEqualToString:@"Profile"]){
-            cell.imageView.image=[UIImage imageNamed:@"ic_userprofile.png"];
+            cell.imageView.image=[UIImage imageNamed:@"profile_icon.png"];
         }
         
-        else if([title isEqualToString:@"Friend List"]){
-            cell.imageView.image=[UIImage imageNamed:@"friends.png"];
+        else if([title isEqualToString:@"Friends"]){
+            cell.imageView.image=[UIImage imageNamed:@"friends_icon.png"];
         }
+        else if([title isEqualToString:@"Invite Friend"]){
+            cell.imageView.image=[UIImage imageNamed:@"Invite_friend.png"];
+        }
+        
+       [cell.textLabel setFont:[UIFont fontWithName:@"Zapfino" size:3.0]];
+        cell.textLabel.font=[UIFont fontWithName:@"Zapfino" size:3.0];
         return cell;
     }
     else
@@ -737,12 +818,28 @@
             _currentIndexPath = indexPath;
             cell2.accessoryType = UITableViewCellAccessoryCheckmark;
         }
+        
+//        self.deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.deleteButton setImage:[UIImage imageNamed:@"plus_icon.png"] forState:UIControlStateNormal ];
+//        self.deleteButton.frame = CGRectMake(tableView.frame.size.width-30, 10.0, 20.0, 20.0);
+//        self.deleteButton.tag=indexPath.row;
+//        self.deleteButton.userInteractionEnabled = YES;
+//        [self.deleteButton addTarget:self action:@selector(buttonTouch:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+            // [cell2 addSubview:self.deleteButton];
+
+    
         return cell2;
-
-
     }
-    
-    
+   
+}
+
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(self.accountTableView)
+    return UITableViewCellEditingStyleDelete;
+    else 
+        return UITableViewCellEditingStyleNone;
 }
 
 
@@ -754,16 +851,30 @@
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *viewfor;
     if (tableView==self.accountTableView) {
-        viewfor=[[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.size.width-100, 30)];
-        viewfor.backgroundColor=[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f];
-        UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 25)];
-        label.backgroundColor=[UIColor clearColor];
-        [label setText:(section == 0 ? @"Primary User:" : @"Guest Users:")];
-        [label setTextColor:[UIColor whiteColor]];
-        [viewfor addSubview:label];
-//        if (tableView==self.accountTableView) {
-//            return (section == 0 ? @"Primary User:" : @"Guest Users:");
-//        }
+        if (section==0) {
+            
+            UIView * viewLogoBg=[[UIView alloc]init];
+            viewLogoBg.frame=CGRectMake(0, 0, screenSize.size.width-100,55);
+            viewLogoBg.backgroundColor=[UIColor whiteColor];
+//            [self.view insertSubview:viewLogoBg belowSubview:self.mainsubView];
+            
+            
+            UIView * viewLogo=[[UIView alloc]init];
+            viewLogo.frame=CGRectMake(30, 15, 150,24);
+            viewLogo.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"fbrandpro.png"]];
+            [viewLogoBg insertSubview:viewLogo belowSubview:self.mainsubView];
+
+            
+//            viewfor=[[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.size.width-100, 30)];
+//            viewfor.backgroundColor=[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f];
+//            UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 25)];
+//            label.backgroundColor=[UIColor clearColor];
+//            [label setText:(section == 0 ? @"Accounts:" : @"Guest Users:")];
+//            [label setTextColor:[UIColor whiteColor]];
+//            [viewfor addSubview:label];
+            return viewLogoBg;
+        }
+      
         return viewfor;
     }else
         return viewfor;
@@ -788,6 +899,7 @@
 - (void)tableView:(UITableView *)tableView
 commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     NSInteger val=[[NSUserDefaults standardUserDefaults] integerForKey:@"LoggedInUser"];
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -795,7 +907,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         [SUCache deleteItemInSlot:slot];
 
         
-        SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        ProfileTableViewCell *cell = (ProfileTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.userName = @"Add New User";
         cell.userID = nil;
         cell.contentView.backgroundColor=[UIColor whiteColor];
@@ -805,8 +917,42 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([_currentIndexPath compare:indexPath] == NSOrderedSame) {
             [self _deselectRow];
         }
+        
+        [[NSUserDefaults standardUserDefaults]setInteger:val-1 forKey:@"LoggedInUser"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+        
+        if (val-1==0) {
+            
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKAccessTokenDidChangeNotification object:nil];
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:FBSDKProfileDidChangeNotification object:nil];
+            
+            
+            self.account=[[AccountViewController alloc] init];
+            [self.navigationController pushViewController:self.account animated:YES];
+        }
+
+
+        for (NSInteger i=indexPath.row+1; i<val; i++) {
+            SUCacheItem *cacheItem1 = [SUCache itemForSlot:i];
+
+            ProfileTableViewCell *cell = (ProfileTableViewCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i-1 inSection:0]];
+            cell.userName =cacheItem1.profile.name;
+            cell.userID = cacheItem1.token.userID;
+
+            [SUCache saveItem:cacheItem1 slot:i-1];
+
+            if (i==val-1) {
+                [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i-1 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+            }
+
+        }
+      
+        
+        
+
    [tableView reloadData];
-    }
+        
+           }
 }
 
 
@@ -859,32 +1005,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                 
                 self.swipeGestureRight.direction = UISwipeGestureRecognizerDirectionRight;
             }];
-        }
+           }
         
-        }else{
-            [self _deselectRow];
-        
-            FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-            if (indexPath.section == 1) {
-                login.loginBehavior = FBSDKLoginBehaviorWeb;
-            }
-            
-            NSArray *permissions =  [[NSArray alloc] initWithObjects:@"publish_actions", nil];
-            
-                //            login.loginBehavior = FBSDKLoginBehaviorWeb;
-            
-            [login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                
-                
-                NSLog(@"result grand permission - %@  declinedPermissions - %@",result.grantedPermissions,result.declinedPermissions);
-                if (error || result.isCancelled) {
-    
-                    [self _deselectRow];
-                }
-            }];
-            
         }
-
     }
 }
 

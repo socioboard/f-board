@@ -15,13 +15,13 @@
 #import "PageViewController.h"
 #import "PostViewController.h"
 #import "PageViewController.h"
-    //#import "SUAccountsViewController.h"
+#import "InviteFriendController.h"
 #import "GroupViewController.h"
 #import "FBAutomationViewController.h"
 #import "CustomMenuViewController.h"
-    //#import "SUAccountsViewController.h"
 #import "AccountViewController.h"
 #import "ProfileViewController.h"
+#import "Reachability.h"
 #import <sqlite3.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
@@ -33,14 +33,26 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSInteger account= [[NSUserDefaults standardUserDefaults]integerForKey:@"PrimaryUser"];
+    NSInteger account= [[NSUserDefaults standardUserDefaults]integerForKey:@"LoggedInUser"];
         //    [[NSUserDefaults standardUserDefaults]synchronize];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+    {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
+    }
     
     UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     if (localNotif) {
         [self postSchedule:localNotif];
     }
     [self saveinSqlite];
+    [self checkNetWorkConnection];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if (account) {
         
@@ -56,8 +68,8 @@
         PostViewController *post = [[PostViewController alloc] init];
         post.title = @"Post schedule";
         
-        GroupViewController *grp = [[GroupViewController alloc]init];
-        grp.title = @"Group details";
+//        GroupViewController *grp = [[GroupViewController alloc]init];
+//        grp.title = @"Group details";
         
         UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
         [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
@@ -65,10 +77,15 @@
         
         
         FBAutomationViewController *automaton=[[FBAutomationViewController alloc] initWithCollectionViewLayout:layout];
-        automaton.title=@"Friend List";
+        automaton.title=@"Friends";
         
-        ScheduledPostController *schedule=[[ScheduledPostController alloc] init];
-        schedule.title=@"Scheduled";
+//        ScheduledPostController *schedule=[[ScheduledPostController alloc] init];
+//        schedule.title=@"Scheduled";
+        
+        
+        InviteFriendController *inviteFriend=[[InviteFriendController alloc]init];
+        inviteFriend.title=@"Invite Friend";
+
         
         ProfileViewController *profileView=[[ProfileViewController alloc] init];
         profileView.title=@"Profile";
@@ -82,19 +99,13 @@
         profileView.FBid=[FBSDKAccessToken currentAccessToken].userID;
         
         CustomMenuViewController *customMenu=[[CustomMenuViewController alloc] init];
-        customMenu.viewControllers = @[follow,unfollow,profile,post,grp,automaton,schedule,profileView];
-        
-        
-        
-        self.navController=[[UINavigationController alloc] initWithRootViewController:customMenu];
-        
-        
+        customMenu.viewControllers = @[follow,unfollow,profile,post,automaton,profileView,inviteFriend];
+              self.navController=[[UINavigationController alloc] initWithRootViewController:customMenu];
         
     }else{
         AccountViewController *accountView=[[AccountViewController alloc] init];
         self.navController=[[UINavigationController alloc] initWithRootViewController:accountView];
-        
-        
+       
     }
     self.navController.navigationBarHidden=YES;
     self.navController.delegate=self;
@@ -105,6 +116,31 @@
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 }
+
+-(void)checkNetWorkConnection{
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    [reachability startNotifier];
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    BOOL netWorkConnection;
+    if(status == NotReachable)
+    {
+        netWorkConnection=NO;
+    }
+    else if (status == ReachableViaWiFi){
+        netWorkConnection=YES;
+    }else if (status==ReachableViaWWAN){
+        netWorkConnection=YES;
+        
+    }else{
+        netWorkConnection=NO;
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setBool:netWorkConnection forKey:@"ConnectionAvilable"];
+    
+}
+
+
 
 -(void)saveinSqlite
 {
@@ -222,6 +258,27 @@
 {
     [self postSchedule:notification];
 }
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    return [FBAppCall handleOpenURL:url
+                  sourceApplication:sourceApplication
+                    fallbackHandler:^(FBAppCall *call) {
+                        if ([call.dialogData.method isEqualToString:@"appinvites"]) {
+                                // handle response
+                        }
+                    }];
+}
+
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self checkNetWorkConnection];
+
+    [FBAppCall handleDidBecomeActive];
+}
+
 
 
 -(void)postSchedule:(UILocalNotification *)notification{
@@ -353,12 +410,14 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    [self checkNetWorkConnection];
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
+//- (void)applicationDidBecomeActive:(UIApplication *)application {
+//    [self checkNetWorkConnection];
+//    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+//}
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

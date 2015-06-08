@@ -34,31 +34,30 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.scrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.scrollView.delegate=self;
+    self.scrollView.backgroundColor=[UIColor clearColor];
+    self.scrollView.contentSize=CGSizeMake(0,self.view.frame.size.height+200);
+//    self.scrollView.contentOffset=CGPointMake(0,self.view.frame.size.height+200);
+    [self.view addSubview:self.scrollView];
     
-
     self.photoIdArray = [[NSMutableArray alloc]init];
     self.pictureArray = [[NSMutableArray alloc]init];
     
     self.profileView = [[UIView alloc]init];
-    self.profileView.frame = CGRectMake(0, 0, self.view.frame.size.width, 200);
+    self.profileView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height/3-20);
     self.profileView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.profileView];
-    
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f];
-    [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
+    [self.scrollView addSubview:self.profileView];
     
     self.coverImageview=[[UIImageView alloc]init];
     self.coverImageview.userInteractionEnabled = YES;
-    
-    self.coverImageview.frame=CGRectMake(0, 0, self.view.frame.size.width, 250);
-//    self.coverImageview.layer.cornerRadius=20;
-//    self.coverImageview.layer.masksToBounds = YES;
+        self.coverImageview.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height/3-20);
     [self.profileView addSubview:self.coverImageview];
     
     self.profileImageView=[[FBSDKProfilePictureView alloc]init];
     self.profileImageView.userInteractionEnabled = YES;
     // self.profileImageView.image = [UIImage imageNamed:@"hel.jpeg"];
-    self.profileImageView.frame=CGRectMake(30, 110, 80, 80);
+    self.profileImageView.frame=CGRectMake(30, self.view.frame.size.height/8, 80, 80);
     
     [self.profileImageView.layer setBorderColor: [[UIColor blackColor] CGColor]];
     [self.profileImageView.layer setBorderWidth: 2.0];
@@ -70,18 +69,22 @@
 //    self.nameLabel.text = @"Vinayaka";
     self.nameLabel.numberOfLines = 1;
     self.nameLabel.font=[UIFont fontWithName:@"Helvetica-Bold" size:15];
-    self.nameLabel.frame = CGRectMake(120, 130, 200, 30);
+    self.nameLabel.frame = CGRectMake(120,self.view.frame.size.height/8, 200, 30);
     [self.profileView addSubview:self.nameLabel];
     
-  
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f];
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
-        
+    
+    self.view.backgroundColor=[UIColor colorWithRed:250.0f/255.0f green:250.0f/255.0f blue:250.f alpha:0.8f];
+    [self createFollowTable];
+    [self createCollectionView];
     
        // Do any additional setup after loading the view.
 }
 
 -(void)reloadDetails:(NSNotificationCenter *)defaultCenter{
+    
+    
     [self fetchMyDetails];
     
     [self fetchMyProfileDetails];
@@ -95,8 +98,7 @@
     NSString *str=[NSString stringWithFormat:@"/%@?fields=id,name,work,location,hometown,albums,birthday,cover",@"me"];
     if (token) {
         
-//        [FBSDKAccessToken setCurrentAccessToken:token];
-//        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me?fields=id,name,work,location,hometown,albums,birthday,cover" parameters:nil];
+
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:str parameters:nil];
         
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -110,7 +112,7 @@
             
 //            [self.profileImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/me/picture?type=small"]] placeholderImage:[UIImage imageNamed:@"hel.jpeg"]];
             
-            self.profileImageView.profileID=self.FBid;
+            self.profileImageView.profileID=[FBSDKAccessToken currentAccessToken].userID;
             
              for (NSDictionary *dic in [result objectForKey:@"work"] ) {
                   self.workString = [[dic objectForKey:@"employer"]objectForKey:@"name"];
@@ -124,40 +126,44 @@
             
             self.birthdayString = [result objectForKey:@"birthday"];
             
-           
+            [profileTableView reloadData];
         }];
         [self getUrlOfPhotos];
-        [self createFollowTable];
     }
 
-    
-    
-    
 }
 
 -(void)createCollectionView{
     
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setItemSize:CGSizeMake(100, 100)];
+    [flowLayout setItemSize:CGSizeMake(90, 100)];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
     CGSize s =[UIScreen mainScreen].bounds.size;
-    
+    if (!photoCollectionView) {
+
     if([UIScreen mainScreen].bounds.size.height>500)
     {
-        photoCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(0, 390, s.width, s.height-390) collectionViewLayout:flowLayout];
+        photoCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(10,profileTableView.frame.size.height+profileTableView.frame.origin.y-50, s.width-20,self.scrollView.contentSize.height-2*self.view.frame.size.height/3-50 ) collectionViewLayout:flowLayout];
     }
     else{
-        photoCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(0, 360, s.width, s.height-360) collectionViewLayout:flowLayout];
+        photoCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(10, profileTableView.frame.size.height+profileTableView.frame.origin.y-50, s.width-20,self.scrollView.contentSize.height-2*self.view.frame.size.height/3-50) collectionViewLayout:flowLayout];
     }
+        
+        if (IS_IPHONE_6P) {
+            photoCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(10,profileTableView.frame.size.height+profileTableView.frame.origin.y-50, s.width-20, self.scrollView.contentSize.height-2*self.view.frame.size.height/3+80) collectionViewLayout:flowLayout];
+
+        }
     
     [photoCollectionView setDataSource:self];
     [photoCollectionView setDelegate:self];
     [photoCollectionView registerClass:[ImageViewCustomCell class] forCellWithReuseIdentifier:@"cell"];
     //  [filtercollectioView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]]];
-    [photoCollectionView setBackgroundColor:[UIColor colorWithRed:9/255.0 green:30/255.0 blue:59/255.0 alpha:1]];
+    [photoCollectionView setBackgroundColor:[UIColor whiteColor]];
     [photoCollectionView setCollectionViewLayout:flowLayout];
-    [self.view addSubview:photoCollectionView];
-
+    [self.scrollView addSubview:photoCollectionView];
+    }else{
+        [photoCollectionView reloadData];
+    }
 }
 
 
@@ -177,23 +183,79 @@
     NSString *str = [self.pictureArray objectAtIndex:indexPath.row];
     cell.photoImgView.hidden=NO;
     [cell.photoImgView setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"hel.jpeg"]];
+    
+    cell.layer.cornerRadius=4.0;
+    cell.layer.borderWidth=0.5;
+    cell.layer.borderColor=[[UIColor blackColor] CGColor];
+    cell.textLabel.textColor=[UIColor blackColor];
+    
+    cell.layer.shadowColor = [UIColor blackColor].CGColor;
+    cell.layer.shadowOpacity = 0.4f;
+    cell.layer.shadowOffset = CGSizeMake(0.0f, 4.0f);
+    cell.layer.shadowRadius = 1.5f;
+    cell.layer.masksToBounds = NO;
+
           return cell;
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-
     NSLog(@"index path of row %ld",(long)indexPath.row);
+    if (!self.imageView) {
+         self.imageView=[[UIImageView alloc] initWithFrame:CGRectMake(40, 100, self.view.frame.size.width-80, self.view.frame.size.height-300)];
+        self.imageView.layer.borderColor=[[UIColor grayColor] CGColor];
+        self.imageView.layer.borderWidth=2.0;
+        self.imageView.layer.cornerRadius=2.0;
+        self.imageView.userInteractionEnabled=YES;
+       [self.view addSubview:self.imageView];
+        
+        self.cancelButton=[UIButton buttonWithType:UIButtonTypeCustom];
+        [self.cancelButton addTarget:self action:@selector(cancelButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        self.cancelButton.frame=CGRectMake(self.imageView.frame.size.width-30, 0, 30, 30);
+        [self.cancelButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
+        [self.imageView addSubview:self.cancelButton];
+    }else{
+        self.imageView.hidden=NO;
+    }
+   
+    [self.imageView setImageWithURL:[NSURL URLWithString:[self.pictureArray objectAtIndex:indexPath.row]] placeholderImage:[UIImage imageNamed:@""]];
+   
+//        [self.view bringSubviewToFront:self.imageView];
     
+}
+
+-(void)cancelButtonTap:(UIButton *)button{
+    self.imageView.hidden=YES;
+
 }
 
 -(void)createFollowTable
 {
-    profileTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 250, self.view.frame.size.width,150) style:UITableViewStylePlain];
-    profileTableView.dataSource=self;
-    profileTableView.delegate=self;
-    profileTableView.backgroundColor=[UIColor whiteColor];
-    [self.view addSubview:profileTableView];
+    
+    if (IS_IPHONE_6P) {
+        profileTableView=[[UITableView alloc]initWithFrame:CGRectMake(10,self.view.frame.size.height/3, self.view.frame.size.width-20,self.view.frame.size.height/3) style:UITableViewStylePlain];
+
+    }else if (IS_IPHONE_4_OR_LESS){
+      profileTableView=[[UITableView alloc]initWithFrame:CGRectMake(10,self.view.frame.size.height/3, self.view.frame.size.width-20,self.view.frame.size.height/3+80) style:UITableViewStylePlain];
+    
+    }
+    
+    else{
+    profileTableView=[[UITableView alloc]initWithFrame:CGRectMake(10,self.view.frame.size.height/3, self.view.frame.size.width-20,self.view.frame.size.height/3+50) style:UITableViewStylePlain];
+    }
+        profileTableView.dataSource=self;
+        profileTableView.delegate=self;
+       profileTableView.scrollEnabled=NO;
+        profileTableView.backgroundColor=[UIColor colorWithRed:225.0f/255.0f green:225.0f/255.0f blue:225.0f/255.0f alpha:0.1f];
+    
+//    profileTableView.layer.shadowColor = [UIColor blackColor].CGColor;
+//    profileTableView.layer.shadowOpacity = 0.6f;
+//    profileTableView.layer.shadowOffset = CGSizeMake(0.0f, 10.0f);
+//    profileTableView.layer.shadowRadius = 2.0f;
+//    profileTableView.layer.masksToBounds = NO;
+
+        [self.scrollView addSubview:profileTableView];
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -203,6 +265,16 @@
 
 
 -(void)fetchMyDetails{
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+    
+
+    self.pictureArray=[[NSMutableArray alloc]init];
     self.photoIdArray=[[NSMutableArray alloc] init];
     
     NSIndexPath *indexPath=[SingletonClass sharedState].selectedUserIndex;
@@ -217,20 +289,16 @@
 //            NSLog(@"result is %@",result);
             
             NSString *str1 = [result objectForKey:@"id"];
-
             
             for (NSDictionary *dic in [result objectForKey:@"data"] ) {
                 NSString *str1 = [dic objectForKey:@"id"];
                 
                 if (str1) {
                     [self.photoIdArray addObject:str1];
-                }else{
-                    [self.photoIdArray addObject:@"nil"];
                 }
 
             }
-//            NSLog(@"photo id array is %lu & array is ",(unsigned long)self.photoIdArray.count);
-//             NSLog(@"photo id array is %@ ",self.photoIdArray);
+
             [self getUrlOfPhotos];
         }];
    }
@@ -245,11 +313,11 @@
         
         [FBSDKAccessToken setCurrentAccessToken:token];
         
-              //  for (int i=0; i<self.photoIdArray.count; i++) {
+        for (int i=0; i<self.photoIdArray.count; i++) {
             
-        if (self.photoIdArray.count>1) {
+//        if (self.photoIdArray.count>1) {
           
-        NSString *str = [self.photoIdArray objectAtIndex:0];
+        NSString *str = [self.photoIdArray objectAtIndex:i];
         
         NSString *checkStr = [NSString stringWithFormat:@"%@/photos",str];
         
@@ -264,18 +332,16 @@
                 
                 if (str1) {
                     [self.pictureArray addObject:str1];
-                }else{
-                    [self.pictureArray addObject:@"nil"];
                 }
                 
             }
 //            NSLog(@"photo id array is %lu & array is ",(unsigned long)self.pictureArray.count);
 //            NSLog(@"photo id array is %@ ",self.pictureArray);
-            [self createCollectionView];
+            
+            [photoCollectionView reloadData];
+           
         }];
-       
-       // }
-       
+    
     }
     }
 
@@ -297,26 +363,45 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     cell.textLabel.font = [UIFont fontWithName:@"Menlo-BoldItalic" size:12];
-    if (indexPath.row ==0) {
+    if (indexPath.section ==0) {
         cell.textLabel.text = [NSString stringWithFormat:@"Works at %@",self.workString];
+        
         cell.imageView.image = [UIImage imageNamed:@"briefcase.png"];
     }
     
-    if (indexPath.row ==1) {
+    if (indexPath.section ==1) {
         cell.textLabel.text =  [NSString stringWithFormat:@"Lives at %@",self.locationString];
         cell.imageView.image = [UIImage imageNamed:@"place.png"];
    }
     
-    if (indexPath.row ==2) {
+    if (indexPath.section ==2) {
         cell.textLabel.text =   [NSString stringWithFormat:@"Hometown  %@",self.homeTownString];
         cell.imageView.image = [UIImage imageNamed:@"home.png"];
   }
     
-    if (indexPath.row ==3) {
+    if (indexPath.section ==3) {
         cell.textLabel.text = [NSString stringWithFormat:@"Birthday  %@",self.birthdayString];
-        cell.imageView.image = [UIImage imageNamed:@"briefcase.png"];
+        cell.imageView.image = [UIImage imageNamed:@"birthday.png"];
 
     }
+    
+    cell.backgroundColor=[UIColor whiteColor];
+    cell.textLabel.numberOfLines=0;
+    cell.textLabel.lineBreakMode=NSLineBreakByWordWrapping;
+    
+    [cell.textLabel sizeToFit];
+    cell.layer.cornerRadius=5.0;
+    cell.layer.borderWidth=0.5;
+    cell.layer.borderColor=[[UIColor brownColor] CGColor];
+    cell.textLabel.textColor=[UIColor blackColor];
+    
+//    cell.layer.shadowColor = [UIColor blackColor].CGColor;
+//    cell.layer.shadowOpacity = 0.8f;
+//    cell.layer.shadowOffset = CGSizeMake(0.0f, 10.0f);
+//    cell.layer.shadowRadius = 3.5f;
+//    cell.layer.masksToBounds = NO;
+
+    
     return cell;
     
 }
@@ -329,22 +414,32 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    
+    
 }
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
     
-    return 1;
+    return 4;
 }
 
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    return 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 35;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 5;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 5;
 }
 
 - (void)didReceiveMemoryWarning {

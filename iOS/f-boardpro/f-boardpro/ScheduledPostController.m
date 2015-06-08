@@ -118,11 +118,15 @@
 
 -(void)createFollowTable
 {
-    groupTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height-50) style:UITableViewStylePlain];
+    groupTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height) style:UITableViewStylePlain];
     groupTableView.dataSource=self;
     groupTableView.delegate=self;
     groupTableView.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:groupTableView];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBarHidden=NO;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -147,9 +151,7 @@
     cell.userNameDesc.text=[self.TextArray objectAtIndex:indexPath.row];
     CGSize maximumLabelSize = CGSizeMake(296, FLT_MAX);
     CGSize expectedLabelSize = [cell.userNameDesc.text sizeWithFont:[UIFont fontWithName:@"ariel" size:5] constrainedToSize:maximumLabelSize lineBreakMode: NSLineBreakByWordWrapping];
-    
-    
-        //adjust the label the the new height.
+           //adjust the label the the new height.
     CGRect newFrame = cell.userNameDesc.frame;
     newFrame.size.height = expectedLabelSize.height;
     newFrame.size.width = cell.userNameDesc.frame.size.width;
@@ -161,7 +163,6 @@
     UIImage *Postedimage = [UIImage imageWithData:[self.dataArray objectAtIndex:indexPath.row]];
     cell.userImage.image=Postedimage;
     cell.userImage.frame=CGRectMake(tableView.frame.size.width-60, 22, 50, 50);
-    
     
     return cell;
 }

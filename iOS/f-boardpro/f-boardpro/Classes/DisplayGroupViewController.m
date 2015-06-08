@@ -93,6 +93,17 @@
     [self.view addSubview:groupFeedsView];
 }
 -(void)fetchFeeds{
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
+    }
+    
+
+    
     NSString *str1 =self.idStr;
 
     NSIndexPath *indexPath=[SingletonClass sharedState].selectedUserIndex;

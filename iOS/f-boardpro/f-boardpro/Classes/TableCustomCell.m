@@ -45,10 +45,10 @@
             
             
             self.likeCountLabel = [[UILabel alloc]init];
-            self.likeCountLabel.text=@"Like count=10";
+//            self.likeCountLabel.text=@"Like count=10";
             self.likeCountLabel.font=[UIFont fontWithName:@"HelveticaNeue" size:10];
             self.likeCountLabel.frame=CGRectMake(20, 230, 100, 50);
-            // [self.contentView addSubview:self.likeCountLabel];
+             [self.contentView addSubview:self.likeCountLabel];
             
             self.commentCountLabel = [[UILabel alloc]init];
             self.commentCountLabel.text=@"comment count=10";
@@ -126,6 +126,7 @@
             self.timeLabel=[[UILabel alloc]init];
 //            self.timeLabel.text=@"12:12:12:12 UTC";
             self.timeLabel.numberOfLines = 0;
+            [self.timeLabel setTextColor:[UIColor grayColor]];
             self.timeLabel.font=[UIFont fontWithName:@"HelveticaNeue" size:12];
             self.timeLabel.frame=CGRectMake(67, 21, 160, 40);
             [self.contentView addSubview:self.timeLabel];
@@ -164,7 +165,7 @@
             
             self.fromLabel=[[UILabel alloc]init];
             self.fromLabel.numberOfLines = 0;
-            self.fromLabel.frame=CGRectMake(50, 0, 300, 40);
+            self.fromLabel.frame=CGRectMake(50, 0, 200, 40);
                 //            self.fromLabel.textColor = [UIColor blueColor];
             self.fromLabel.font=[UIFont fontWithName:@"Baskerville-Bold" size:20];
             [self.contentView addSubview:self.fromLabel];
@@ -174,7 +175,7 @@
             self.userNameDesc.text=@"My feeds";
             self.userNameDesc.numberOfLines = 0;
             self.userNameDesc.font=[UIFont fontWithName:@"AvenirNextCondensed-Medium" size:18];
-            self.userNameDesc.frame=CGRectMake(160, 30, 220, 200);
+            self.userNameDesc.frame=CGRectMake(160, 30, self.frame.size.width-170, 200);
             [self.contentView addSubview:self.userNameDesc];
             
             

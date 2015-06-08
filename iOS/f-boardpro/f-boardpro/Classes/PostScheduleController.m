@@ -12,6 +12,7 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import <sqlite3.h>
 #import "SUCache.h"
+#import "ScheduledPostController.h"
 #import "SingletonClass.h"
 
 @interface PostScheduleController ()
@@ -22,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+     self.view.backgroundColor = [UIColor colorWithRed:250.0f/255.0f green:250.0f/255.0f blue:250.0f/255.0f alpha:.6f];
     self.scrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     self.scrollView.backgroundColor=[UIColor clearColor];
     self.scrollView.delegate=self;
@@ -30,13 +31,30 @@
     [self.view addSubview:self.scrollView];
     
     
-    self.selectedImageView=[[UIImageView alloc] initWithFrame:CGRectMake(10,160, self.view.frame.size.width-20, 300)];
-    self.selectedImageView.hidden=YES;
-    self.selectedImageView.backgroundColor=[UIColor clearColor];
+    self.selectedImageView=[[UIImageView alloc] initWithFrame:CGRectMake(150,30, 130, 110)];
+    self.selectedImageView.hidden=NO;
+    self.selectedImageView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"upload_image.png"]];
+       self.selectedImageView.userInteractionEnabled=YES;
+    
+       self.selectedImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.selectedImageView.layer.shadowOpacity = 0.6f;
+    self.selectedImageView.layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
+    self.selectedImageView.layer.shadowRadius = 10.0f;
+    self.selectedImageView.layer.masksToBounds = NO;
     [self.scrollView addSubview:self.selectedImageView];
-    
-    
-    self.profileImageView=[[FBSDKProfilePictureView alloc] initWithFrame:CGRectMake(0, 10, 80, 80)];
+    UIGestureRecognizer *gesture=[[UIGestureRecognizer alloc] initWithTarget:self action:@selector(pickFromLibrary:)];
+    [self.selectedImageView addGestureRecognizer:gesture];
+    [self.scrollView bringSubviewToFront:self.selectedImageView];
+
+    self.profileImageView=[[FBSDKProfilePictureView alloc] initWithFrame:CGRectMake(20, 30, 110, 110)];
+    self.profileImageView.layer.borderColor=[[UIColor blackColor] CGColor];
+    self.profileImageView.layer.borderWidth=.5f;
+    self.profileImageView.backgroundColor = [UIColor whiteColor];
+    self.profileImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.profileImageView.layer.shadowOpacity = 0.6f;
+    self.profileImageView.layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
+    self.profileImageView.layer.shadowRadius = 10.0f;
+    self.profileImageView.layer.masksToBounds = NO;
     [self.scrollView addSubview:self.profileImageView];
     
      self.pageTextField = [[UITextView alloc] init];
@@ -45,15 +63,15 @@
      self.pageTextField.autocorrectionType = UITextAutocorrectionTypeNo;
      self.pageTextField.keyboardType = UIKeyboardTypeDefault;
      self.pageTextField.returnKeyType = UIReturnKeyDefault;
-
      self.pageTextField.delegate = self;
     self.pageTextField.backgroundColor=[UIColor whiteColor];
-    
-     self.pageTextField.frame = CGRectMake(80,10, self.view.frame.size.width, 80);
+    self.pageTextField.frame = CGRectMake(10,155, self.view.frame.size.width-20, 130);
+    self.pageTextField.layer.borderColor=[[UIColor blackColor] CGColor];
+    self.pageTextField.layer.borderWidth=.5f;
     self.pageTextField.backgroundColor = [UIColor whiteColor];
     self.pageTextField.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.pageTextField.layer.shadowOpacity = 0.4f;
-    self.pageTextField.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.pageTextField.layer.shadowOpacity = 0.6f;
+    self.pageTextField.layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
     self.pageTextField.layer.shadowRadius = 10.0f;
     self.pageTextField.layer.masksToBounds = NO;
      [self.scrollView addSubview:self.pageTextField];
@@ -61,7 +79,7 @@
     self.view.backgroundColor=[UIColor whiteColor];
     
     
-    UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithTitle:@"Post" style:UIBarButtonItemStylePlain target:self action:@selector(postContent)];
+    UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithTitle:@"Schedule" style:UIBarButtonItemStylePlain target:self action:@selector(postContent)];
     [item1 setTintColor:[UIColor blueColor]];
    self.navigationItem.rightBarButtonItem=item1;
     self.navigationController.navigationItem.rightBarButtonItem=item1;
@@ -76,10 +94,7 @@
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 56)];
     [toolBar setBarStyle:UIBarStyleDefault];
     
-  
-    
     NSMutableArray *barItems = [[NSMutableArray alloc] init];
-    
     
     UIBarButtonItem *Photo = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"camera.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addPhotos)];
     
@@ -140,6 +155,9 @@
 -(BOOL)pickFromLibrary:(id)sender{
     [self.pageTextField resignFirstResponder];
     self.selectedImageView.hidden=NO;
+    self.selectedImageView.layer.borderColor=[[UIColor blackColor] CGColor];
+    self.selectedImageView.layer.borderWidth=.5f;
+
     if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary] == NO
          && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)) {
         return NO;
@@ -166,6 +184,10 @@
     cameraUI.delegate = self;
     
     [self presentViewController:cameraUI animated:YES completion:nil];
+
+//    ScheduledPostController *schedule=[[ScheduledPostController alloc] init];
+//    schedule.title=@"Scheduled";
+//    [self.navigationController pushViewController:schedule animated:YES];
     return YES;
     
 }
@@ -272,7 +294,7 @@
 
     self.profileImageView.profileID=[FBSDKAccessToken currentAccessToken].userID;
     if ([self.type isEqualToString:@"Text"]) {
-        [self.pageTextField becomeFirstResponder];
+//        [self.pageTextField becomeFirstResponder];
         
     }else{
 //        self.pageTextField.placeholder=@"Write Something...";
@@ -314,7 +336,7 @@
         //    FBSDKAccessToken *token = [SUCache itemForSlot:path.section+path.row].token;
         //    [FBSDKAccessToken setCurrentAccessToken:token];
         //    NSLog(@"FBID %@",[FBSDKAccessToken currentAccessToken].userID);
-    
+      [self getTimeDifferenceToFire];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post scheduled successfully"
                                                     message:@""
                                                    delegate:self
@@ -322,7 +344,7 @@
                                           otherButtonTitles:nil];
     [alert show];
     
-    [self getTimeDifferenceToFire];
+  
     
 }
 
@@ -368,8 +390,13 @@
     NSMutableDictionary * dictMessage=[[NSMutableDictionary alloc]init];
     [dictMessage setObject:self.localNotification.alertBody forKey:@"Text"];
     
-    
-    time_t unixTime = (time_t) [[NSDate date] timeIntervalSince1970];
+    NSDate *now = [NSDate date];
+    dateToFire = [now dateByAddingTimeInterval:seconds];
+    NSLog(@"fire time: %@", dateToFire);
+    self.localNotification.fireDate = dateToFire;
+    self.localNotification.soundName = UILocalNotificationDefaultSoundName;
+
+    time_t unixTime = (time_t) [dateToFire timeIntervalSince1970];
     self.timeStamp = [NSString stringWithFormat:@"%ld",unixTime];
     
     [dictMessage setObject:self.timeStamp forKey:@"TimeStamp"];
@@ -382,18 +409,10 @@
     
     
     NSLog(@"notification body %@ and time stamp %@ and userId %@",self.localNotification.alertBody,_timeStamp,userId);
-    
-    
     [self.localNotification setUserInfo:dictMessage];
-    NSDate *now = [NSDate date];
-//    seconds = 10;//comment this later
-    NSDate *dateToFire = [now dateByAddingTimeInterval:seconds];
-    NSLog(@"fire time: %@", dateToFire);
-    self.localNotification.fireDate = dateToFire;
-    self.localNotification.soundName = UILocalNotificationDefaultSoundName;
-//    
+    
   [[UIApplication sharedApplication] scheduleLocalNotification: self.localNotification];
-//    
+    
    [self convertImageToData:self.selectedImageView.image];
     
 }
@@ -420,7 +439,7 @@
     NSData *imgData= UIImageJPEGRepresentation(saveImage,0.0);
     
         //send date data
-    time_t unixTime = (time_t) [[NSDate date] timeIntervalSince1970];
+    time_t unixTime = (time_t) [dateToFire timeIntervalSince1970];
     self.timeStamp = [NSString stringWithFormat:@"%ld",unixTime];
     
         //    NSNumber * numbToStore=[NSNumber numberWithLong:unixTime];
@@ -459,6 +478,9 @@
             
             if ( sqlite3_step(statement)==SQLITE_DONE) {
                 NSLog(@"successfully saved data to database");
+                
+                UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"Post successfuly scheduled" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
             }
             
         }
@@ -479,18 +501,19 @@
 
 -(void)postContent{
 
-    if (self.selectedImageView.image&&self.pageTextField.text) {
-         [self alertPosted:self.selectedImageView.image withMessage:self.pageTextField.text];
-    }
-      else  if (self.selectedImage&&self.pageTextField.text) {
-         [self alertPosted:self.selectedImage withMessage:self.pageTextField.text];
-    }else if  (self.selectedImage) {
-        [self alertPosted:self.selectedImage withMessage:nil];
-
-    }else if (self.pageTextField.text){
-        [self alertPosted:nil withMessage:self.pageTextField.text];
-
-    }
+//    if (self.selectedImageView.image&&self.pageTextField.text) {
+//         [self alertPosted:self.selectedImageView.image withMessage:self.pageTextField.text];
+//    }
+//      else  if (self.selectedImage&&self.pageTextField.text) {
+//         [self alertPosted:self.selectedImage withMessage:self.pageTextField.text];
+//    }else if  (self.selectedImage) {
+//        [self alertPosted:self.selectedImage withMessage:nil];
+//
+//    }else if (self.pageTextField.text){
+//        [self alertPosted:nil withMessage:self.pageTextField.text];
+//
+//    }
+    [self getTimeDifferenceToFire];
    
 }
 

@@ -35,15 +35,15 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.refreshControl addTarget:self action:@selector(refershControlAction) forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
     
-    NSArray *itemArray=[NSArray arrayWithObjects:@"Friends List",@"Unfriend friends", nil];
-    self.segmentControl = [[UISegmentedControl alloc] initWithItems:itemArray];
-    self.segmentControl.frame =CGRectMake(-4,5,self.view.frame.size.width,30);
-    [self.segmentControl addTarget:self action:@selector(mySegmentControlAction:) forControlEvents: UIControlEventValueChanged];
-    [self.segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
-    [self.segmentControl setBackgroundColor:[UIColor whiteColor]];
-    [self.segmentControl setTintColor:[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f]];
-    self.segmentControl.selectedSegmentIndex=0;
-    [self.view addSubview:self.segmentControl];
+//    NSArray *itemArray=[NSArray arrayWithObjects:@"Friends List",@"Unfriend friends", nil];
+//    self.segmentControl = [[UISegmentedControl alloc] initWithItems:itemArray];
+//    self.segmentControl.frame =CGRectMake(-4,5,self.view.frame.size.width,30);
+//    [self.segmentControl addTarget:self action:@selector(mySegmentControlAction:) forControlEvents: UIControlEventValueChanged];
+//    [self.segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+//    [self.segmentControl setBackgroundColor:[UIColor whiteColor]];
+//    [self.segmentControl setTintColor:[UIColor colorWithRed:80.0f/255.0f green:105.0f/255.0f blue:183.0f/255.0f alpha:1.0f]];
+//    self.segmentControl.selectedSegmentIndex=0;
+//    [self.view addSubview:self.segmentControl];
 
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -53,7 +53,7 @@ static NSString * const reuseIdentifier = @"Cell";
 //    
 //    [self.collectionView setCollectionViewLayout:layout];
     // Register cell classes
-    self.collectionView.frame= CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height-50);
+    self.collectionView.frame= CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height-50);
     self.view.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     self.collectionView.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     [self.collectionView registerClass:[ImageViewCustomCell class] forCellWithReuseIdentifier:reuseIdentifier];
@@ -67,12 +67,12 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    self.mutOldArray=[[NSMutableArray alloc] init];
-    self.mutNowArray=[[NSMutableArray alloc] init];
-    [self FetchFreinds];
+//    self.mutOldArray=[[NSMutableArray alloc] init];
+//    self.mutNowArray=[[NSMutableArray alloc] init];
+    
     self.navigationController.navigationBarHidden=YES;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(FetchFreinds) name:@"CurrentUserChangedNotification" object:nil];
-
+             [self FetchFreinds];
 }
 
 -(void)mySegmentControlAction:(UISegmentedControl *)seg{
@@ -81,8 +81,7 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 -(void)unfriendYou{
-    self.unfriendArray=[[NSMutableArray alloc] init];
-    self.newfriendArray=[[NSMutableArray alloc] init];
+    
     for (NSDictionary *dic1 in self.mutOldArray) {
         int i=0;
          BOOL isItemFound=0;
@@ -125,27 +124,37 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 -(void)FetchFreinds{
-    if (self.mutOldArray&&self.mutNowArray) {
-        self.mutOldArray=[[NSMutableArray alloc] init];
-        self.mutNowArray=[[NSMutableArray alloc] init];
+    
+    BOOL connection= [[NSUserDefaults standardUserDefaults] boolForKey:@"ConnectionAvilable"];
+    
+    if (!connection) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"No internet Connection" message:@"check your internet" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return ;
     }
+    
+//    if (self.mutOldArray&&self.mutNowArray) {
+    self.mutOldArray=[[NSMutableArray alloc] init];
+   self.mutNowArray=[[NSMutableArray alloc] init];
+    self.unfriendArray=[[NSMutableArray alloc] init];
+    self.newfriendArray=[[NSMutableArray alloc] init];
+    
+//    }
     NSIndexPath *index=[SingletonClass sharedState].selectedUserIndex;
         //    NSLog(@"index path %d",index.section+index.row);
     FBSDKAccessToken *token = [SUCache itemForSlot:index.section+index.row].token;
     if (token) {
         
-    
     [FBSDKAccessToken setCurrentAccessToken:token];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/friends" parameters:nil];
-    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/taggable_friends" parameters:nil];
+//     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/invitable_friends?fields=name,picture,id" parameters:nil];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id response, NSError *error) {
     NSArray *arr=[response objectForKey:@"data"];
        NSArray *friendList= [[NSUserDefaults standardUserDefaults]objectForKey:[FBSDKAccessToken currentAccessToken].userID] ;
-        
-        [self.mutNowArray addObjectsFromArray:arr];
+    [self.mutNowArray addObjectsFromArray:arr];
         if (friendList) {
              [self.mutOldArray addObjectsFromArray:friendList];
-            [self unfriendYou];
+//            [self unfriendYou];
 
         }else{
             [self.mutOldArray addObjectsFromArray:arr];
@@ -153,11 +162,11 @@ static NSString * const reuseIdentifier = @"Cell";
         
         }
        
-               [self.collectionView reloadData];
+       [self.collectionView reloadData];
         
     }];
     
-    }
+  }
     
 }
 
@@ -194,42 +203,42 @@ static NSString * const reuseIdentifier = @"Cell";
 //    NSLog(@"self  %lu",(unsigned long)self.mutNowArray.count);
     
   
-    if (self.segmentControl.selectedSegmentIndex==0) {
+//    if (self.segmentControl.selectedSegmentIndex==0) {
           return self.mutNowArray.count;
-    }else{
-        return self.unfriendArray.count;
-    }
+//    }else{
+//        return self.unfriendArray.count;
+//    }
     
     
 }
 
 
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSDictionary *   dic;
-    if (self.segmentControl.selectedSegmentIndex==0) {
-       dic=[self.mutNowArray objectAtIndex:indexPath.row];
-        
-    }
-    
-    ProfileViewController *profile=[[ProfileViewController alloc] init];
-    profile.FBid=[dic objectForKey:@"id"];
-    
-    [self.navigationController pushViewController:profile animated:YES];
-}
+//-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+//    NSDictionary *   dic;
+//    if (self.segmentControl.selectedSegmentIndex==0) {
+//       dic=[self.mutNowArray objectAtIndex:indexPath.row];
+//        
+//    }
+//    
+//    ProfileViewController *profile=[[ProfileViewController alloc] init];
+//    profile.FBid=[dic objectForKey:@"id"];
+//    
+//    [self.navigationController pushViewController:profile animated:YES];
+//}
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ImageViewCustomCell *cell = (ImageViewCustomCell *)[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
      cell.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"name.png"]];
     NSDictionary *dic;
-    if (self.segmentControl.selectedSegmentIndex==0) {
+//    if (self.segmentControl.selectedSegmentIndex==0) {
         dic=[self.mutNowArray objectAtIndex:indexPath.row];
 
-    }else{
-        dic=[self.unfriendArray objectAtIndex:indexPath.row];
-
-    }
+//    }else{
+//        dic=[self.unfriendArray objectAtIndex:indexPath.row];
+//
+//    }
 //     NSDictionary *dic=[self.mutNowArray objectAtIndex:indexPath.row];
-    NSString *str=[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=small",[dic objectForKey:@"id"]];
+    NSString *str=[NSString stringWithFormat:@"%@",[[[dic objectForKey:@"picture"] objectForKey:@"data"]objectForKey:@"url"]];
     NSURL *url=[NSURL URLWithString:str];
    
     [cell.imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@""]];
