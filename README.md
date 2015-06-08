@@ -50,12 +50,12 @@ Guide to create app in FaceBook developer console:
 ==================================================
 1. Go to https://developers.facebook.com/
 2. Click on My Apps then Add a New App  ![](http://i.imgur.com/5k0kxXl.png)
-3. Click on "Android or Ios" ![]((http://i.imgur.com/RXQm4eF.png))
+3. Click on "Android or Ios" ![](http://i.imgur.com/RXQm4eF.png)
 4. Write app name and click on Create New Facebook AppId ![](http://i.imgur.com/zmQboXB.png)
-5. Select "No" for Is this a test version of another app.? And Choose "CATEGORY" for app. ![](http://i.imgur.com/yJ7m6ql.png)
+5. Select "No" for Is this a test version of another app.? And Choose "Category" for app. ![](http://i.imgur.com/yJ7m6ql.png)
 6. Click "My Apps"  and Select "See All Apps"
 7. Select Created App ![](http://i.imgur.com/CrAjc3w.png)
-8. Select platforms "Android or iOS" and fill the details ![](http://i.imgur.com/ZruuKTm.png)
+8. Click on "Settings",  select the platforms "Android or iOS" and fill required details ![](http://i.imgur.com/ZruuKTm.png)
 9. Copy the "App Id" and "App Secret" and paste it inside the string.xml in android application
    ![](http://i.imgur.com/YFhwJeu.png)
    
