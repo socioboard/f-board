@@ -85,19 +85,19 @@ public class Utilsss {
 	    String localDateString = null;
 
 	    long when = 0;
-	    try 
+	    try  
 	    {
 	        when = dateFormat.parse(utcLongDateTime).getTime();
-	    } catch (ParseException e) {
+	    } 
+	    catch (ParseException e) 
+	    {
 	        e.printStackTrace();
 	    }
 	    localDateString = dateFormat.format(new Date(when + TimeZone.getDefault().getRawOffset() + (TimeZone.getDefault().inDaylightTime(new Date()) ? TimeZone.getDefault().getDSTSavings() : 0)));
-	    System.out.println("TIME     : "+localDateString);
 	   
-	    System.out.println("In MILLIES     : "+when);
 	    ///
 	    Calendar date=Calendar.getInstance();
-        Date d=date.getTime();
+        Date d       =date.getTime();
    
         long different = d.getTime() - when;
    
@@ -118,36 +118,55 @@ public class Utilsss {
          long elapsedHours = different / hoursInMilli;
          long elapsedMinute = different / minutesInMilli;
          String timeago;
+         
+         
          if(elapsedYears>0)
          {
-        	 timeago=""+elapsedYears+" Years Ago";
+        	  if(elapsedYears==1)
+        		  timeago=""+elapsedYears+" Year Ago";
+        	  else
+        		  timeago=""+elapsedYears+" Years Ago";
          }
          else
         if(elapsedMonths>0)
          {
-        	timeago=""+elapsedMonths+" months Ago";
+        	 if(elapsedMonths==1)
+        		 timeago=""+elapsedMonths+" Month Ago";
+        	 else
+        		 timeago=""+elapsedMonths+" Months Ago";
          }
          else
          if(elspsedWeeks>0)
          {
-         	 timeago=""+elspsedWeeks+" weeks Ago";
+        	 if(elspsedWeeks==1)
+        		 timeago=""+elspsedWeeks+" Week Ago";
+        	 else
+        		 timeago=""+elspsedWeeks+" Weeks Ago";
           }
           else
          if(elapsedDays>0)
          {
-          timeago=""+elapsedDays+" Days Ago";
+        	 if(elapsedDays==1)
+        		 timeago=""+elapsedDays+" Day Ago";
+        	 else
+        		 timeago=""+elapsedDays+" Days Ago";
          }
          else
          if(elapsedHours>0)
          { 
-          timeago=""+elapsedHours+" Hour Ago";
+        	 if(elapsedHours==1)
+        		 timeago=""+elapsedHours+" Hour Ago";
+        	 else
+        		 timeago=""+elapsedHours+" Hours Ago";
           
          }else
          {
-          timeago=""+elapsedMinute+" Minues Ago";
+        	 if(elapsedMinute==1)
+        		 timeago=""+elapsedMinute+" Minute Ago";
+        	 else
+        		 timeago=""+elapsedMinute+" Minutes Ago";
          }
 	    
-         System.out.println("created     : "+timeago);
 	    return timeago;
 	}
 }

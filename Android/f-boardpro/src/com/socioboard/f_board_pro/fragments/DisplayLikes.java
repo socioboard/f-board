@@ -34,20 +34,21 @@ public class DisplayLikes extends ListFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
 	{
-		rootView = inflater.inflate(R.layout.display_likes_fragment, container,false);
-		likeList=new ArrayList<LikeModel>();
-		progressbar=(ProgressBar) rootView.findViewById(R.id.progressBar1);
+		rootView    = inflater.inflate(R.layout.display_likes_fragment, container,false);
+		likeList    = new ArrayList<LikeModel>();
+		progressbar = (ProgressBar) rootView.findViewById(R.id.progressBar1);
 		
 		progressbar.setVisibility(View.VISIBLE);
 		
-		nolikes=(TextView) rootView.findViewById(R.id.no_likes);
+		nolikes    = (TextView) rootView.findViewById(R.id.no_likes);
 		nolikes.setText("Be the first to like this");
 		nolikes.setVisibility(View.INVISIBLE);
 		
 		like=(ImageView) rootView.findViewById(R.id.like);
 		
 		new GetLikeDetails().execute();
-		return rootView;
+		
+		return rootView; 
 	}
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)

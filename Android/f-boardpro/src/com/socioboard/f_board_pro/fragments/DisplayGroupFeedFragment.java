@@ -20,28 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -115,7 +93,7 @@ public class DisplayGroupFeedFragment extends ListFragment
 					
 					@Override
 					public void run() {
-						
+						MainActivity.fragmentManager =getFragmentManager();
 						MainActivity.swipeFragment(new DisplayLikes());		
 					}
 				});
@@ -182,6 +160,7 @@ public class DisplayGroupFeedFragment extends ListFragment
 				{
 					MainSingleTon.selectedGroupFeed.setLikes(MainSingleTon.selectedGroupFeed.getLikes()-1);
 					MainSingleTon.userLikedFeedList.get(i).setLike(false);
+					likestatus=false;
 				}
 			}
 		}		
@@ -195,6 +174,7 @@ public class DisplayGroupFeedFragment extends ListFragment
 				{
 					MainSingleTon.selectedGroupFeed.setLikes(MainSingleTon.selectedGroupFeed.getLikes()+1);
 					MainSingleTon.userLikedFeedList.get(i).setLike(true);
+					likestatus=true;
 				}
 			}
 	}
@@ -380,22 +360,25 @@ public class DisplayGroupFeedFragment extends ListFragment
 		  protected String doInBackground(String... params)
 			  {
 	
-			   System.out.println("fb like background ");
-			   System.out.println("accesstoken " + MainSingleTon.accesstoken); // "CAAEejcrRLlUBAOFu9g0DkKw3uGZAG3W8ZADqBS3EJDXEeh8tBFaeMkX8x1m7Jmqjt0vNOmcLXT14pAa8ooIQEh6bOhNXU0pDm6gsxFDdGB2e8GeomfTPx4P7L179M7kCYBPZBIfjXpWk9tYncTRlqR9ZCAgNcZB2rzMnDAtIFn4OtYsysSRAY");
-			   System.out.println("message id " + MainSingleTon.selectedGroupFeed.getFeedID()); // "100006025154392_184232125120958");
+			  HttpClient httpclient = new DefaultHttpClient();
+				
+			   String URL = "https://graph.facebook.com/"+ MainSingleTon.selectedGroupFeed.getFeedID()+ "/likes";
 	
-			   HttpClient httpclient = new DefaultHttpClient();
-	
-			   String URL = "https://graph.facebook.com/"+ MainSingleTon.selectedGroupFeed.getFeedID() + "/likes&access_token="+MainSingleTon.accesstoken;
-	
-			   HttpGet dislikePost = new HttpGet(URL+"&method=DELETE");
+			   HttpPost httppost = new HttpPost(URL);
 	
 			   try 
 			   {
-				    // Execute HTTP Post Request
-				    response = httpclient.execute(dislikePost);
+				    // Add your data
+				    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				    nameValuePairs.add(new BasicNameValuePair("access_token",MainSingleTon.accesstoken));
+				    nameValuePairs.add(new BasicNameValuePair("method","DELETE"));
+				    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		
-				    System.out.println("response on back  "+ response.getStatusLine().toString());
+				   
+				    // Execute HTTP Post Request
+				    response = httpclient.execute(httppost);
+				    
+				    System.out.println("response unlke......"+response.getStatusLine());
 	
 			   } 
 			   catch (ClientProtocolException e)

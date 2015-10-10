@@ -1,4 +1,4 @@
-package com.socioboard.f_board_pro.adapter;
+/*package com.socioboard.f_board_pro.adapter;
 
 import java.util.ArrayList;
 
@@ -93,3 +93,4 @@ public class UserPhotoAdapter extends BaseAdapter
     }
 
 }
+*/

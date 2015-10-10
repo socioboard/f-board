@@ -15,7 +15,43 @@ public class HomeFeedModel
 	String description=null;
 	int likes=0;
 	int comments=0;
+    int shares=0;
+    String sharelink;
+    String likescount=null;
+    public String getLikescount() {
+		return likescount;
+	}
+
+	public void setLikescount(String likescount) {
+		this.likescount = likescount;
+	}
+
+	public String getCommentscount() {
+		return commentscount;
+	}
+
+	public void setCommentscount(String commentscount) {
+		this.commentscount = commentscount;
+	}
+	String commentscount=null;
 	
+	public String getSharelink() {
+		return sharelink;
+	}
+
+	public void setSharelink(String sharelink) {
+		this.sharelink = sharelink;
+	}
+
+	public int getShares()
+	{
+		return shares;
+	}
+
+	public void setShares(int shares)
+	{
+		this.shares = shares;
+	}
 	
 	
 	

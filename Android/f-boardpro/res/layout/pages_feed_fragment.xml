@@ -11,12 +11,15 @@
 
     <ProgressBar
         android:id="@+id/addedyouprogressBar1"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/addedyouasfavgridView"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="30dp"
-        android:visibility="invisible" />
-
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+<TextView
+    android:id="@+id/nopages"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="No pages"
+    android:layout_centerInParent="true"/>
 </RelativeLayout>

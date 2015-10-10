@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header_rlt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/color_light_blue_500" >
+
+        <TextView
+            android:id="@+id/people_liked_you"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:text="Write your comment here"
+            android:textColor="@color/White"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_rlt"
+        android:background="@color/White"
+        android:visibility="visible" >
+
+        <EditText
+            android:id="@+id/writemycommnet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:hint="Enter your Text"
+            android:padding="25dp"
+            android:textAlignment="center"
+            android:textColor="@color/text"
+            android:textSize="16sp" >
+        </EditText>
+        <!-- <requestFocus /> -->
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/post"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlt1"
+        android:padding="15dp"
+        android:background="@color/color_light_blue_500"
+       >
+
+        <TextView
+            android:id="@+id/enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:text="Post"
+            android:textSize="15sp"
+            android:textColor="@color/White"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>

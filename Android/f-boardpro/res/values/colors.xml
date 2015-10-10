@@ -12,8 +12,8 @@
     <color name="color_orange_A400">#ff9100</color>
 
     <color name="primary_color">@color/color_light_blue_500</color>
-    <color name="primary_color_light">@color/color_light_blue_100</color>
-    <color name="primary_color_dark">@color/color_light_blue_700</color>
+    <color name="primary_color_light">@color/color_light_blue_500</color>
+    <color name="primary_color_dark">@color/color_light_blue_500</color>
 
     <color name="accent_color">@color/color_orange_A200</color>
     <color name="accent_color_light">@color/color_orange_A100</color>

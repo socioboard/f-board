@@ -28,6 +28,8 @@ public class JSONParseraa {
 	
 	public JSONObject getJSONFromUrl(String url) {
 		
+		System.out.println("inside jsonparser###########");
+		
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
@@ -50,7 +52,7 @@ public class JSONParseraa {
 				{
 					builder.append(line);
 					
-					System.out.println("New :"+builder.append(line));// here m displaying the value
+				 
 					}
 				} 
 			else 
@@ -70,7 +72,7 @@ public class JSONParseraa {
 		// Parse String to JSON object 
 		try { 
 				jsonObject = new JSONObject( builder.toString());
-				System.out.println("Suresh :"+jsonObject);
+				 
 			} 
 		catch (JSONException e) {
 			Log.e("JSON Parser", "Error parsing data " + e.toString());

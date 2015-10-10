@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/entirView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/White"
     android:padding="10dp" >
 
     <com.socioboard.f_board_pro.viewlibary.AccountImageView
-            app:maskDrawable="@drawable/circle_mask"
         android:id="@+id/profilepic"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:src="@drawable/profile"
-        />
+        app:maskDrawable="@drawable/circle_mask" />
 
     <TextView
         android:id="@+id/from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/profilepic"
+        android:text="xxxxxxxxxx"
+        android:textStyle="bold" />
+      <ImageView
+        android:id="@+id/droptoshare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="12dp"
+        android:src="@drawable/auto_share_icon"
         android:text="xxxxxxxxxx"
         android:textStyle="bold" />
 
@@ -53,8 +62,9 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/image"
+            android:layout_below="@+id/image"
             android:paddingLeft="5dp"
+            android:autoLink="all"
             android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             android:textSize="12sp" />
 
@@ -63,6 +73,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/profile_pic_white_border" />
+
+        <TextView
+            android:id="@+id/likescounttxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="3 likes" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -138,7 +155,7 @@
         android:layout_height="1dp"
         android:layout_below="@+id/rlt2"
         android:background="@color/divider"
-        android:visibility="invisible" />
+        android:visibility="invisible" />
     -->
 
 </RelativeLayout>

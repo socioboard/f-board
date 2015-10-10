@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <com.socioboard.f_board_pro.database.util.LoadMoreListView
         android:id="@+id/android:list"
@@ -82,13 +82,13 @@
 
         <ImageButton
             android:id="@+id/enter"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@color/White"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:src="@drawable/enter1" />
+            android:src="@drawable/send_icon" />
     </RelativeLayout>
 
 </RelativeLayout>

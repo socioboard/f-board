@@ -41,7 +41,8 @@ public class ImageLoader {
 
 	final int stub_id = R.drawable.ic_launcher;
 
-	public void DisplayImage(String url, ImageView imageView) {
+	public void DisplayImage(String url, ImageView imageView) 
+	{
 		imageViews.put(imageView, url);
 		Bitmap bitmap = memoryCache.get(url);
 		if (bitmap != null){
@@ -61,7 +62,8 @@ public class ImageLoader {
 		executorService.submit(new PhotosLoader(p));
 	}
 
-	private Bitmap getBitmap(String url) {
+	private Bitmap getBitmap(String url)
+	{
 		File f = fileCache.getFile(url);
 
 		Bitmap b = decodeFile(f);
@@ -72,8 +74,7 @@ public class ImageLoader {
 		try {
 			Bitmap bitmap = null;
 			URL imageUrl = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) imageUrl
-					.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
 			conn.setConnectTimeout(30000);
 			conn.setReadTimeout(30000);
 			conn.setInstanceFollowRedirects(true);
@@ -84,7 +85,8 @@ public class ImageLoader {
 			conn.disconnect();
 			bitmap = decodeFile(f);
 			return bitmap;
-		} catch (Throwable ex) {
+		} catch (Throwable ex) 
+		{
 			ex.printStackTrace();
 			if (ex instanceof OutOfMemoryError)
 				memoryCache.clear();
@@ -93,7 +95,7 @@ public class ImageLoader {
 	}
 
 	// Decodes image and scales it to reduce memory consumption
-	private Bitmap decodeFile(File f) {
+	public Bitmap decodeFile(File f) {
 		try {
 			// Decode image size
 			BitmapFactory.Options o = new BitmapFactory.Options();
@@ -103,7 +105,7 @@ public class ImageLoader {
 			stream1.close();
 
 			// Find the correct scale value. It should be the power of 2.
-			final int REQUIRED_SIZE = 70;
+			final int REQUIRED_SIZE =256;
 			int width_tmp = o.outWidth, height_tmp = o.outHeight;
 			int scale = 1;
 			while (true) {
@@ -208,5 +210,18 @@ public class ImageLoader {
 		memoryCache.clear();
 		fileCache.clear();
 	}
-
+	public static Bitmap getBitmapFromURL(String src) {
+		try {
+			URL url = new URL(src);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(input);
+			return myBitmap;
+		} catch (IOException e) {
+			// Log exception
+			return null;
+		}
+	}
 }

@@ -1,20 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.1" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.socioboard.f_board_pro" >
+    package="com.socioboard.f_board_pro"
+    android:versionCode="21"
+    android:versionName="2.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="24" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.socioboard.f_board_pror.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.socioboard.f_board_pro.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -23,26 +38,107 @@
         <activity
             android:name="com.socioboard.f_board_pro.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" >
+              android:theme="@style/AppTheme"
+            android:label="@string/app_name"
+            android:screenOrientation="sensorPortrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.socioboard.f_board_pro.MainActivity" />
+            </intent-filter>
         </activity>
+        
         <activity
             android:name="com.socioboard.f_board_pro.SplashActivity"
-            android:label="@string/title_activity_splash" >
+            android:label="@string/title_activity_splash"
+            android:screenOrientation="sensorPortrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.socioboard.f_board_pro.WelcomeActivity"
-            android:label="@string/title_activity_welcome" >
+            android:label="@string/title_activity_welcome"
+            android:screenOrientation="sensorPortrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs "com.example.myapp://" -->
+                <data android:scheme="com.socioboard.f_board_pro.WelcomeActivity" />
+            </intent-filter>
         </activity>
+        
         <activity
             android:name="com.facebook.FacebookActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name="com.socioboard.f_board_pro.Blankscheduleactivity" />
-        <receiver android:name="com.socioboard.f_board_pro.SchedulerCustomReceiver" />
+        
+        <activity
+            android:name="com.socioboard.f_board_pro.Blankscheduleactivity"
+            android:screenOrientation="sensorPortrait" />  
+        <activity
+            android:name="com.socioboard.f_board_pro.DetailsAboutPendingLinks"
+            android:screenOrientation="sensorPortrait" />
+
+        <receiver
+            android:name="com.socioboard.f_board_pro.SchedullerReceiver"
+            android:screenOrientation="sensorPortrait" />
+        
+         <receiver
+            android:name="com.socioboard.f_board_pro.SharlinksBroadcastReceiver"
+            android:screenOrientation="sensorPortrait" />
+         
+         <receiver
+            android:name="com.socioboard.f_board_pro.service_classes.PageShareagonBroadcastReceiver"
+            android:screenOrientation="sensorPortrait" />
+
+        <activity
+            android:name="com.socioboard.f_board_pro.SchedulleComposeActivity"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name="com.socioboard.f_board_pro.ShowAlbum"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name="com.socioboard.f_board_pro.AllInOneSearchFeeds"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+        
+         <activity
+            android:name="com.socioboard.f_board_pro.DetailsAboutPendingPageShareagon"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name="com.socioboard.f_board_pro.ShowPostDetails"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name="com.socioboard.f_board_pro.ShowPostLikes"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+            <activity
+            android:name="com.socioboard.f_board_pro.UserGuide"
+            android:largeHeap="true"
+            android:screenOrientation="sensorPortrait" />
+
+        <service android:name="com.socioboard.f_board_pro.LikeSchedulerReciever" />
+         <service android:name="com.socioboard.f_board_pro.ShareLinkServiceClass" />
+           <service android:name="com.socioboard.f_board_pro.service_classes.ShareagonpageServiceClass" />
+
+        <receiver
+            android:name="com.appnext.appnextsdk.ReferralReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

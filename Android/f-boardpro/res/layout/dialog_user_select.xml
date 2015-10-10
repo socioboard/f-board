@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_frame_normal"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="?attr/colorPrimary"
+            android:gravity="center"
+            android:text="Cancel"
+            android:textColor="@color/White" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorPrimary"
+            android:gravity="center"
+            android:text="@string/done"
+            android:textColor="@color/White" />
+    </LinearLayout>
+
+  <RelativeLayout
+    android:id="@+id/relout23"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/relativeLayout1"
+    android:layout_alignRight="@+id/relativeLayout1"
+    android:layout_below="@+id/footer"
+    android:layout_margin="10dp"
+    android:background="@drawable/ab_share_pack_holo_light" >
+
+    <ListView
+        android:id="@+id/listView1select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" >
+    </ListView>
+
+</RelativeLayout> 
+
+</RelativeLayout>

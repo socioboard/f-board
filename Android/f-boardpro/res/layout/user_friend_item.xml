@@ -7,27 +7,36 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        
-        android:background="@color/White">
+        android:background="@drawable/editbox_dropdown_background" >
 
         <ImageView
             android:id="@+id/fpic"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/profile"
-            android:layout_margin="5dp"
-            
-             />
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="5dp"
+            android:src="@drawable/profile" />
 
         <TextView
             android:id="@+id/fname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/fpic"
-            android:text="Raghav Ragz" 
-            android:textSize="12sp"
-           android:layout_marginTop="5dp"
-           />
+            android:padding="5dp"
+            android:text="Raghav Ragz"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:button="@drawable/invite_customdrawablecheckbox"
+            android:visibility="invisible"
+            android:padding="5dp" />
     </RelativeLayout>
 
 </RelativeLayout>

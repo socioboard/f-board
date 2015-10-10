@@ -5,7 +5,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    app:popupTheme="@style/Theme.AppCompat.Light">
+    android:background="@color/primary_color"
+    app:popupTheme="@style/AppTheme">
     
     </android.support.v7.widget.Toolbar>

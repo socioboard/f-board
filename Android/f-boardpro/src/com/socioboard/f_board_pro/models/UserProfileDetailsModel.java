@@ -12,6 +12,7 @@ public class UserProfileDetailsModel
 	String UserWork=null;
 	String UserGender=null;
 	
+	
 	public String getUserGender() 
 	{
 		return UserGender;

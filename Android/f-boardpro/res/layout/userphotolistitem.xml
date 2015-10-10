@@ -2,12 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/White" >
+    android:background="#009688" >
     
     <ImageView 
         android:layout_height="100dp"
         android:layout_width="100dp"
-        android:layout_centerInParent="true"
-        android:id="@+id/userphoto_imageview"/>
+        android:layout_alignParentTop="true"
+        android:id="@+id/userphoto_imageview"
+        android:src="@drawable/profile"
+        android:background="@drawable/card"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_toRightOf="@+id/userphoto_imageview"
+        android:text="profile name"
+        android:textColor="@color/White"
+        android:textSize="15sp" />
 
 </RelativeLayout>

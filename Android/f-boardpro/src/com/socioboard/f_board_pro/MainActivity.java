@@ -3,10 +3,13 @@ package com.socioboard.f_board_pro;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,6 +19,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,12 +27,13 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,9 +46,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
+import bolts.AppLinks;
 
+import com.appnext.appnextsdk.AppnextTrack;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -51,22 +59,31 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.applinks.AppLinkData;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 import com.socioboard.f_board_pro.adapter.AccountAdapter;
 import com.socioboard.f_board_pro.adapter.DrawerAdapter;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
+import com.socioboard.f_board_pro.database.util.JSONParseraa;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.database.util.Utilsss;
-import com.socioboard.f_board_pro.fragments.DisplayUserFriendsFragment;
-import com.socioboard.f_board_pro.fragments.Display_User_Details;
-import com.socioboard.f_board_pro.fragments.GetGroups_Fragment;
-import com.socioboard.f_board_pro.fragments.GetHomeFeedFragment;
-import com.socioboard.f_board_pro.fragments.GetUserFeeds;
+import com.socioboard.f_board_pro.fragments.AutoLiker;
+import com.socioboard.f_board_pro.fragments.ShareagonLinks;
+import com.socioboard.f_board_pro.fragments.FriendsFragment;
+import com.socioboard.f_board_pro.fragments.Groups_Fragment;
+import com.socioboard.f_board_pro.fragments.HomeFeed_Fragment;
+import com.socioboard.f_board_pro.fragments.MyFeeds_Fragment;
 import com.socioboard.f_board_pro.fragments.Pages_Fragment;
-import com.socioboard.f_board_pro.fragments.Scheduler_Fragment;
+import com.socioboard.f_board_pro.fragments.ProfileFragment;
+import com.socioboard.f_board_pro.fragments.SchedulerFragment;
+import com.socioboard.f_board_pro.fragments.SearchFragment;
+import com.socioboard.f_board_pro.fragments.ShareagonPage;
+import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.viewlibary.Items;
 import com.socioboard.f_board_pro.viewlibary.MultiSwipeRefreshLayout;
 
@@ -87,10 +104,12 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 	private ListView mDrawerList_Left,mDrawerList_Right;
 
 	private ActionBarDrawerToggle mDrawerToggle;
-	public static  FragmentManager fragmentManager;//
+	public static FragmentManager fragmentManager;//
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+	public static  Context  context; 
 
+	boolean doubleBackToExitPressedOnce; private int progress = 10;
 
 	// SwipeRefreshLayout allows the user to swipe the screen down to trigger a manual refresh
 	private MultiSwipeRefreshLayout mSwipeRefreshLayout;
@@ -104,10 +123,6 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 	ProfileTracker profileTracker;
 	Profile fBprofile;
 
-	public static PendingIntent pendingIntent;
-	public static AlarmManager alarmManager;
-
-
 	ImageView pCoverPic;
 	TextView userName;
 	TextView userEmailId ;
@@ -115,23 +130,78 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		FacebookSdk.sdkInitialize(getApplicationContext());
-
 		super.onCreate(savedInstanceState);
 
+		FacebookSdk.sdkInitialize(MainActivity.this);
+
+		AppnextTrack.track(this);
+
+		//+++++++++++++++++++++++
+
+		context = getApplicationContext();
+
+		Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(MainActivity.this, getIntent());
+
+		if (targetUrl != null) {
+
+			Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
+
+		} else {
+
+
+			AppLinkData.fetchDeferredAppLinkData(
+					MainActivity.this, 
+					new AppLinkData.CompletionHandler() {
+						@Override
+						public void onDeferredAppLinkDataFetched(AppLinkData appLinkData) {
+							//process applink data
+						}
+					});
+		}
+
+
+		FlurryAgent.setLogEnabled(false);
+
+		FlurryAgent.init(MainActivity.this, "XXXXXXXXXXXXXXXXXXXX");
+
 		setContentView(R.layout.activity_main);
+
+		callbackManager = CallbackManager.Factory.create();
+
 		handler = new Handler();
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) setSupportActionBar(toolbar);
-		
 
-		fragmentManager = getSupportFragmentManager();
 		mDrawerTitles = getResources().getStringArray(R.array.drawer_titles);
-		mDrawerIcons = getResources().obtainTypedArray(R.array.drawer_icons);
+		mDrawerIcons  = getResources().obtainTypedArray(R.array.drawer_icons);
 
 		drawerItems = new ArrayList<Items>();
+
+		profileTracker = new ProfileTracker()
+		{
+			@Override
+			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+
+				if(profileTracker.isTracking())
+				{
+
+					/*fBprofile = currentProfile;
+					LoginManager.getInstance().logInWithPublishPermissions(MainActivity.this, Arrays.asList("publish_actions","manage_pages"));
+					new GetExtendedAccessToken().execute();*/
+
+				}
+				else
+				{
+
+				}
+
+			}
+		};
+		//++++++++++++++++++++++++++++++++++++++++++++
+
+	
+		//++++++++++++++++++++++++++++++++++++++++++++
 
 		mDrawerList_Left = (ListView) findViewById(R.id.left_drawer);
 
@@ -145,10 +215,8 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 		accountList = new ArrayList<ModelUserDatas>();
 		mTitle = mDrawerTitle = getTitle();
 
-
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerToggle = new ActionBarDrawerToggle(
-				this,                  /** host Activity */
+		mDrawerToggle = new ActionBarDrawerToggle(this,                  /** host Activity */
 				mDrawerLayout,         /** DrawerLayout object */
 				toolbar,                 /** nav drawer icon to replace 'Up' caret */
 				R.string.drawer_open,  /** "open drawer" description */
@@ -161,8 +229,6 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 				super.onDrawerClosed(view);
 				getSupportActionBar().setTitle(mTitle);
 				mMenu.findItem(R.id.action_settings).setVisible(true);
-
-
 			}
 
 			/** Called when a drawer has settled in a completely open state. */
@@ -170,7 +236,6 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			{
 				super.onDrawerOpened(drawerView);
 				getSupportActionBar().setTitle(mDrawerTitle);
-
 
 			}
 		};
@@ -197,12 +262,11 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			@Override
 			public void onClick(View v)
 			{
-
+				MainSingleTon.showMyToast(MainActivity.this,"Available in future version!");	
 
 			}
 		});
-		
-		
+
 		//Setting onclick listener 
 		user.setOnClickListener(new OnClickListener()
 		{
@@ -210,15 +274,14 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			@Override
 			public void onClick(View v)
 			{
-				swipeFragment(new Display_User_Details(MainSingleTon.userid));
+				fragmentManager =getSupportFragmentManager();
+				swipeFragment(new ProfileFragment(MainSingleTon.userid));
 				setTitle(MainSingleTon.username);
 				mDrawerLayout.closeDrawer(mDrawerList_Right);
 
 			}
 		});
-		
-		
-		
+
 		//Setting onclick listener 
 		feedbackRlt.setOnClickListener(new OnClickListener()
 		{
@@ -226,8 +289,8 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			@Override
 			public void onClick(View v) 
 			{
-
-				
+				Intent intent = new Intent(getApplicationContext(), UserGuide.class);
+				startActivity(intent);
 			}
 		});
 
@@ -239,14 +302,26 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			public void onClick(View v)
 			{
 
-				addNewAccount();
+				if(profileTracker.isTracking())
+				{
+					profileTracker.stopTracking();
+					LoginManager.getInstance().logOut();
+					System.out.println("IS tracking true");
+					addNewAccount();
+
+				}else
+				{
+					System.out.println("faslse");
+					addNewAccount();
+				}
+
 			}
 		});
 
-		mDrawerList_Left.addFooterView(footer, null, true); // true = clickable
+		mDrawerList_Left.addFooterView(footer, null, false); // true = clickable
 
-		mDrawerList_Right.addHeaderView(headerRight, null, true); // true = clickable
-		mDrawerList_Right.addFooterView(footerRight, null, true); // true = clickable
+		mDrawerList_Right.addHeaderView(headerRight, null, false); // true = clickable
+		mDrawerList_Right.addFooterView(footerRight, null, false); // true = clickable
 
 		//Set width of drawer
 		DrawerLayout.LayoutParams lp = (DrawerLayout.LayoutParams) mDrawerList_Left.getLayoutParams();
@@ -259,14 +334,12 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 		lpR.width = calculateDrawerWidth();
 		mDrawerList_Right.setLayoutParams(lpR);
 
-
 		// Set the adapter for the list view
 		mDrawerList_Left.setAdapter(new DrawerAdapter(getApplicationContext(), drawerItems));
 		// Set the list's click listener
 		mDrawerList_Left.setOnItemClickListener(new LeftDrawerItemClickListener());
 
 		accountList.clear();
-
 
 		System.out.println("ACCCCCCCCCCCCCCOUNTLIST ="+accountList.size());
 
@@ -292,51 +365,54 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 
 		mDrawerList_Right.setOnItemClickListener(new RightDrawerItemClickListener());
 
-
 		setUser(MainSingleTon.username, MainSingleTon.userimage, MainSingleTon.userEmail);
 
-		Display_User_Details fragment = new Display_User_Details(MainSingleTon.userid);
+		ProfileFragment fragment = new ProfileFragment(MainSingleTon.userid);
 
-		fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commitAllowingStateLoss();
+		fragmentManager =getSupportFragmentManager();
 
-		/**alarm manager to receive the pending intent**/
-		
-		alarmManager    = (AlarmManager) getSystemService(ALARM_SERVICE);
-		
-		Intent myIntent = new Intent(MainActivity.this,	SchedulerCustomReceiver.class);
-		pendingIntent   = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-
-		NotificationManager mNotificationManager = (NotificationManager) this.getApplicationContext().getSystemService(
-						Context.NOTIFICATION_SERVICE);
-		mNotificationManager.cancelAll();
-		alarmManager.cancel(pendingIntent);
-
+		swipeFragment(fragment);
 	}
 
 	protected void addNewAccount()
 	{ 
 
-		
-		
-		
 		MainSingleTon.isfrom_schedulefrag=false;
-		
+
 		callbackManager = CallbackManager.Factory.create();
 
+		Uri targetUrl =
+				AppLinks.getTargetUrlFromInboundIntent(MainActivity.this, getIntent());
+		if (targetUrl != null) {
+			Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
+		} else {
+			AppLinkData.fetchDeferredAppLinkData(
+					getBaseContext(), 
+					new AppLinkData.CompletionHandler() {
+						@Override
+						public void onDeferredAppLinkDataFetched(AppLinkData appLinkData) {
+							//process applink data
+
+							System.out.println("NOT ABLE TO FETCH THE P");
+						}
+					});
+		}
+
+		LoginManager.getInstance().setLoginBehavior(LoginBehavior.SUPPRESS_SSO);
+
 		LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos",
-																				"public_profile", "user_posts", 
-																				"user_likes","read_stream",
-																				"user_friends",
-																				"user_hometown","user_work_history",
-																				"user_location",
-																				"user_birthday","user_about_me"
-																				));
+				"public_profile", "user_posts", 
+				"user_likes",
+				"user_friends",
+				"user_hometown","user_work_history",
+				"user_location",
+				"user_birthday","user_about_me","user_groups","read_stream"
+				));
 		//LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos","public_profile"));	
 		//
-		
+
 		LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>()
-		{
+				{
 
 			@Override
 			public void onSuccess(LoginResult loginResult)
@@ -344,14 +420,14 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 
 				Profile.fetchProfileForCurrentAccessToken();
 				myAccessToken = loginResult.getAccessToken();
-				
-				
-				
+
 			}
 
 			@Override
-			public void onError(FacebookException error) {
-				AccessToken.setCurrentAccessToken(null);				
+			public void onError(FacebookException error)
+			{
+				AccessToken.setCurrentAccessToken(null);
+
 			}
 
 			@Override
@@ -359,8 +435,9 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			{
 				AccessToken.setCurrentAccessToken(null);
 
+
 			}
-		});
+				});
 
 		profileTracker = new ProfileTracker()
 		{
@@ -368,24 +445,23 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
 
 				if(profileTracker.isTracking())
-
 				{
 
 					fBprofile = currentProfile;
-					LoginManager.getInstance().logInWithPublishPermissions(MainActivity.this, Arrays.asList("publish_actions"));
+					LoginManager.getInstance().logInWithPublishPermissions(MainActivity.this, Arrays.asList("publish_actions","manage_pages"));
+					
+					new GetExtendedAccessToken().execute();
+					
 					
 
-					new GetExtendedAccessToken().execute();
-
-				}else
+				}
+				else
 				{
 
 				}
 
 			}
 		};
-		
-	
 
 	}
 
@@ -456,7 +532,6 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 				{
 				}
 
-
 				System.out.println("--------------------MainSingleTon.useridlist.size()="+MainSingleTon.useridlist.size());
 
 				accountList.clear();
@@ -477,12 +552,13 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 				AccountAdapter accountAdapter = new AccountAdapter(MainActivity.this, accountList);
 
 				mDrawerList_Right.setAdapter(accountAdapter);
-				
+
 				LoginManager.getInstance().logOut();
 			}else 
 			{
 				Toast.makeText(getApplicationContext(), "Users Account already exist!!", Toast.LENGTH_SHORT).show();
-				
+
+
 				LoginManager.getInstance().logOut();
 			}
 		}
@@ -491,6 +567,7 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 
 	public void setUser(final String namefinal,  final String pPic, final String email)
 	{ 
+		/*ImageLoader imageLoader=new ImageLoader(this);*/
 
 		new Thread(new Runnable() {
 
@@ -511,26 +588,34 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 
 			}
 		}).start();
+		/*imageLoader.DisplayImage(pPic, profilePic);*/
 		profilePic.setOnClickListener(new OnClickListener() 
 		{
-			
+
 			@Override
 			public void onClick(View v) 
 			{
-			MainActivity.swipeFragment(new Display_User_Details(MainSingleTon.userid));
-			mDrawerLayout.closeDrawer(mDrawerList_Right);
-			setTitle(MainSingleTon.username);
-				
+				fragmentManager =getSupportFragmentManager();
+				MainActivity.swipeFragment(new ProfileFragment(MainSingleTon.userid));
+				mDrawerLayout.closeDrawer(mDrawerList_Right);
+				setTitle(MainSingleTon.username);
+
 			}
 		});
-		pCoverPic.setImageResource(R.drawable.header_image);
+		//		pCoverPic.setImageResource(R.drawable.header_image);
+
+		/*imageLoader.DisplayImage("https://graph.facebook.com/" + MainSingleTon.userid+ "?fields=cover&access_token=" +  MainSingleTon.accesstoken, pCoverPic);*/
+
+		new GetUserCover().execute();
+
 		pCoverPic.setOnClickListener(new OnClickListener() 
 		{
-			
+
 			@Override
 			public void onClick(View v) 
 			{
-				MainActivity.swipeFragment(new Display_User_Details(MainSingleTon.userid));
+				fragmentManager =getSupportFragmentManager();
+				MainActivity.swipeFragment(new ProfileFragment(MainSingleTon.userid));
 				mDrawerLayout.closeDrawer(mDrawerList_Right);
 				setTitle(MainSingleTon.username);
 			}
@@ -538,12 +623,12 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 		userName.setText(namefinal);
 		userName.setOnClickListener(new OnClickListener() 
 		{
-			
+
 			@Override
 			public void onClick(View v) 
 			{
-			
-				MainActivity.swipeFragment(new Display_User_Details(MainSingleTon.userid));
+
+				MainActivity.swipeFragment(new ProfileFragment(MainSingleTon.userid));
 				mDrawerLayout.closeDrawer(mDrawerList_Right);
 				setTitle(MainSingleTon.username);
 			}
@@ -551,18 +636,20 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 		userEmailId.setText(email);
 		userEmailId.setOnClickListener(new OnClickListener() 
 		{
-			
+
 			@Override
 			public void onClick(View v) 
 			{
-				MainActivity.swipeFragment(new Display_User_Details(MainSingleTon.userid));
+				fragmentManager =getSupportFragmentManager();
+				MainActivity.swipeFragment(new ProfileFragment(MainSingleTon.userid));
 				mDrawerLayout.closeDrawer(mDrawerList_Right);
 				setTitle(MainSingleTon.username);
-				
+
 			}
 		});
 		System.out.println("email "+email);
 	}
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState)
 	{
@@ -580,18 +667,49 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 	}
 
 	@Override
-	public void onBackPressed() {
-		 
-		
-		if (fragmentManager.getBackStackEntryCount() > 1) 
+	public void onBackPressed()	
+	{					
+
+		if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT))
 		{
-			fragmentManager.popBackStack();
-		}else
-		{
-			super.onBackPressed();
+			mDrawerLayout.closeDrawer(Gravity.RIGHT);
 		}
+		else
+			if (mDrawerLayout.isDrawerOpen(Gravity.LEFT))
+			{
+				mDrawerLayout.closeDrawer(Gravity.LEFT);
+			}
+			else 
+			{
+				if (fragmentManager.getBackStackEntryCount() < 1) 
+				{
+					if (doubleBackToExitPressedOnce) 
+					{
+						super.onBackPressed();
+
+						return;
+					}
+					this.doubleBackToExitPressedOnce = true;
+
+					Toast.makeText(this, "Please click BACK again to exit",Toast.LENGTH_SHORT).show();
+
+					new Handler().postDelayed(new Runnable() 
+					{
+
+						@Override
+						public void run() 
+						{
+							doubleBackToExitPressedOnce = false;
+						}
+					}, 2000);
+				}
+				else 
+				{
+					fragmentManager.popBackStack();
+				}
+			}
+
 	}
-	
 
 	/**
 	 * Swaps fragments in the main content view
@@ -599,39 +717,62 @@ public class MainActivity extends ActionBarActivity implements MultiSwipeRefresh
 	private void selectItem(int position)
 	{
 		Fragment fragment = null;
-System.out.println("selected position "+position);
+
+		System.out.println("selected position "+position);
+
 		switch (position)
 		{
-			case 0:
-				fragment = new Display_User_Details(MainSingleTon.userid);
-				break;
-			case 1:
-				fragment = new GetHomeFeedFragment();
-				break;
-				
-			case 2:
-				fragment = new GetUserFeeds();
-				break;
-	
-			case 3:
-				fragment = new DisplayUserFriendsFragment();
-				break;
-				
-			case 4:
-				fragment = new Pages_Fragment();
-				break;
-				
-			case 5:
-				fragment = new Scheduler_Fragment();
-				break;
+		case 0:
+			fragment = new ProfileFragment(MainSingleTon.userid);
+			break;
+		case 1:
+			fragment = new HomeFeed_Fragment();
+			break;
+
+		case 2:
+			fragment = new MyFeeds_Fragment();
+			break;
+
+		case 3:
+			fragment = new FriendsFragment();
+			break;
+
+		case 4:
+			fragment = new Groups_Fragment();
+			break;
+
+		case 5:
+			fragment = new Pages_Fragment();
+			break;
+
+		case 6:
+			fragment = new SearchFragment();
+			break;
+
+		case 7:
+			fragment = new AutoLiker();
+			break;
+
+		case 8:
+			fragment = new SchedulerFragment();
+			break;
+		case 9:
+			fragment = new ShareagonLinks();
+			break;
+
+		case 10:
+			fragment = new ShareagonPage();
+			break;
 
 		}
 
 		if (fragment != null)
 		{
-			// Insert the fragment by replacing any existing fragment
+			/*// Insert the fragment by replacing any existing fragment
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.main_content, fragment).addToBackStack(null).commit();
+			fragmentManager.beginTransaction().replace(R.id.main_content, fragment).addToBackStack(null).commit();*/
+			fragmentManager =getSupportFragmentManager();
+			swipeFragment(fragment);
 
 		}
 
@@ -641,7 +782,7 @@ System.out.println("selected position "+position);
 			mDrawerList_Left.setItemChecked(position, true);
 
 			setTitle(mDrawerTitles[position]);
-//			updateView(position, position, true,mDrawerList_Left);
+			//			updateView(position, position, true,mDrawerList_Left);
 
 			mDrawerLayout.closeDrawer(mDrawerList_Left);
 		}
@@ -651,7 +792,7 @@ System.out.println("selected position "+position);
 			if (position != 0)
 			{
 				setTitle(mDrawerTitles[position - 1]);
-//				updateView(position, position, true,mDrawerList_Right);
+				//				updateView(position, position, true,mDrawerList_Right);
 			}
 			mDrawerLayout.closeDrawer(mDrawerList_Right);
 		}
@@ -668,7 +809,6 @@ System.out.println("selected position "+position);
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		System.out.println("onCreateOptionsMenu");
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 
@@ -679,12 +819,11 @@ System.out.println("selected position "+position);
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
-		mMenu=menu;
-		System.out.println("onPrepareOptionsMenu");
-		// If the nav drawer is open, hide action items related to the content view
+		mMenu = menu;
+		/*// If the nav drawer is open, hide action items related to the content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList_Left);
 
-		boolean drawerOpenR = mDrawerLayout.isDrawerOpen(mDrawerList_Right);
+		boolean drawerOpenR = mDrawerLayout.isDrawerOpen(mDrawerList_Right);*/
 
 
 		if (mDrawerLayout.isDrawerOpen(mDrawerList_Right))
@@ -694,9 +833,9 @@ System.out.println("selected position "+position);
 		} 
 		else
 		{
-			mMenu.findItem(R.id.action_settings).setVisible(false);
-			mDrawerLayout.openDrawer(mDrawerList_Right);
 
+			mDrawerLayout.openDrawer(mDrawerList_Right);
+			mMenu.findItem(R.id.action_settings).setVisible(false);
 
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -790,31 +929,7 @@ System.out.println("selected position "+position);
 		return false;
 	}
 
-	private void trySetupSwipeRefresh()
-	{
-		mSwipeRefreshLayout = (MultiSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-		if (mSwipeRefreshLayout != null)
-		{
-			mSwipeRefreshLayout.setColorSchemeResources(
-					R.color.refresh_progress_1,
-					R.color.refresh_progress_2,
-					R.color.refresh_progress_3);
-			mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() 
-			{
-				@Override
-				public void onRefresh()
-				{
-					Toast.makeText(getApplication(),"Refresh!", Toast.LENGTH_LONG);
-				}
-			});
 
-			if (mSwipeRefreshLayout instanceof MultiSwipeRefreshLayout)
-			{
-				MultiSwipeRefreshLayout mswrl = (MultiSwipeRefreshLayout) mSwipeRefreshLayout;
-				mswrl.setCanChildScrollUpCallback(this);
-			}
-		}
-	}
 
 	private class LeftDrawerItemClickListener implements ListView.OnItemClickListener
 	{
@@ -843,42 +958,46 @@ System.out.println("selected position "+position);
 	private void selectItemRight(final int positionRightlist)
 	{
 
-		runOnUiThread(new Runnable() {
-
+		runOnUiThread(new Runnable() 
+		{
 			@Override
-			public void run() {
-
+			public void run() 
+			{
 				ModelUserDatas model       = MainSingleTon.userdetails.get(accountList.get(positionRightlist-1).getUserid());
 				MainSingleTon.userid       = model.getUserid();
 				MainSingleTon.username     = model.getUsername();
 				MainSingleTon.userimage    = model.getUserimage();
 				MainSingleTon.accesstoken  = model.getUserAcessToken();
 				MainSingleTon.userEmail   = model.getUserEmail();
-
 				MainSingleTon.feedArrayList.clear();
-				MainSingleTon.pagesArrayList.clear();
+
 				MainSingleTon.isPAgesLoaded =false;
 
 				setUser(MainSingleTon.username, MainSingleTon.userimage, MainSingleTon.userEmail);
 
 			}
 		});
-		swipeFragment(new Display_User_Details(MainSingleTon.userid));
+		fragmentManager =getSupportFragmentManager();
+		swipeFragment(new ProfileFragment(MainSingleTon.userid));
 		setTitle(MainSingleTon.username);
+		mDrawerLayout.closeDrawer(mDrawerList_Right);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
+		Bundle bundle = data.getExtras();
+
+		System.out.println("BUNDLDLDLDLLDLD = "+bundle);
 		if (!MainSingleTon.isfrom_schedulefrag)
 		{
+			System.out.println("FALSE");
 			callbackManager.onActivityResult(requestCode, resultCode, data);
 		}
-		
+
 	}
 
-	
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	public void circleIn(View view) 
 	{
@@ -928,7 +1047,81 @@ System.out.println("selected position "+position);
 	}
 	public static void swipeFragment(Fragment fragment)
 	{ 
-		fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commitAllowingStateLoss();
+
+		fragmentManager.beginTransaction().replace(R.id.main_content, fragment).commit();
+	}
+	/* class to GetUserDetails a post */
+	public class GetUserCover extends AsyncTask<String, Void, String> 
+	{
+		String userFBaccesToken = null;
+		String coverUrl1=null;
+
+		@Override
+		protected String doInBackground(String... params) 
+		{
+			userFBaccesToken = MainSingleTon.accesstoken;
+
+			String coverUrl = "https://graph.facebook.com/" + MainSingleTon.userid+ "?fields=cover&access_token=" + userFBaccesToken;
+			System.out.println("inside set user  coverUrl"+coverUrl);
+			JSONParseraa jsonParser = new JSONParseraa();
+
+			JSONObject jsonCover = jsonParser.getJSONFromUrl(coverUrl);
+			try
+			{
+				if (jsonCover!=null) {
+					if (jsonCover.has("cover"))
+					{
+						System.out.println("inside set use try "+ jsonCover.getString("cover"));
+						JSONObject jsonObject2 = jsonCover.getJSONObject("cover");
+						if (jsonObject2.has("source"))
+						{
+							System.out.println(" inside set use source  "+ jsonObject2.getString("source"));
+							coverUrl1=jsonObject2.getString("source");
+						}
+
+					}
+				}
+
+
+			}
+			catch (JSONException e) 
+			{
+				e.printStackTrace();
+				System.out.println("error " + e);
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(String result) 
+		{
+			super.onPostExecute(result);
+
+			if (coverUrl1 != null)
+			{
+				ImageLoader imageLoader=new ImageLoader(MainActivity.this);
+				imageLoader.DisplayImage(coverUrl1, pCoverPic);			
+			}
+			else 
+			{
+				pCoverPic.setImageResource(R.drawable.header_image);
+			}
+
+		}
+
 	}
 
+	public static void makeToast(String toast_msg)
+	{
+		Toast.makeText(context, toast_msg, Toast.LENGTH_SHORT).show();
+	}
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FlurryAgent.onStartSession(getApplicationContext(), "XXXXXXXXXXXXXXXXXXXXX");
+	}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 }

@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/datetime"
         android:layout_toRightOf="@+id/profilepic"
-        android:text="raghav Ragz"
+        android:text="XXXXXXXXXXXXX"
+        android:textColor="@color/black"
         android:layout_marginTop="5dp"
         android:textStyle="bold" />
 
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/from"
         android:layout_toRightOf="@+id/profilepic"
+        android:textColor="@color/black"
         android:text="asdaafsddgfg gfgfgh hghgjhkhg"
         android:textSize="10sp" />
 

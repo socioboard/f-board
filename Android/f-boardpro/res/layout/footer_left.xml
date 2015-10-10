@@ -1,13 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="match_parent" >
 
     <RelativeLayout
         android:id="@+id/content"
-        android:layout_marginTop="180dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" >
+        android:layout_marginTop="50dp" >
 
         <View
             android:id="@+id/view1"
@@ -26,8 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="52dp"
-            android:text="Made in ♥ with socioboard"
+            android:layout_marginTop="30dp"
+            android:text="Made with ♥ by socioboard"
             android:textSize="10dp"
             android:textStyle="bold" />
 
@@ -38,8 +37,16 @@
             android:layout_below="@+id/view1"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
-            android:layout_marginTop="40dp"
             android:src="@drawable/fbrandpro" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:text="v 1.8"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
 </RelativeLayout>

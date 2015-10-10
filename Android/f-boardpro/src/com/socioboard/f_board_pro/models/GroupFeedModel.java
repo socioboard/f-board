@@ -12,7 +12,18 @@ public class GroupFeedModel
 	String FeedId=null;
 	int likes=0;
 	int comments=0;
+	int shares=0;
 	
+	public int getShares()
+	{
+		return shares;
+	}
+
+	public void setShares(int shares)
+	{
+		this.shares = shares;
+	}
+
 	public String getFromID()
 	{
 		return fromID;

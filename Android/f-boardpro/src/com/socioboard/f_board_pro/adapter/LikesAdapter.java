@@ -2,20 +2,22 @@ package com.socioboard.f_board_pro.adapter;
 //adapter for setting like list
 import java.util.ArrayList;
 
-import com.socioboard.f_board_pro.R;
-import com.socioboard.f_board_pro.database.util.MainSingleTon;
-import com.socioboard.f_board_pro.models.HomeFeedModel;
-import com.socioboard.f_board_pro.models.LikeModel;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.socioboard.f_board_pro.R;
+import com.socioboard.f_board_pro.database.util.MainSingleTon;
+import com.socioboard.f_board_pro.imagelib.ImageLoader;
+import com.socioboard.f_board_pro.models.LikeModel;
 
 public class LikesAdapter extends BaseAdapter 
 {
@@ -23,12 +25,14 @@ public class LikesAdapter extends BaseAdapter
 	private Context context;
 	private ArrayList<LikeModel> likeList;
 	private Handler handler = new Handler();
-
+	ImageLoader imageLoader;  
+	private int lastPosition = -1;
 	public LikesAdapter(Context context, ArrayList<LikeModel> likeList) 
 	{
 		super();
 		this.context = context;
 		this.likeList = likeList;
+		imageLoader = new ImageLoader(context); 
 	}
 
 	@Override
@@ -62,11 +66,18 @@ public class LikesAdapter extends BaseAdapter
 		likeModel=likeList.get(position);
 		
 		ImageView profilePic = (ImageView) convertView.findViewById(R.id.profilepic);
-		getBitmap(profilePic, "https://graph.facebook.com/"+likeModel.getUserId()+"/picture?type=small");
+		imageLoader.DisplayImage("https://graph.facebook.com/"+likeModel.getUserId()+"/picture?type=small", profilePic);
 		
-		
+			
 		TextView name = (TextView) convertView.findViewById(R.id.name);
 		name.setText(likeModel.getUserName());
+		
+		Animation animation = AnimationUtils.loadAnimation(context,
+				(position > lastPosition) ? R.anim.up_from_bottom
+						: R.anim.down_from_top);
+		convertView.startAnimation(animation);
+		lastPosition = position;
+		
 		
 		return convertView;
 	}

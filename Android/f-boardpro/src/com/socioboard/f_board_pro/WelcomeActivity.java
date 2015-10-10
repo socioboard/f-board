@@ -2,6 +2,7 @@ package com.socioboard.f_board_pro;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.json.JSONArray;
@@ -19,9 +20,15 @@ import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.appnext.appnextsdk.AppnextTrack;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -31,36 +38,83 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONArrayCallback;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import com.socioboard.f_board_pro.adapter.Viewpageradapter;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.database.util.Utilsss;
+import com.socioboard.f_board_pro.models.IntroViewPagerModel;
+import com.viewpagerindicator.PageIndicator;
 
 public class WelcomeActivity extends Activity {
-	
-	LoginButton connectFacebook;
+
 	CallbackManager callbackManager;
 	F_Board_LocalData fBoardLocalData;
 	AccessToken myAccessToken = null;
-	ProfileTracker profileTracker;
+
 	String currentUserEmailId = null;
+	ImageView btn;
 	Handler handler; //
 
 	Profile profile;
-	String extendedAccessToken =null;
-	
+	JSONObject jobj;
+	String extendedAccessToken = null;
+
+	PageIndicator indicator;
+	Viewpageradapter viewpageradapter;
+	ArrayList<IntroViewPagerModel> arrayList = new ArrayList<IntroViewPagerModel>();
+	TextView textView_privacy_prompt;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 
-		FacebookSdk.sdkInitialize(WelcomeActivity.this.getApplicationContext()); //Initialize Facebook SDK  
+		FacebookSdk.sdkInitialize(WelcomeActivity.this.getApplicationContext());   
+
+		AppnextTrack.track(this);
 
 		setContentView(R.layout.activity_welcome);
+
+		textView_privacy_prompt = (TextView) findViewById(R.id.textView_privacy_prompt);
+
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+
+		indicator      = (PageIndicator) findViewById(R.id.indicator);
+
+		IntroViewPagerModel model = new IntroViewPagerModel();
+		model.setDrawable(R.drawable.intro_screen1);
+		model.setIntro_text(MainSingleTon.introtext);
+		model.setColor("#2196F3");
+		arrayList.add(model);
+
+		IntroViewPagerModel model2 = new IntroViewPagerModel();
+		model2.setDrawable(R.drawable.intro_screen3);
+		model2.setIntro_text("Check all your profile feeds");
+		model2.setColor("#2196F3");
+		arrayList.add(model2);
+
+		IntroViewPagerModel model3 = new IntroViewPagerModel();
+		model3.setDrawable(R.drawable.intro_screen5);
+		model3.setIntro_text("List of pages, which you liked or following");
+		model3.setColor("#2196F3");
+		arrayList.add(model3);
+
+		IntroViewPagerModel model4 = new IntroViewPagerModel();
+		model4.setDrawable(R.drawable.intro_screen6);
+		model4.setIntro_text("Type and search people, pages, groups, events and places");
+		model4.setColor("#2196F3");
+		arrayList.add(model4);
+
+		viewpageradapter = new Viewpageradapter(getApplicationContext(),
+				arrayList);
+
+		pager.setAdapter(viewpageradapter);
+
+		indicator.setViewPager(pager);
 
 		fBoardLocalData = new F_Board_LocalData(getApplicationContext());
 
@@ -70,7 +124,9 @@ public class WelcomeActivity extends Activity {
 
 		try {
 
-			info = getPackageManager().getPackageInfo("com.socioboard.f_board_pro",PackageManager.GET_SIGNATURES);
+			info = getPackageManager()
+					.getPackageInfo("com.socioboard.f_board_pro",
+							PackageManager.GET_SIGNATURES);
 
 			for (Signature signature : info.signatures) {
 
@@ -79,107 +135,140 @@ public class WelcomeActivity extends Activity {
 				md.update(signature.toByteArray());
 				String something = new String(Base64.encode(md.digest(), 0));
 				Log.e("hash key", something);
-				System.out.println("keyy hashhhh "+something);
+				System.out.println("keyy hashhhh " + something);
 			}
 
-		}
-		catch (NameNotFoundException e1) 
-		{
+		} catch (NameNotFoundException e1) {
 			Log.e("name not found", e1.toString());
-		} 
-		catch (NoSuchAlgorithmException e) 
-		{
+		} catch (NoSuchAlgorithmException e) {
 			Log.e("no such an algorithm", e.toString());
-		}
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			Log.e("exception", e.toString());
 		}
 
-		callbackManager = CallbackManager.Factory.create(); //The CallbackManager manages the callbacks into the FacebookSdk from an Activity's  onActivityResult() method.
+		 
+		btn = (ImageView) findViewById(R.id.btn);
+		btn.setOnClickListener(new OnClickListener() {
 
-		connectFacebook = (LoginButton) findViewById(R.id.connectfacebook); //Facebook login button 
+			@Override
+			public void onClick(View v) {
 
-		connectFacebook.setReadPermissions(Arrays.asList("email","user_photos",
-				"public_profile", "user_posts", 
-				"user_likes",
-				"user_friends","read_stream",
-				"user_hometown","user_work_history",
-				"user_location",
-				"user_birthday","user_about_me"
-				)); ///set facebook permission to get the user details
-		/*connectFacebook.setReadPermissions(Arrays.asList("email","user_photos", "public_profile"));*/
-connectFacebook.clearPermissions();
-		
-		//connectFacebook.setPublishPermissions(Arrays.asList("publish_actions","publish_pages"));
-		
-		connectFacebook.registerCallback(callbackManager,
+				LoginWithFB();
+			}
+		});
+
+
+	}
+
+	public void LoginWithFB() {
+
+		callbackManager = CallbackManager.Factory.create();
+
+		//LoginManager.getInstance().setLoginBehavior(LoginBehavior.SUPPRESS_SSO);
+
+		LoginManager.getInstance().logInWithReadPermissions(
+				this,
+				Arrays.asList("email", "user_photos", "public_profile",
+						"user_posts", "user_likes", "user_friends",
+						"user_hometown", "user_work_history", "user_location",
+						"user_birthday", "user_about_me", "user_groups","read_stream"));
+
+		LoginManager.getInstance().registerCallback(callbackManager,
 				new FacebookCallback<LoginResult>() {
 
 			@Override
-			public void onSuccess(LoginResult loginResult)
-			{
-					connectFacebook.setPublishPermissions(Arrays.asList("publish_actions"));
-				
+			public void onSuccess(LoginResult loginResult) {
+				// connectFacebook.setPublishPermissions(Arrays.asList("publish_actions"));
+
 				myAccessToken = loginResult.getAccessToken();
-				
+
+				Profile.fetchProfileForCurrentAccessToken();
+
 				MainSingleTon.dummyAccesstoken = myAccessToken;
-				
-				System.out.println("Inseid the success="+ loginResult.getAccessToken().getToken());
-				System.out.println("Inseid the success="+ loginResult.getAccessToken().getUserId());
-				System.out.println("Inseid the success="+ loginResult.getRecentlyGrantedPermissions()); 
-				
-				GraphRequest request = GraphRequest.newMeRequest(myAccessToken,
-						new GraphRequest.GraphJSONObjectCallback() {
-					@Override
-					public void onCompleted(JSONObject object,	GraphResponse response) {
-						System.out.println(" GraphRequesto bject= " + object);
-						System.out.println(" GraphRequest response =" + response);
 
-						try {
-							if( object.has("email"))
-							{
-								currentUserEmailId = object.getString("email");
-								System.out.println("@@@@@@@@@@@@email111 " + currentUserEmailId);
-							}
-							new GetExtendedAccessToken().execute();
-						 
-						} catch (JSONException e) {
+				System.out.println("Inseid the success="
+						+ loginResult.getAccessToken().getToken());
+				System.out.println("Inseid the success="
+						+ loginResult.getAccessToken().getUserId());
+				System.out.println("Inseid the success="
+						+ loginResult.getRecentlyGrantedPermissions());
 
-							e.printStackTrace();
+				if (loginResult.getRecentlyGrantedPermissions()
+						.contains("publish_actions")) {
+					System.out.println("Insdie tht profileTracker1D");
+
+					GraphRequest request = GraphRequest.newMeRequest(
+							myAccessToken,
+							new GraphRequest.GraphJSONObjectCallback() {
+								@Override
+								public void onCompleted(
+										JSONObject object,
+										GraphResponse response) {
+
+
+									jobj = object;
+
+									try {
+
+										if (object.has("email")) {
+											currentUserEmailId = object
+													.getString("email");
+
+										}
+
+										new GetExtendedAccessToken()
+										.execute();
+
+									} catch (JSONException e) {
+
+										e.printStackTrace();
+									}
+								}
+
+							});
+
+					request.executeAsync();
+
+					// Graph request to get the user profile data like
+					// user email, name etc
+					GraphRequest.newMyFriendsRequest(myAccessToken,
+							new GraphJSONArrayCallback() {
+
+						@Override
+						public void onCompleted(
+								JSONArray objects,
+								GraphResponse response) {
+
+							System.out
+							.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$="
+									+ response);
 						}
+					}).executeAsync();
+				} else {
 
-					}
+					System.out.println("else..........");
+					LoginManager.getInstance()
+					.logInWithPublishPermissions(
+							WelcomeActivity.this,
+							Arrays.asList("publish_actions",
+									"manage_pages"));
+				}
 
-				});
-				
-				request.executeAsync();
-				 
-				//Graph request to get the user profile data like user email, name etc
-				GraphRequest.newMyFriendsRequest(myAccessToken, new GraphJSONArrayCallback() {
-
-					@Override
-					public void onCompleted(JSONArray objects, GraphResponse response) {
-
-						System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$="+response);
-					}
-				}).executeAsync();
-				 
 			}
 
 			@Override
 			public void onError(FacebookException error) {
-				
-				error.printStackTrace();
+				AccessToken.setCurrentAccessToken(null);
+
 			}
 
 			@Override
 			public void onCancel() {
-			 
-				System.out.println("----- onCancel ");
+				AccessToken.setCurrentAccessToken(null);
+
 			}
 		});
-		 
+
 	}
 
 	@Override
@@ -187,40 +276,12 @@ connectFacebook.clearPermissions();
 
 		super.onResume();
 
-		System.out.println("Insdie tht ONRRRRESSSUME");
-
-		//FB profile tracker to get the user current and old profile data
-		profileTracker = new ProfileTracker() {
-			@Override
-			protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-
-				if(profileTracker.isTracking())
-
-				{
-					System.out.println("currentProfilgetName =-------------------------------------"
-							+ currentProfile.getName());
-					System.out.println("getProfilePictureUri ="
-							+ currentProfile.getProfilePictureUri(
-									240, 260));
-					System.out.println("oldProfile =" + oldProfile);
-
-					profile = currentProfile;
-
-				 
-				}else
-				{
-					System.out.println("TRACKER STAOPED");
-				}
-			}
-		};
-
-
-
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 
 	}
@@ -229,13 +290,10 @@ connectFacebook.clearPermissions();
 	public void onDestroy() {
 		super.onDestroy();
 
-		//Once the profile tracking is done just finish the tracker 
-		if (profileTracker.isTracking()) {
-			profileTracker.stopTracking();
-		}
 	}
 
-	//AsyncTask class to get the extended access token from current access token
+	// AsyncTask class to get the extended access token from current access
+	// token
 	public class GetExtendedAccessToken extends AsyncTask<Void, Void, String> {
 
 		@Override
@@ -244,82 +302,96 @@ connectFacebook.clearPermissions();
 			String tokenURL = " https://graph.facebook.com/oauth/access_token?client_id="
 					+ getResources().getString(R.string.app_id)
 					+ "&client_secret="
-					+getResources().getString(R.string.app_secret)
+					+ getResources().getString(R.string.app_secret)
 					+ "&grant_type=fb_exchange_token&fb_exchange_token="
 					+ myAccessToken.getToken();// CURRENT_ACCESS_TOKEN"
 
 			String dummtoken = Utilsss.getJSONString(tokenURL);
 
-			System.out.println("EXXXXXXXXXXTEDED ACCESSTOKEN= "+dummtoken);
+			System.out.println("EXXXXXXXXXXTEDED ACCESSTOKEN= " + dummtoken);
 
-			dummtoken = dummtoken.substring(dummtoken.indexOf("="),dummtoken.indexOf("&"));
+			dummtoken = dummtoken.substring(dummtoken.indexOf("="),
+					dummtoken.indexOf("&"));
 
 			extendedAccessToken = dummtoken.replace("=", "");
 
-			System.out.println("DDSSDDSASDDSF= "+extendedAccessToken);
-
+			System.out.println("DDSSDDSASDDSF= " + extendedAccessToken);
 
 			return extendedAccessToken;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-			
+
 			super.onPostExecute(result);
+ 
 
-			System.out.println("INSIDE THE PPOST EXECITE");
-			//+++++++++++++++++++++++++++++++++++++++
+			fBoardLocalData.getAllUsersData();
 
-			ModelUserDatas modelUserDatas = new ModelUserDatas();
+			if (!MainSingleTon.userdetails.isEmpty()) {
+				if (!MainSingleTon.userdetails.containsKey(myAccessToken
+						.getUserId())) {
 
-			if(extendedAccessToken!=null)
-			{
-				modelUserDatas.setUserAcessToken(extendedAccessToken);
+					System.out.println("Account Exostssssssssssssss");
 
-				System.out.println("ExTEDDD TOKEN STORED = "+extendedAccessToken);
-			}else
-			{
-				System.out.println("ExTEDDD TOKEN NOT STORED = "+extendedAccessToken);
+				}
+			} else {
+				ModelUserDatas modelUserDatas = new ModelUserDatas();
 
-				modelUserDatas.setUserAcessToken(myAccessToken.getToken());
+				if (extendedAccessToken != null) {
+					modelUserDatas.setUserAcessToken(extendedAccessToken);
+
+					System.out.println("ExTEDDD TOKEN STORED = "
+							+ extendedAccessToken);
+				} else {
+					System.out.println("ExTEDDD TOKEN NOT STORED = "
+							+ extendedAccessToken);
+
+					modelUserDatas.setUserAcessToken(myAccessToken.getToken());
+				}
+
+				try {
+					modelUserDatas.setUserid(myAccessToken.getUserId());
+					modelUserDatas.setUsername(jobj.getString("first_name"));
+					modelUserDatas.setUserimage("https://graph.facebook.com/"
+							+ myAccessToken.getUserId()
+							+ "/picture?type=large");
+					modelUserDatas.setUserEmail(currentUserEmailId);
+					MainSingleTon.username = jobj.getString("first_name");
+					MainSingleTon.userimage = "https://graph.facebook.com/"
+							+ myAccessToken.getUserId()
+							+ "/picture?type=large";
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				MainSingleTon.accesstoken = myAccessToken.getToken();
+				MainSingleTon.userid = myAccessToken.getUserId();
+
+				fBoardLocalData.addNewUserAccount(modelUserDatas);
+				MainSingleTon.userdetails.put(myAccessToken.getUserId(),
+						modelUserDatas);
+				MainSingleTon.useridlist.add(myAccessToken.getUserId());
+
+				SharedPreferences lifesharedpref = getSharedPreferences(
+						"FacebookBoard", Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor = lifesharedpref.edit();
+				editor.putString("userid", myAccessToken.getUserId());
+				editor.commit();
 			}
-			modelUserDatas.setUserid(myAccessToken.getUserId());
-			modelUserDatas.setUsername(profile.getName());
-			modelUserDatas.setUserimage(""+ profile.getProfilePictureUri(240, 260));
-			modelUserDatas.setUserEmail(currentUserEmailId);
 
-			MainSingleTon.username    = profile.getName();
-			MainSingleTon.userimage   = ""+profile.getProfilePictureUri(240, 260);
-			MainSingleTon.accesstoken = myAccessToken.getToken();
-			MainSingleTon.userid      = myAccessToken.getUserId();
-			
+			// once done with first user just logged out
 
-			fBoardLocalData.addNewUserAccount(modelUserDatas);
-			MainSingleTon.userdetails.put(myAccessToken.getUserId(), modelUserDatas);
-			MainSingleTon.useridlist.add(myAccessToken.getUserId());
+			LoginManager.getInstance().logOut();
 
-			SharedPreferences lifesharedpref=getSharedPreferences("FacebookBoard", Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor=lifesharedpref.edit();
-			editor.putString("userid", myAccessToken.getUserId());
-			editor.commit();
-			
-			if (profileTracker.isTracking()) {
-				profileTracker.stopTracking();
-				System.out.println("I profileTrackerFFFFFFFFFFFFFFFFFFU");
-			}
-			 
-			//once done with first user just logged out 
-			 LoginManager loginManager = LoginManager.getInstance();
-			 loginManager.logOut();
-			 System.out.println("I FFFFFFFFFFFFFFFFFFULoggedout");
-			 
-			Intent intent = new Intent(getApplicationContext(),	MainActivity.class);
+			Intent intent = new Intent(getApplicationContext(),
+					MainActivity.class);
 			startActivity(intent);// start intent to move for home screen
 			finish();
-			System.out.println("COMIITEEDD STORED  =-----------------------------------");
+
+			
 		}
 	}
-
-
 
 }

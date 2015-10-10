@@ -2,11 +2,20 @@
 <resources>
 
     <string name="app_name">f-boardpro</string>
-    <string name="app_id">xxxxxxxxxxxxxxxxxx</string>
-    <string name="app_secret">xxxxxxxxxxxxxxxxxxxxxxxxxx</string>
-    <string name="hello_world"> </string>
+    <string name="app_id">XXXXXXXXXXXXXXX</string>
+    <string name="app_secret">XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="flury_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="parse_app_id">XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="parse_client_key">XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</string>
+    <string name="hello_world"></string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="done" translatable="true">Done</string>
+    <string name="Schedulle" translatable="true">Schedule</string>
+    <string name="tweethint" translatable="true">Write something about this photo</string>
+    <string name="facebook_text" translatable="true">We do not post without your permission</string>
+    <string name="addme">"\"please add me to Fboardpro app\""</string>
+    <string name="friendreq">Only Testers,developers and App admins are authorised so, to become a tester, please send a friend request to the following FB id</string>
 
     <plurals name="numberOfNewArticles">
         <item quantity="one">%d new</item>
@@ -18,17 +27,31 @@
         <item>Home Feeds</item>
         <item>My Feeds</item>
         <item>My Friends</item>
+        <item>My Groups</item>
         <item>Pages</item>
+        <item>Search</item>
+        <item>Like Scheduler</item>
         <item>Schedules</item>
+        <item>Shareagon</item>
+        <item>Shareagon Page</item>
+    </string-array>
+    <string-array name="tabs_name">
+        <item>FBoard Friends</item>
+        <item>All Freinds</item>
     </string-array>
 
     <array name="drawer_icons">
-        <item>@drawable/ic_userprofile</item>
-        <item>@drawable/feeds</item>
-        <item>@drawable/my_feeds</item>
-        <item>@drawable/friends</item>
-        <item>@drawable/display_page</item>
-        <item>@drawable/post_schedule</item>
+        <item>@drawable/profile_icon</item>
+        <item>@drawable/home_feeds_icon</item>
+        <item>@drawable/my_feeds_icon</item>
+        <item>@drawable/friends_icon</item>
+        <item>@drawable/group_detail</item>
+        <item>@drawable/pages_icon</item>
+        <item>@drawable/search</item>
+        <item>@drawable/like_schedular</item>
+        <item>@drawable/schedule_icon</item>
+        <item>@drawable/auto_share_icon</item>
+        <item>@drawable/shareagon_page</item>
     </array>
 
     <string-array name="footer_titles">
@@ -38,9 +61,9 @@
     </string-array>
 
     <array name="footer_icons">
-        <item>@drawable/ic_sales</item>
-        <item>@drawable/ic_settings</item>
-        <item>@drawable/ic_help</item>
+        <item>@drawable/add_acount_icon</item>
+        <item>@drawable/settings_icon</item>
+        <item>@drawable/feed_back_icon</item>
     </array>
 
     <string name="title_activity_splash">Faceboardpro</string>

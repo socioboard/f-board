@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/textfield_default"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/contents"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/pageImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/profile_pic_white_border"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/pageNAme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+            android:text="FirstName LastName"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/placeCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pageNAme"
+            android:layout_toRightOf="@+id/pageImage"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="Category"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/placeCategory"
+            android:layout_toRightOf="@+id/pageImage"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="Location"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="11sp" />
+
+        <RelativeLayout
+            android:id="@+id/likeRlt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@+id/pageImage"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
+
+            <TextView
+                android:id="@+id/likebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/likeImage"
+                android:text="100 likes"
+                android:textColor="@android:color/black"
+                android:textSize="11sp"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/wereHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/likeRlt"
+            android:layout_toRightOf="@+id/pageImage"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="were here"
+            android:textColor="@android:color/black"
+            android:textSize="11sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

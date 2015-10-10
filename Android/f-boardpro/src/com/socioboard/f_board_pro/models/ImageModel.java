@@ -2,23 +2,48 @@ package com.socioboard.f_board_pro.models;
 
 public class ImageModel
 {
-	String icon=null;
-	String image=null;
-	public String getIcon()
-	{
-		return icon;
+	String imageId=null;
+	String imageUrl=null;
+	String imageDate=null;
+	String imageName=null;
+	int imageLikes=0;
+	int imageComments=0;
+	public String getImageId() {
+		return imageId;
 	}
-	public void setIcon(String icon)
-	{
-		this.icon = icon;
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
 	}
-	public String getImage()
-	{
-		return image;
+	public String getImageUrl() {
+		return imageUrl;
 	}
-	public void setImage(String image)
-	{
-		this.image = image;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
+	public String getImageDate() {
+		return imageDate;
+	}
+	public void setImageDate(String imageDate) {
+		this.imageDate = imageDate;
+	}
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public int getImageLikes() {
+		return imageLikes;
+	}
+	public void setImageLikes(int imageLikes) {
+		this.imageLikes = imageLikes;
+	}
+	public int getImageComments() {
+		return imageComments;
+	}
+	public void setImageComments(int imageComments) {
+		this.imageComments = imageComments;
+	}
+	
 	
 }

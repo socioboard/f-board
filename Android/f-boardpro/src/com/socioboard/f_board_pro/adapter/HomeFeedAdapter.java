@@ -3,32 +3,49 @@ package com.socioboard.f_board_pro.adapter;
 
 import java.util.ArrayList;
 
-import com.socioboard.f_board_pro.R;
-import com.socioboard.f_board_pro.database.util.MainSingleTon;
-import com.socioboard.f_board_pro.models.HomeFeedModel;
-
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Handler;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
- 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.socioboard.f_board_pro.MainActivity;
+import com.socioboard.f_board_pro.R;
+import com.socioboard.f_board_pro.ShowPostDetails;
+import com.socioboard.f_board_pro.database.util.MainSingleTon;
+import com.socioboard.f_board_pro.imagelib.ImageLoader;
+import com.socioboard.f_board_pro.models.HomeFeedModel;
+
+
 public class HomeFeedAdapter extends BaseAdapter
 {
 
 	private Context context;
 	private ArrayList<HomeFeedModel> feedList;
-	private Handler handler = new Handler();
+	ImageLoader imageLoader ;
+
+	private int lastPosition = -1;
 
 	public HomeFeedAdapter(Context context, ArrayList<HomeFeedModel> feedList) 
 	{
 		this.context = context;
-		this.feedList = feedList;	}
+		this.feedList = feedList;	
+
+		imageLoader = new ImageLoader(context);
+	}
 	@Override
 	public int getCount()
 	{
@@ -46,8 +63,17 @@ public class HomeFeedAdapter extends BaseAdapter
 	{
 		return feedList.indexOf(getItem(position));
 	}
+	public class ViewHolder
+	{
+		RelativeLayout entirView;
+
+		TextView mTitle, mMessage,likes, mTime, mDescription, comments,share;
+		ImageView mImage, profilepic;
+
+	}
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
+	public View getView(final int position, View convertView, ViewGroup parent)
 	{
 		if (convertView == null)
 		{
@@ -55,75 +81,236 @@ public class HomeFeedAdapter extends BaseAdapter
 			convertView = mInflater.inflate(R.layout.home_feed_item, parent, false);
 		}
 
+		final ViewHolder  holder=new ViewHolder();
 
-		HomeFeedModel rowItem = getItem(position);
-		
-		TextView mTitle=(TextView) convertView.findViewById(R.id.from);
-		mTitle.setText(rowItem.getFrom());
-		
-		TextView mMessage=(TextView) convertView.findViewById(R.id.message);
-		mMessage.setText(rowItem.getMessage());
+		final HomeFeedModel rowItem = getItem(position);
 
-		TextView mTime=(TextView) convertView.findViewById(R.id.datetime);
-		mTime.setText(rowItem.getDateTime());
+		ImageView droptoshare = (ImageView) convertView.findViewById(R.id.droptoshare);
 
-		TextView mDescription=(TextView) convertView.findViewById(R.id.description);
-		mDescription.setText(rowItem.getDescription());
+		droptoshare.setOnClickListener(new OnClickListener() {
 
-		ImageView mImage=(ImageView) convertView.findViewById(R.id.image);
-		mImage.setBackgroundResource(R.drawable.photo);
+			@Override
+			public void onClick(View v) {
+
+				if(MainSingleTon.shareLinks.contains(rowItem.getSharelink()))
+				{
+					MainActivity.makeToast("Already exist!!");
+
+				}else
+				{
+					MainSingleTon.shareLinks.add(rowItem.getSharelink());
+					MainActivity.makeToast("Added total share links "+	MainSingleTon.shareLinks.size());
+				}
+			}
+		});
+
+
+
+		holder.entirView = (RelativeLayout) convertView.findViewById(R.id.entirView);
+
+		holder.entirView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				MainSingleTon.selectedHomeFeed     = rowItem;
+
+				MainSingleTon.selectedFeedForLikes = rowItem.getFeedId();
+
+				MainSingleTon.selectedShareLink    = rowItem.getSharelink();
+
+				Intent intent = new Intent(context, ShowPostDetails.class);
+
+				context.startActivity(intent);	
+			}
+		});
+
+
+
+		holder.mTitle=(TextView) convertView.findViewById(R.id.from);
+		holder.mTitle.setText(rowItem.getFrom());
+
+		holder.mMessage =(TextView) convertView.findViewById(R.id.message);
+		holder.mMessage.setText(rowItem.getMessage());
+
+		holder.mTime =(TextView) convertView.findViewById(R.id.datetime);
+		holder.mTime.setText(rowItem.getDateTime());
+
+		holder.mDescription =(TextView) convertView.findViewById(R.id.description);
+		holder.mDescription.setText(rowItem.getDescription());
+
+		holder.mImage=(ImageView) convertView.findViewById(R.id.image);
+		holder.mImage.setBackgroundResource(R.drawable.photo);
+
 		if(rowItem.getPicture()!=null)
-			setImageFromUrl(mImage, position, rowItem.getPicture());
+
+			imageLoader.DisplayImage(rowItem.getPicture(), holder.mImage);
 		else
-			mImage.setVisibility(View.GONE);
-		ImageView profilepic=(ImageView) convertView.findViewById(R.id.profilepic);
-		
+			holder.mImage.setVisibility(View.VISIBLE);
+
+
+		holder.profilepic=(ImageView) convertView.findViewById(R.id.profilepic);
+
 		if(rowItem.getProfilePic()!=null)
-			setImageFromUrl(profilepic, position, rowItem.getProfilePic());
+
+			imageLoader.DisplayImage(rowItem.getProfilePic(), holder.profilepic);
 		else
-			profilepic.setBackgroundResource(R.drawable.profile);
-		
-		TextView likes=(TextView) convertView.findViewById(R.id.likes);
+			holder.profilepic.setBackgroundResource(R.drawable.profile);
+
+		holder.likes=(TextView) convertView.findViewById(R.id.likes);
+
+		Animation animation = AnimationUtils.loadAnimation(context,
+				(position > lastPosition) ? R.anim.up_from_bottom
+						: R.anim.down_from_top);
+		convertView.startAnimation(animation);
+		lastPosition = position;
+
+
 		if(rowItem.getLikes()>0)
 		{
-			likes.setText("Likes "+rowItem.getLikes());
+			holder.likes.setText("Likes "+rowItem.getLikes());
 		}
 		else
 		{
-			likes.setText("Like");
+			holder.likes.setText("Like");
 		}
-		
-		TextView comments=(TextView) convertView.findViewById(R.id.comments);
+
+		holder.likes.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+
+			}
+		});
+
+
+		holder.comments=(TextView) convertView.findViewById(R.id.comments);
 		if(rowItem.getComments()>0)
 		{
-			comments.setText("Comments "+rowItem.getComments());
+			holder.comments.setText("Comments "+rowItem.getComments());
 		}
 		else
 		{
-			comments.setText("Comment");
+			holder.comments.setText("Comment");
 		}
-		
-		TextView share=(TextView) convertView.findViewById(R.id.share);
-		share.setText("Share");
+
+		holder.comments.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+
+			}
+		});
+
+		holder.share=(TextView) convertView.findViewById(R.id.share);
+		if(rowItem.getShares()>0)
+		{
+			holder.share.setText("Shares "+rowItem.getShares());
+		}
+		else
+		{
+			holder.share.setText("Share");
+		}
+
+		holder.share.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				MainSingleTon.selectedShareLink= rowItem.getSharelink();
+				sharePost(holder.share);
+			}
+		});
 		return convertView;
 	}
-	private void setImageFromUrl(final ImageView mImage, final int positon, final String imageURL)
+
+	public void sharePost(final TextView shareTxtView)
 	{
-			new Thread(new Runnable()
+		System.out.println("INSIDE THERE SHARE");
+
+
+		System.out.println("MainSingleTon.selectedShareLink="+MainSingleTon.selectedShareLink);
+		System.out.println("MainSingleTon.accesstoken"+MainSingleTon.accesstoken);
+
+		if(MainSingleTon.selectedShareLink!=null)
+		{
+
+			System.out.println("psotmsmasdlgkl response=");
+
+			Bundle params = new Bundle();
+
+			if( MainSingleTon.selectedShareLink.isEmpty())
 			{
+
+				/**Do nothing becz user just want to post text not an image*/
+			}else
+			{
+
+				params.putString("link",  MainSingleTon.selectedShareLink); // image to post	
+			}
+
+			params.putString(AccessToken.ACCESS_TOKEN_KEY, MainSingleTon.accesstoken);
+
+			new GraphRequest(MainSingleTon.dummyAccesstoken, "me/feed", params,
+
+					HttpMethod.POST, new GraphRequest.Callback() {
+
 				@Override
-				public void run()
-				{
-					final Bitmap imageBitmap = MainSingleTon.getBitmapFromURL(imageURL);
-					handler.post(new Runnable() 
+				public void onCompleted(GraphResponse response) {
+
+					System.out.println("Scheduled response="+response.getJSONObject());
+
+					if(response.getJSONObject()!=null)
 					{
-						@Override
-						public void run() 
+						if(response.getJSONObject().has("id"))
 						{
-							mImage.setImageBitmap(imageBitmap);
+							((Activity) context).runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+
+									MainActivity.makeToast("Shared successfully!!");
+									//shareTxtView.setTextColor(context.getResources().getColor(R.color.color_light_blue_700));
+								}
+							});
 						}
-					});
+					}else
+					{
+						MainActivity.makeToast("Sorry you cannot share this post!!");
+					}
+
 				}
-			}).start();
+			}).executeAsync();
+
+
+			Bundle params1 = new Bundle();
+
+			params1.putString(AccessToken.ACCESS_TOKEN_KEY, MainSingleTon.accesstoken);
+
+			new GraphRequest(MainSingleTon.dummyAccesstoken, "me/interests",
+					params1,
+					HttpMethod.GET,
+					new GraphRequest.Callback() {
+				public void onCompleted(GraphResponse response) {
+
+					System.out.println("Hey i am here="+response.getJSONObject());
+
+
+				}
+			}
+					).executeAsync();
+
+		}
+		else
+		{
+			MainActivity.makeToast("Sorry didn't recognize post, try again");
+		}
+
+
 	}
+
+
+
 }

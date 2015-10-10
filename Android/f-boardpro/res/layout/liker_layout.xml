@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/scheduler"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp" >
+
+        <RelativeLayout
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edit_query_background_normal"
+            android:padding="10dp" >
+
+            <TextView
+                android:id="@+id/likedcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="Use the like scheduler feature to schedule likes to your home feeds. You can target max 5 likes per minute to keep it within limits."
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/timerRLt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/editbox_background_normal" >
+
+            <EditText
+                android:id="@+id/likesperminute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:hint="Enter max likes per minute = (1-5)"
+                android:inputType="number"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black" >
+            </EditText>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/timerRLt1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timerRLt"
+            android:background="@drawable/editbox_background_normal" >
+
+            <EditText
+                android:id="@+id/totalhoure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:hint="Enter total time of execution: (1-24)hrs"
+                android:inputType="number"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black" >
+            </EditText>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/timerRLt2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timerRLt1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rectangle" >
+
+            <TextView
+                android:id="@+id/edsearchView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="Start"
+                android:textColor="@color/White"
+                android:textSize="18sp" >
+            </TextView>
+        </RelativeLayout>
+
+        
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/service_running"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#DD000000"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/warningtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Like scheduler is running!!"
+            android:textColor="@color/Red"
+            android:textSize="26sp" />
+
+        <RelativeLayout
+            android:id="@+id/statusRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/warningtext" >
+
+            <TextView
+                android:id="@+id/totallikerperday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Total likes assigned"
+                android:textColor="@color/White"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/arleadyLikedRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statusRlt" >
+
+            <TextView
+                android:id="@+id/completed_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Liked"
+                android:textColor="@color/White"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pending"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/arleadyLikedRlt" >
+
+            <TextView
+                android:id="@+id/pending_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Pending likes"
+                android:textColor="@color/White"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/hourstocomplete"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pending" >
+
+            <TextView
+                android:id="@+id/total_hours_assigned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:text="Total hours to finish task"
+                android:textColor="@color/White"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/refreshRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hourstocomplete"
+            android:layout_marginTop="15dp" >
+
+            <ImageView
+                android:id="@+id/refreshImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/buttoncolor"
+                android:src="@drawable/ic_action_refresh" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cancel_schedulerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/refreshRlt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rectangle" >
+
+            <TextView
+                android:id="@+id/cancel_scheduler_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="Stop Scheduler"
+                android:textColor="@color/White"
+                android:textSize="18sp" >
+            </TextView>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/unkonw_user"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true" >
+
+        <RelativeLayout
+            android:id="@+id/unkonw_user1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/fbrandpro" />
+
+            <TextView
+                android:id="@+id/text12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logo"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="45dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Your account is not authorised to use this feature"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text12"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                
+                    android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/friendreq"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text4"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                    android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="with message"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text2"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:autoLink="all"
+                android:background="@drawable/buttoncolor"
+                android:text="https://www.facebook.com/sumit.ghosh"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/logo"
+                android:layout_below="@+id/text3"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                    android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/addme"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="italic" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                android:text="For more updates join SocioBoard group on FB"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt1"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:autoLink="all"
+                android:background="@drawable/buttoncolor"
+                android:gravity="center"
+                android:text="https://www.facebook.com/groups/621124567991195/"
+                android:textColor="@android:color/holo_blue_dark" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

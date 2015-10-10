@@ -1,259 +1,475 @@
 package com.socioboard.f_board_pro.fragments;
 
+/**
+ *Use this class to retrieve the multiple Mainsingeton Ids
+ *Using this pgID it will retreive the entire data 
+ */
+
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.socioboard.f_board_pro.MainActivity;
 import com.socioboard.f_board_pro.R;
+import com.socioboard.f_board_pro.adapter.CustomerAdapter;
 import com.socioboard.f_board_pro.adapter.Pages_Adapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
-import com.socioboard.f_board_pro.database.util.LoadMoreListView;
-import com.socioboard.f_board_pro.database.util.LoadMoreListView.OnLoadMoreListener;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
-import com.socioboard.f_board_pro.models.PagesModel;
+import com.socioboard.f_board_pro.models.PagesSearch_Model;
 
-public class Pages_Fragment extends ListFragment 
+public class Pages_Fragment extends Fragment implements OnScrollListener 
 {
 
-	ListView lv;
-	String pagesNextUrl =null;
-	public  ArrayList<PagesModel> mListItems;
+	ListView listView;
 
-	boolean isPapesaAvailable =false;
-	FragmentManager fragmentManager;
+	public  ArrayList<PagesSearch_Model> mListItems;
 
+	boolean isAlredyScrolloing = true;
+	TextView button1, clearAll;
 	ProgressBar progressbar;
-	String mainUrl = null ;
+	TextView nopages;
+	ViewGroup viewGroup;
+	Pages_Adapter pages_Adapter;
+	String cursor =  null;
+	RelativeLayout headerLlt;
+	AutoCompleteTextView autoCompleteTextView1;
+	CustomerAdapter adapter;
 	public View rootview =  null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		rootview = inflater.inflate(R.layout.pages_fragment, container, false);
 
-		rootview	= inflater.inflate(R.layout.pages_fragment, container, false);
+		listView = (ListView) rootview.findViewById(R.id.listView);
 
+		progressbar = (ProgressBar) rootview.findViewById(R.id.progressbar);
 
-		return rootview;
-	}
+		progressbar.setVisibility(View.VISIBLE);
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState)
-	{
-		
-		fragmentManager = getFragmentManager();
-		
+		nopages  = (TextView) rootview.findViewById(R.id.nopages);
 
-		if(!MainSingleTon.isPAgesLoaded)
-		{
-			progressbar = (ProgressBar) view.findViewById(R.id.progressbar);
+		button1  = (TextView) rootview.findViewById(R.id.button1); 
 
-			mainUrl ="https://graph.facebook.com/"+MainSingleTon.userid+"/likes?access_token="+MainSingleTon.accesstoken;
+		clearAll = (TextView) rootview.findViewById(R.id.clearAll);
 
-			progressbar.setVisibility(View.VISIBLE);
+		autoCompleteTextView1 = (AutoCompleteTextView) rootview.findViewById(R.id.autoCompleteTextView1);
 
-			new LoadDataTask().execute();
-		}
+		nopages.setVisibility(View.INVISIBLE);
 
-		lv = getListView();
-		mListItems = new ArrayList<PagesModel>();
+		headerLlt = (RelativeLayout) rootview.findViewById(R.id.headerLlt);
 
-		mListItems.addAll(MainSingleTon.pagesArrayList);
+		addFooterView();
 
+		progressbar.setVisibility(View.VISIBLE);
 
-		((LoadMoreListView) getListView()).setOnLoadMoreListener(new OnLoadMoreListener() {
-			public void onLoadMore() {
-				// Do the work to load more items at the end of list
-				// here
+		listView.setOnScrollListener(Pages_Fragment.this);
 
-				new LoadDataTask().execute();
+		mListItems = new ArrayList<PagesSearch_Model>();
+
+		new LoadDataTask().execute();
+
+		button1.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				for (int i = 0; i < mListItems.size(); i++) {
+
+					if(MainSingleTon.pageShareagonList.contains(mListItems.get(i).getPgID()))
+					{
+
+					}else
+					{
+
+						MainSingleTon.pageShareagonList.add(mListItems.get(i).getPgID());
+					}
+
+				}
+				clearAll.setText("Clear all selected pages from Shareagon ="+MainSingleTon.pageShareagonList.size());
+
+				button1.setVisibility(View.INVISIBLE);
+
+				clearAll.setVisibility(View.VISIBLE);
+
+				MainActivity.makeToast("Total pages added "+MainSingleTon.pageShareagonList.size());
+
 			}
 		});
 
-		getListView().setOnItemClickListener(new OnItemClickListener()
+		if(MainSingleTon.pageShareagonList.size()>0)
+		{
+			button1.setVisibility(View.INVISIBLE);
+
+			clearAll.setVisibility(View.VISIBLE);
+
+			MainActivity.makeToast("Total pages added "+MainSingleTon.pageShareagonList.size());
+
+		}else
 		{
 
+
+		}
+
+		clearAll.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				button1.setVisibility(View.VISIBLE);
+
+				MainSingleTon.pageShareagonList.clear();
+
+				button1.setText("Add all pages to Shareagon = "+MainSingleTon.pageShareagonList.size());
+
+				clearAll.setVisibility(View.INVISIBLE);
+
+
+			}
+		});
+
+		/*listView.setOnItemClickListener(new OnItemClickListener()
+		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) 
 			{
-				MainSingleTon.pageFBiD =MainSingleTon.pagesArrayList.get(position).getPgID();
-				System.out.println("get page..............");
-				/*Fragment fragment = new PagesFeed_Fragment();
-				
-				fragmentManager.beginTransaction().add(R.id.main_content, fragment).commit();*/
-				MainActivity.swipeFragment(new PagesFeed_Fragment());
-				 
+				MainSingleTon.pgID      = mListItems.get(position).getPgID();
+				MainSingleTon.pgCategory = mListItems.get(position).getPgCategory();
+				MainSingleTon.pgNAME= mListItems.get(position).getPgName();
+				Intent intent = new Intent(getActivity(), AllInOneSearchFeeds.class);
+
+				startActivity(intent);
+
 			}
 		});
+		 */
+	
+		return rootview;
+	}
+	private void addFooterView() {
+
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+
+		viewGroup = (ViewGroup) inflater.inflate(R.layout.progress_layout, listView, false);
+
+		listView.addFooterView(viewGroup);
+
+		viewGroup.setVisibility(View.INVISIBLE);
+
 	}
 
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
-		
 		@Override
 		protected Void doInBackground(Void... params)
 		{
-			MainSingleTon.pagesArrayList.clear();
+			String hirURL ="https://graph.facebook.com/"+MainSingleTon.userid+"/likes?access_token="+MainSingleTon.accesstoken;
 
-			if(isPapesaAvailable)
-			{
-				mainUrl = pagesNextUrl;
-			} 
-			if(mainUrl!=null)
-			{
-				JSONParseraa jsonParser = new JSONParseraa();
-				
-				JSONObject jsonObject = jsonParser.getJSONFromUrl(mainUrl);
+			JSONParseraa jsonParser = new JSONParseraa();
 
-				try {
-					
-					JSONArray jsonArray =  jsonObject.getJSONArray("data");
+			JSONObject jsonObject = jsonParser.getJSONFromUrl(hirURL);
 
-					if(jsonArray.length()!=0)
+			try {
+
+				JSONArray jsonArray =  jsonObject.getJSONArray("data");
+
+				if(jsonArray.length()!=0)
+				{
+					for(int i = 0; i<jsonArray.length();i++)
 					{
-						for(int i = 0; i<jsonArray.length();i++)
+						PagesSearch_Model pagesModel = new PagesSearch_Model();
+
+						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+
+						if(jsonObject2.has("category"))
+						{
+							pagesModel.setPgCategory(jsonObject2.getString("category"));
+
+						}else
+						{
+						}
+						if(jsonObject2.has("name"))
+						{
+							pagesModel.setPgName(jsonObject2.getString("name"));
+						}else
+						{
+						}
+						if(jsonObject2.has("id"))
 						{
 
-							PagesModel pagesModel = new PagesModel();
-
-							JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-
-							if(jsonObject2.has("category"))
-							{
-								pagesModel.setPgCategory(jsonObject2.getString("category"));
-
-							}else
-							{
-							}
-							if(jsonObject2.has("name"))
-							{
-								pagesModel.setPgName(jsonObject2.getString("name"));
-							}else
-							{
-							}
-							if(jsonObject2.has("id"))
-							{
-
-								pagesModel.setPgID(jsonObject2.getString("id"));
-							}else
-							{
-							}
-							if(jsonObject2.has("created_time"))
-							{
-
-								pagesModel.setPgCreatedTime(jsonObject2.getString("created_time"));
-							}else
-							{
-								
-							}
-
-							MainSingleTon.pagesArrayList.add(pagesModel);
+							pagesModel.setPgID(jsonObject2.getString("id"));
+						}else
+						{
 						}
+						if(jsonObject2.has("created_time"))
+						{
+
+							pagesModel.setPgCreatedTime(jsonObject2.getString("created_time"));
+						}else
+						{
+
+						}
+						pagesModel.setLikesCount(null);
+
+						mListItems.add(pagesModel);
+					}
+				}
+				else
+				{ 
+					getActivity().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							Toast.makeText(getActivity(), "-----!!No Pages u liked!!-----", Toast.LENGTH_SHORT).show();
+
+						}
+					});
+
+				}
+
+				if(jsonObject.has("paging"))
+				{
+					JSONObject js56 =  jsonObject.getJSONObject("paging");
+
+					if(js56.has("next"))
+					{
+
+						System.out.println(mListItems.size()+"---------------js56----------"+js56.getString("next"));
+						cursor	=	js56.getString("next");
+
 					}
 					else
-					{ 
-						getActivity().runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-
-								Toast.makeText(getActivity(), "-----!!No Pages u liked!!-----", Toast.LENGTH_SHORT).show();
-
-							}
-						});
-
-
-					}
-
-					if(jsonObject.has("paging"))
 					{
-						JSONObject js56 =  jsonObject.getJSONObject("paging");
-
-						if(js56.has("next"))
-						{
-							isPapesaAvailable =true;
-							pagesNextUrl = js56.getString("next");
-							mListItems.addAll(MainSingleTon.pagesArrayList);
-						}
-						else
-						{
-							isPapesaAvailable =false;
-							mainUrl =null;
-
-						}
-
+						System.out.println("---------------NOOOO----------");
+						cursor= null;
 					}
 
-				} catch (JSONException e) {
-
-					e.printStackTrace();
 				}
-			}
-			else
-			{
-				getActivity().runOnUiThread(new Runnable() {
 
-					@Override
-					public void run() {
+			} catch (JSONException e) {
 
-						Toast.makeText(getActivity(), "----- End ;-) ----", Toast.LENGTH_SHORT).show();
-						MainSingleTon.isPAgesLoaded = true;
-					}
-				});
+				e.printStackTrace();
 			}
+
+
 			if (isCancelled()) {
 				return null;
 			}
 
-			// Simulates a background task
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) 
 		{
-			if(progressbar!=null)
-			{
-				progressbar.setVisibility(View.INVISIBLE);
-			}
 			super.onPostExecute(result);
 
-			Pages_Adapter pages_Adapter = new Pages_Adapter(getActivity(), MainSingleTon.pagesArrayList);
+			if(mListItems.size()>0)
+			{
+				//pages_Adapter = new Pages_Adapter(getActivity(), mListItems);
+				//
+				progressbar.setVisibility(View.INVISIBLE);
+				nopages.setVisibility(View.INVISIBLE);
+				listView.setVisibility(View.VISIBLE);
+				isAlredyScrolloing = false;
+				
+				adapter  = new CustomerAdapter(getActivity(), R.layout.pages_rowitem, mListItems);
+				listView.setAdapter(adapter);
+				autoCompleteTextView1.setThreshold(1);
+				autoCompleteTextView1.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView  
+				autoCompleteTextView1.setTextColor(Color.BLUE);
+			}
+			else
+			{
+				isAlredyScrolloing = true;
+				progressbar.setVisibility(View.INVISIBLE);
+				nopages.setVisibility(View.VISIBLE);
+				viewGroup.setVisibility(View.GONE);
+			}
 
-			setListAdapter(pages_Adapter);
 
-			pages_Adapter.notifyDataSetChanged();
 		}
 
 		@Override
 		protected void onCancelled() 
 		{
-			// Notify the loading more operation has finished
-			((LoadMoreListView) getListView()).onLoadMoreComplete();
+
 			if(progressbar!=null)
 			{
 				progressbar.setVisibility(View.INVISIBLE);
 			}		
 		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+
+		boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+
+		if (loadMore) {
+
+			if (isAlredyScrolloing) {
+
+				// do nothing
+
+			} else {
+
+				// bottom progress visible
+
+				viewGroup.setVisibility(View.VISIBLE);
+
+				isAlredyScrolloing = true;
+
+				if(cursor==null)
+				{
+					viewGroup.setVisibility(View.GONE);
+
+				}else
+				{
+					loadFromTHisCursor(cursor);
+				}
+
+			}
+
+		} else {
+
+		}
+
+	}
+
+	private void loadFromTHisCursor(String cursor) {
+
+		new LoadMoreSearchPagesAys().execute(cursor);
+
+	}
+	public class LoadMoreSearchPagesAys extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... params)
+		{
+			String hitURL = params[0];
+
+			JSONParseraa jsonParser = new JSONParseraa();
+
+			JSONObject jsonObject = jsonParser.getJSONFromUrl(hitURL);
+
+			try {
+
+				JSONArray jsonArray =  jsonObject.getJSONArray("data");
+
+				if(jsonArray.length()!=0)
+				{
+					for(int i = 0; i<jsonArray.length();i++)
+					{
+						PagesSearch_Model pagesModel = new PagesSearch_Model();
+
+						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+
+						if(jsonObject2.has("category"))
+						{
+							pagesModel.setPgCategory(jsonObject2.getString("category"));
+
+						}else
+						{
+						}
+						if(jsonObject2.has("name"))
+						{
+							pagesModel.setPgName(jsonObject2.getString("name"));
+						}else
+						{
+						}
+						if(jsonObject2.has("id"))
+						{
+
+							pagesModel.setPgID(jsonObject2.getString("id"));
+						}else
+						{
+						}
+						if(jsonObject2.has("created_time"))
+						{
+
+							pagesModel.setPgCreatedTime(jsonObject2.getString("created_time"));
+						}else
+						{
+
+						}
+						pagesModel.setLikesCount(null);
+
+						mListItems.add(pagesModel);
+					}
+				}
+
+				if(jsonObject.has("paging"))
+				{
+					JSONObject js56 =  jsonObject.getJSONObject("paging");
+
+					if(js56.has("next"))
+					{
+
+						cursor	=	js56.getString("next");
+					}
+					else
+					{
+						cursor= null;
+					}
+
+				}else
+				{
+					cursor= null;
+				}
+
+			} catch (JSONException e) {
+
+				e.printStackTrace();
+			}
+
+
+			if (isCancelled()) {
+				return null;
+			}
+
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) 
+		{
+			super.onPostExecute(result);
+
+			//pages_Adapter.notifyDataSetChanged();
+			adapter.notifyDataSetChanged();
+
+			isAlredyScrolloing = false;
+
+		}
+
+
 	}
 
 
