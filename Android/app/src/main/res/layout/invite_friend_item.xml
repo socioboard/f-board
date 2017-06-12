@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nnnnnn"
+        android:background="@drawable/edittextbg" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttoncolor" >
+
+            <ImageView
+                android:id="@+id/fpic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="5dp"
+                android:src="@drawable/profile" />
+
+            <TextView
+                android:id="@+id/fname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/fpic"
+                android:padding="5dp"
+                android:text="Suresh Maidaragi"
+                android:textSize="12sp" />
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/fpic"
+                android:layout_alignBottom="@id/fpic"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"
+                android:button="@drawable/customdrawablecheckbox"
+                android:padding="5dp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/nnnnnn"/>
+
+</RelativeLayout>

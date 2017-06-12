@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@+id/peopleSearclistView"
+        android:layout_width="fill_parent"
+        android:layout_above="@+id/adView"
+        android:layout_height="fill_parent" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/nopeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/no_dataa"
+        android:visibility="invisible" />
+
+    <com.google.android.gms.ads.AdView
+    android:id="@+id/adView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_alignParentBottom="true"
+    ads:adSize="BANNER"
+    ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
+
+
+</RelativeLayout>

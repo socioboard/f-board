@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:id="@+id/headerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_light_blue_500"
+            android:padding="5dp" >
+
+            <ImageView
+                android:id="@+id/backImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_previous_item" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/like_schedulerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headerRlt"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/likheader11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" * Like scheduler"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_light_blue_500"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/likheader_descriptions1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader11"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="5dp"
+                android:text="Where in one can create scheduler by just entering likes per minute and total hour of execution, which start liking your Facebook Timeline posts, till it reaches total execution hour."
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/post_schedulerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/like_schedulerRlt"
+            android:layout_marginTop="5dp"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/likheader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" * Posts scheduler"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_light_blue_500"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/likheader_descriptions11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader1"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="5dp"
+                android:text="In Scheduler you can choose any number of Facebook accounts to schedule a particular post, even after deleting your app account, a scheduler can post on your timeline, you can also delete scheduled post before it gets posted on the network."
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/schd_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader_descriptions11"
+                android:src="@drawable/scheduler_intor" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/shareagonRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_schedulerRlt"
+            android:layout_marginTop="5dp"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/likheader123"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" * Shareagon"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_light_blue_500"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/likheader_descriptions123"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader123"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="5dp"
+                android:text="In Scheduler you can choose any number of Facebook accounts to schedule a particular post, even after deleting your app account, a scheduler can post on your timeline, you can also delete scheduled post before it gets posted on the network."
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/seemore_shareagon_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader_descriptions123"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/buttoncolor"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="15dp"
+                android:text="seemore"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/Coral"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/shareagon_page_Rlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shareagonRlt"
+            android:layout_marginTop="5dp"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/likheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" * Shareagon Page"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_light_blue_500"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/likheader_descriptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="5dp"
+                android:text="Share Pageagon feature to auto share selected page feeds with given interval and in given page count."
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+           
+            <TextView
+                android:id="@+id/seemore_shareagon_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likheader_descriptions"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="15dp"
+                android:background="@drawable/buttoncolor"
+                android:text="seemore"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/Coral"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/drawer_grouping_padding" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <RelativeLayout
+        android:id="@+id/addAccountRlt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawer_item_height"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/footer_icon3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/drawer_left"
+            android:src="@drawable/add_acount_icon" />
+
+        <TextView
+            android:id="@+id/footer_text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:paddingLeft="@dimen/drawer_text_with_icon"
+            android:paddingRight="@dimen/drawer_right"
+            android:text="Add Account"
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settingRlt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawer_item_height"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/footer_icon1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/drawer_left"
+            android:src="@drawable/settings_icon" />
+
+        <TextView
+            android:id="@+id/footer_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:paddingLeft="@dimen/drawer_text_with_icon"
+            android:paddingRight="@dimen/drawer_right"
+            android:text="Settings"
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/notificationRlt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawer_item_height"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/drawer_left"
+            android:src="@drawable/notification4" />
+
+        <TextView
+            android:id="@+id/notificationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:paddingLeft="72dp"
+            android:paddingRight="60dp"
+            android:text="Notification"
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchButton1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@id/notificationText"
+            android:ellipsize="end"
+            android:textSize="15dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/feedbackRlt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawer_item_height"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/footer_icon2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/drawer_left"
+            android:src="@drawable/feed_back_icon" />
+
+        <TextView
+            android:id="@+id/footer_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:paddingLeft="@dimen/drawer_text_with_icon"
+            android:paddingRight="@dimen/drawer_right"
+            android:text="User Guide"
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</LinearLayout>

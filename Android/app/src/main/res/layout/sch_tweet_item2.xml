@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/differ"
+        android:background="@drawable/photo_frame_xlarge_9"
+        >
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="18dp"
+            android:layout_toLeftOf="@+id/trmp"
+            android:gravity="center"
+            android:text=" 1-12-2015"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_marginTop="7dp"
+            android:id="@+id/trmp"
+            android:layout_width="2dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/Silver" />
+
+        <View
+            android:id="@+id/trmp2"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/textViewDate"
+            android:layout_marginTop="8dp"
+            android:background="@color/Silver" />
+
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/trmp"
+            android:gravity="center"
+            android:text="10:12"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/trmp2"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/feedImage"
+            android:text="sureshmaidaragi"
+            android:textColor="@color/SteelBlue" />
+
+        <ImageView
+            android:id="@+id/feedImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/trmp2"
+            android:src="@drawable/user_default" />
+
+        <TextView
+            android:id="@+id/feedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/feedImage"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:text="This is the demo post version of the post this can be in max 140 chars"
+            android:textColor="@color/Gray"
+            android:textSize="13sp" />
+
+        <View
+            android:id="@+id/trmps"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/feedText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp" />
+
+        <ImageView
+            android:id="@+id/deletePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/buttoncolor"
+            android:layout_alignTop="@+id/trmp"
+            android:src="@drawable/delete_post" />
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/differ"/>
+
+</RelativeLayout>

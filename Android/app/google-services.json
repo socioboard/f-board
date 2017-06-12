@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "846800380558",
+    "firebase_url": "https://pushnotificationfirebase-12934.firebaseio.com",
+    "project_id": "pushnotificationfirebase-12934",
+    "storage_bucket": "pushnotificationfirebase-12934.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846800380558:android:4a8edeed04b83053",
+        "android_client_info": {
+          "package_name": "com.example.glb_122.pushnotificationfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846800380558-u4vs02irngrra6jg5vbpecglipendkom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByJlzyjnwdbPVAvWr_azGyV91KFsOUTNY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846800380558:android:1e07466bbd3d0066",
+        "android_client_info": {
+          "package_name": "com.socioboard.f_board_pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846800380558-u4vs02irngrra6jg5vbpecglipendkom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByJlzyjnwdbPVAvWr_azGyV91KFsOUTNY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

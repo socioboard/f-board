@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_frame_normal_9"
+    android:padding="5dp" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/edittextbg" >
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/trmp"
+            android:gravity="center"
+            android:text=" 1-12-2015"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/trmp"
+            android:layout_width="2dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/Silver" />
+
+        <View
+            android:id="@+id/trmp2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/textViewDate"
+            android:layout_marginTop="8dp"
+            android:background="@color/Silver" />
+
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/trmp"
+            android:gravity="center"
+            android:text="10:12"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Total_links"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Username"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Total likes selected"
+            
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/SteelBlue"
+             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/likesper_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/Total_links"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="35dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:text="likes per minute"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/SteelBlue"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/trmps"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/feedText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp" />
+
+        <ImageView
+            android:id="@+id/deletePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/trmp"
+            android:background="@drawable/buttoncolor"
+            android:src="@drawable/delete_post" />
+
+        <TextView
+            android:id="@+id/Username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/trmp2"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="name"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/SteelBlue" />
+    </RelativeLayout>
+
+</RelativeLayout>

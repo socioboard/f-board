@@ -1,0 +1,126 @@
+apply plugin: 'com.android.library'
+
+group = 'com.parse.bolts'
+version = '1.2.1-SNAPSHOT'
+
+android {
+    /*compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion*/
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+       // minSdkVersion rootProject.ext.minSdkVersion
+
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1
+        versionName project.version
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+        }
+    }
+}
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    def task = project.tasks.create(name: "jar${name.capitalize()}", type: Jar) {
+        dependsOn variant.javaCompile
+        from variant.javaCompile.destinationDir
+
+        manifest {
+            attributes(
+                    "Bundle-Name": 'bolts-android',
+                    "Bundle-Version": project.version
+            )
+        }
+
+        exclude '**/R.class'
+        exclude '**/R\$*.class'
+        exclude '**/Manifest.class'
+        exclude '**/Manifest\$*.class'
+        exclude '**/BuildConfig.class'
+    }
+
+    if (name.equals(com.android.builder.core.BuilderConstants.RELEASE)) {
+        artifacts.add('archives', task);
+    }
+}
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def isSnapshot = version.endsWith('-SNAPSHOT')
+def ossrhUsername = hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+def ossrhPassword = hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+            name 'Bolts-Android'
+            artifactId = 'bolts-android'
+            packaging 'jar'
+            description 'Bolts is a collection of low-level libraries designed to make developing mobile apps easier.'
+            url 'https://github.com/BoltsFramework/Bolts-Android'
+
+            scm {
+                connection 'scm:git@github.com:BoltsFramework/Bolts-Android.git'
+                developerConnection 'scm:git@github.com:BoltsFramework/Bolts-Android.git'
+                url 'https://github.com/BoltsFramework/Bolts-Android'
+            }
+
+            licenses {
+                license {
+                    name 'BSD 2-Clause License'
+                    url 'https://github.com/BoltsFramework/Bolts-Android/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'parse'
+                    name 'Parse'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required { !isSnapshot && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.sourceFiles
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}

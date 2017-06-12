@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:background="@color/White" >
+ <com.socioboard.f_board_pro.viewlibary.AccountImageView
+            app:maskDrawable="@drawable/circle_mask"
+        android:id="@+id/profilepic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dp"
+        android:src="@drawable/profile"
+         />
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/profilepic"
+        android:text="xxxxxxxxxx"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/from"
+        android:layout_toRightOf="@+id/profilepic"
+        android:text="xxxxxxxxxx"
+        android:textSize="8sp" />
+    <RelativeLayout
+        android:id="@+id/rlt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profilepic"
+        android:padding="5dp"
+       
+         >
+ 	<ImageView
+            android:id="@+id/picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/profile_pic_white_border" />
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+          	android:layout_alignParentRight="true"
+            android:paddingLeft="5dp"
+            android:maxLines="4"
+            android:layout_toRightOf="@+id/picture"
+            android:text="assssssssssssssssssssssssssssssssssssssssssss"
+            android:textSize="12sp" />
+
+       
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlt2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlt"
+        android:paddingTop="5dp"
+        android:visibility="visible"
+        >
+        <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:visibility="visible"
+        android:background="@color/dim_foreground_disabled_material_dark" />
+
+        <TextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="25dp"
+            android:layout_margin="5dp"
+            android:text="Likes"
+           
+           
+            android:textColor="@color/text"
+            android:textSize="12sp"
+            
+            />
+        <View
+        android:layout_width="0.1dp"
+        android:layout_height="25dp"
+        android:visibility="visible"
+        android:layout_toLeftOf="@+id/comments"
+        android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="5dp"
+            android:text="Comment"
+         android:textColor="@color/text"
+         android:paddingRight="5dp"
+         android:layout_marginTop="5dp"
+         android:layout_marginBottom="5dp"
+         android:layout_marginRight="20dp"
+         android:layout_marginLeft="20dp"
+            android:textSize="12sp" 
+            />
+	<View
+        android:layout_width="0.1dp"
+        android:layout_height="25dp"
+        android:visibility="visible"
+        android:layout_toRightOf="@+id/comments"
+        android:background="@color/dim_foreground_disabled_material_dark" />
+        <TextView
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="25dp"
+            android:text="Share"
+             android:textColor="@color/text"
+            android:textSize="12sp"
+            android:layout_margin="5dp"
+             />
+    </RelativeLayout>
+<!-- android:background="@color/divider" -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/rlt2"
+        android:visibility="invisible"
+        android:background="@color/divider" />
+
+</RelativeLayout>

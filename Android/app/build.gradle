@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "com.socioboard.f_board_pro"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 26
+        versionName "3.3"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.volley:volley:1.0.0'
+//    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+//    compile 'com.google.android.gms:play-services-auth:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.6'
+    compile 'com.google.android.gms:play-services-auth:10.2.6'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // Android SDK
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:audience-network-sdk:4.+'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
+    compile project(':viewPagerLib')
+    //compile 'com.squareup.picasso:picasso:2.5.2'
+    compile project(':library')
+
+    //compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.shamanland:facebook-like-button:0.1.8'
+    compile 'com.flurry.android:analytics:6.3.1'
+    compile "com.androidplot:androidplot-core:0.9.8"
+//    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:10.2.6'
+//    compile 'com.firebase:firebase-client-android:2.4.0'
+//    compile 'com.google.firebase:firebase-messaging:10.2.6'
+    compile 'com.google.firebase:firebase-database:10.2.6'
+    compile 'com.google.firebase:firebase-storage:10.2.6'
+    compile 'com.google.firebase:firebase-messaging:10.2.6'
+
+}
+apply plugin: 'com.google.gms.google-services'

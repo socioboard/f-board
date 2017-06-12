@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/AliceBlue" >
+
+    <RelativeLayout
+        android:id="@+id/contents"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttoncolor" >
+
+        <ImageView
+            android:id="@+id/pageImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/profile_pic_white_border"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/pageNAme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+            android:text="FirstName LastName"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/pagecategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pageNAme"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+            android:text="FirstName LastName"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/countlike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pagecategory"
+            android:layout_toRightOf="@+id/pageImage"
+            android:padding="5dp"
+              android:visibility="gone"
+            android:text="0 like this"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp" />
+
+        <RelativeLayout
+            android:id="@+id/likeRlt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/countlike"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@+id/pageImage"
+            android:background="@drawable/rectangle_squareedge"
+            android:padding="5dp" >
+
+            <ImageView
+                android:id="@+id/likeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                 android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/add_user" />
+
+            <TextView
+                android:id="@+id/likebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/likeImage"
+                android:text="Add Friend"
+                android:textColor="@android:color/black"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

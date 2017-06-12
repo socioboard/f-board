@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.socioboard.f_board_pro">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <!--  <uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+ <!--   <permission
+        android:name="com.socioboard.f_board_pror.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />-->
+
+    <!--<uses-permission android:name="com.socioboard.f_board_pro.permission.C2D_MESSAGE" />-->
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name=".FboardApp"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.socioboard.f_board_pro.MainActivity" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".UserGuide"/>
+        <activity android:name=".AllInOneSearchFeeds"/>
+        <activity android:name=".DetailsAboutPendingLinks"/>
+        <activity android:name=".DetailsAboutPendingPageShareagon"/>
+        <activity android:name=".SchedulleComposeActivity"/>
+        <activity android:name=".ShowAlbum"/>
+        <activity android:name=".ShowPostDetails"/>
+        <activity android:name=".ShowPostLikes"/>
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            </activity>
+        <activity android:name=".WelcomeActivity"/>
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+        <service android:name=".LikeSchedulerReciever">
+        </service>
+        <service android:name=".ShareLinkServiceClass">
+
+        </service>
+
+        <service android:name=".MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".SharlinksBroadcastReceiver">
+
+        </receiver>
+
+        <receiver android:name=".SchedullerReceiver"/>
+        <receiver android:name=".service_classes.GroupShareagonBroadcastReciver"/>
+        <receiver android:name=".service_classes.PageShareagonBroadcastReceiver"/>
+        <receiver android:name=".database.util.PushNotificationReceiver"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
+            android:value="false" />
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+
+    </application>
+
+</manifest>

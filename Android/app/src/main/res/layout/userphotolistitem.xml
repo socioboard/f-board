@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/edittextbg"
+     >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:background="@drawable/button111">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+    <ImageView 
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/userphoto_imageview"
+        android:src="@drawable/profile"
+        android:background="@drawable/card_9"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/userphoto_imageview"
+        android:text="profile name"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
+    </RelativeLayout>
+</RelativeLayout>

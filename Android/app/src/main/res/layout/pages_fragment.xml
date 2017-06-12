@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/headerLlt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/button1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_apps"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Add all pages to page_shareagon"
+            android:textColor="@color/White" />
+
+        <TextView
+            android:id="@+id/clearAll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_blue_matte_9"
+            android:gravity="center"
+            android:text="Clear all selected pages from Shareagon"
+            android:textColor="@color/White"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/headerLlt"
+        android:padding="10dp"
+        android:ems="10"
+        android:textColor="@android:color/black"
+        android:hint="Search liked page"
+          >
+    </AutoCompleteTextView>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_above="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/autoCompleteTextView1" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/nopages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No pages" />
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
+</RelativeLayout>
