@@ -34,77 +34,91 @@
             android:src="@drawable/fbrandpro" />
 
         <TextView
-            android:id="@+id/text12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/logo"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="45dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="In Accordance with recent API Guidelines, FaceBoook has stopped allowing regular users to manage groups via API"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+        android:id="@+id/text12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="45dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="There is no group in current active account"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text12"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/friendreq"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/text12"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/logo"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginTop="45dp"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="In Accordance with recent API Guidelines, FaceBoook has stopped allowing regular users to manage groups via API"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="15sp" />-->
 
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text4"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:text="with message"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/text2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/text12"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/friendreq"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:textSize="15sp" />-->
 
-        <TextView
-            android:id="@+id/text4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text2"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/buttoncolor"
-            android:text="https://www.facebook.com/sumit.ghosh"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="15sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/text3"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/text4"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:text="with message"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:textSize="15sp" />-->
 
-        <TextView
-            android:id="@+id/text5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/logo"
-            android:layout_below="@+id/text3"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/addme"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="italic" />
+        <!--<TextView-->
+            <!--android:id="@+id/text4"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/text2"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:background="@drawable/buttoncolor"-->
+            <!--android:text="https://www.facebook.com/sumit.ghosh"-->
+            <!--android:textColor="@android:color/holo_blue_dark"-->
+            <!--android:textSize="15sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/text5"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignRight="@+id/logo"-->
+            <!--android:layout_below="@+id/text3"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/addme"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="15sp"-->
+            <!--android:textStyle="italic" />-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -117,28 +131,28 @@
         android:layout_marginBottom="25dp"
         android:padding="5dp" >
 
-        <TextView
-            android:id="@+id/txt1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="For more updates join SocioBoard group on FB"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/txt1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:gravity="center"-->
+            <!--android:text="For more updates join SocioBoard group on FB"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:textSize="14sp" />-->
 
-        <TextView
-            android:id="@+id/txt2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt1"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/buttoncolor"
-            android:gravity="center"
-            android:text="https://www.facebook.com/groups/621124567991195/"
-            android:textColor="@android:color/holo_blue_dark" />
+        <!--<TextView-->
+            <!--android:id="@+id/txt2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/txt1"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@drawable/buttoncolor"-->
+            <!--android:gravity="center"-->
+            <!--android:text="https://www.facebook.com/groups/621124567991195/"-->
+            <!--android:textColor="@android:color/holo_blue_dark" />-->
     </RelativeLayout>
 
     <com.google.android.gms.ads.AdView

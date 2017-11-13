@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -18,11 +20,22 @@ public class FriendsFragment extends Fragment
 {
 	View rootView;
 
+	TextView mNoFriends, invite_friend;
+
 	TabHost tHost;	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
 	{
 		rootView = inflater.inflate(R.layout.user_friends_fragment_tabs, container, false);
+
+		invite_friend = (TextView)rootView.findViewById(R.id.invite_friend);
+
+		invite_friend.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendInvitation();
+			}
+		});
 		//+++++++++++++++++++++++++++++++
 		tHost = (TabHost) rootView.findViewById(android.R.id.tabhost);
 		tHost.setup();
@@ -74,26 +87,28 @@ public class FriendsFragment extends Fragment
 		/** Setting tabchangelistener for the tab */
 		tHost.setOnTabChangedListener(tabChangeListener);
 
+
+
 		/** Defining tab builder for FBoard Friends tab */
 		TabHost.TabSpec tSpecAndroid = tHost.newTabSpec("android");
-		tSpecAndroid.setIndicator("FBoard Friends", getResources().getDrawable(R.drawable.friends_icon));        
-		tSpecAndroid.setContent(new DummyTabContent(getActivity().getBaseContext()));      
+		tSpecAndroid.setIndicator("FBoard Friends", getResources().getDrawable(R.drawable.friends_icon));
+		tSpecAndroid.setContent(new DummyTabContent(getActivity().getBaseContext()));
 		tHost.addTab(tSpecAndroid);
 
 
 		/** Defining tab builder for All Freinds tab */
 		TabHost.TabSpec tSpecApple = tHost.newTabSpec("apple");
-		tSpecApple.setIndicator("All Freinds",getResources().getDrawable(R.drawable.invite_friend));        
+		tSpecApple.setIndicator("All Friends",getResources().getDrawable(R.drawable.invite_friend));
 		tSpecApple.setContent(new DummyTabContent(getActivity().getBaseContext()));
 		tHost.addTab(tSpecApple);
 
-
+//////////////change color of text in TabWidget//////////////////////////////////////////
 		for (int i = 0; i < tHost.getTabWidget().getChildCount(); i++) {
 			/*View v = tHost.getTabWidget().getChildAt(i);
 			v.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
 */
 			TextView tv = (TextView) tHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-			tv.setTextColor(getActivity().getResources().getColor(R.color.black));
+			tv.setTextColor(getActivity().getResources().getColor(R.color.white));
 		}
 
 		return rootView;
@@ -109,6 +124,54 @@ public class FriendsFragment extends Fragment
 
 	}
 
+	public void sendInvitation()
+	{
+		/*
 
+		SharePhoto photo = new SharePhoto.Builder()
+		.setImageUrl(Uri.parse("http://i.imgur.com/GQOn2oe.png"))
+		.setUserGenerated(false)
+		.build();
+
+		ShareOpenGraphObject object = new ShareOpenGraphObject.Builder()
+		.putString("og:type", "f-boardproapp:request")
+		.putString("og:title", "Installation Request")
+		.putPhoto("og:image", photo)
+		.putString("og:description", "f-boardpro is a multiple facebook account management app, it helps you to login to multiple facebook accounts from your Android or iOS device and do various facebook activities like post, like, comment,managing pages, groups and much more.")
+		.putString("og:url", "https://play.google.com/store/apps/details?id=com.socioboard.f_board_pro")
+		.build();
+
+
+		ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
+		.setActionType("f-boardproapp:invite")
+		.putObject("request", object)
+
+		.build();
+
+		ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
+		.setPreviewPropertyName("request")
+		.setAction(action)
+		.build();
+
+		ShareApi shareApi = new ShareApi(content);
+
+		ShareDialog.show(getActivity(), content);
+	*/
+		String appLinkUrl, previewImageUrl;
+
+		appLinkUrl = "https://fb.me/965921146783403";
+		previewImageUrl = "http://i.imgur.com/THlqpFs.png";
+
+		if ( AppInviteDialog.canShow()) {
+
+			//	LoginManager.getInstance().setLoginBehavior(LoginBehavior.SUPPRESS_SSO);
+			AppInviteContent content = new AppInviteContent.Builder()
+					.setApplinkUrl(appLinkUrl)
+					.setPreviewImageUrl(previewImageUrl)
+					.build();
+			AppInviteDialog.show(getActivity(), content);
+
+		}
+	}
 
 }

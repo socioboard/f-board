@@ -46,6 +46,7 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/close"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="2dp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.3"
         android:text="Just click on Shareagon Page button to add page. After adding the Pages you&apos;ll receive alert message with total added share page counts. Now you can schedule SHAREAGON"

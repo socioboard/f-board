@@ -1,20 +1,10 @@
 package com.socioboard.f_board_pro.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +21,17 @@ import com.socioboard.f_board_pro.MainActivity;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
-import com.socioboard.f_board_pro.fragments.ShareagonLinks;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ShareagonAdapter extends BaseAdapter {
 
@@ -103,12 +101,12 @@ public class ShareagonAdapter extends BaseAdapter {
 		
 		userName.setText("Account Name: " + MainSingleTon.userdetails.get(schfeedModel.getUserID()).getUsername());
 
-		txtTime.setText(calendar.get(Calendar.HOUR) + " : "
+		txtTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + " : "
 				+ calendar.get(Calendar.MINUTE));
 
 		txtDate.setText(getDate(schfeedModel.getFeedtime()));
 
-		likesper_minute.setText(schfeedModel.getInterval()+" Likes per minute ");
+		likesper_minute.setText(schfeedModel.getInterval()+" link post per minute ");
 
 		try {
 			

@@ -7,7 +7,7 @@ public class ModelUserDatas {
 	String userAcessToken;
 	String userimage;
 	String userEmail;
-
+	String adminPageAcessToken;
 
 
 
@@ -19,7 +19,6 @@ public class ModelUserDatas {
 		this.adminPageAcessToken = adminPageAcessToken;
 	}
 
-	String adminPageAcessToken;
 	
 
 	public String getUserEmail() {

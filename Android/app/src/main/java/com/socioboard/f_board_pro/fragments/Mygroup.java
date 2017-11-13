@@ -3,13 +3,11 @@ package com.socioboard.f_board_pro.fragments;
 
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -69,44 +67,45 @@ public class Mygroup extends Fragment implements OnScrollListener
 		nofeeds.setVisibility(View.INVISIBLE);
 
 		mGroupList = (ListView) rootView.findViewById(R.id.listview);
+
 		footer=(RelativeLayout) rootView.findViewById(R.id.footer);
 		
-		text4 = (TextView) rootView.findViewById(R.id.text4);
-		txt2  =(TextView) rootView.findViewById(R.id.txt2);
-		
-		txt2.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				String url = "https://www.facebook.com/groups/621124567991195/" ;
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-
-				
-			}
-		});
+		//text4 = (TextView) rootView.findViewById(R.id.text4);
+//		txt2  =(TextView) rootView.findViewById(R.id.txt2);
+//
+//		txt2.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				String url = "https://www.facebook.com/groups/621124567991195/" ;
+//				Intent i = new Intent(Intent.ACTION_VIEW);
+//				i.setData(Uri.parse(url));
+//				startActivity(i);
+//
+//
+//			}
+//		});
 		unkonw_user = (RelativeLayout) rootView.findViewById(R.id.unkonw_user);
 
-		text4.setVisibility(View.INVISIBLE);
+		//text4.setVisibility(View.INVISIBLE);
 		unkonw_user.setVisibility(View.INVISIBLE);
 		footer.setVisibility(View.INVISIBLE);
 		
 		mGroupList.setOnScrollListener(Mygroup.this);
 
-		text4.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				String url = "http://www.facebook.com/"+MainSingleTon.userid ;
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				startActivity(i);
-
-			}
-		});
+//		text4.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				String url = "http://www.facebook.com/"+MainSingleTon.userid ;
+//				Intent i = new Intent(Intent.ACTION_VIEW);
+//				i.setData(Uri.parse(url));
+//				startActivity(i);
+//
+//			}
+//		});
 		mGroupList.setOnScrollListener(Mygroup.this);
 
 		addFooterView();
@@ -244,7 +243,7 @@ public class Mygroup extends Fragment implements OnScrollListener
 				progressbar.setVisibility(View.INVISIBLE);
 				mGroupList.setVisibility(View.INVISIBLE);
 				nofeeds.setVisibility(View.VISIBLE);
-				text4.setVisibility(View.VISIBLE);
+				//text4.setVisibility(View.VISIBLE);
 				footer.setVisibility(View.VISIBLE);
 				unkonw_user.setVisibility(View.VISIBLE);
 				isAlredyScrolloing =true;

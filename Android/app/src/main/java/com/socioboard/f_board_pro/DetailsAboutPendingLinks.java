@@ -1,7 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +13,8 @@ import com.socioboard.f_board_pro.adapter.ShareagonAdapter;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import java.util.ArrayList;
 
 public class DetailsAboutPendingLinks extends Activity {
 	
@@ -39,7 +39,6 @@ public class DetailsAboutPendingLinks extends Activity {
 	    no_items  = (TextView) findViewById(R.id.no_items);
 	    headerRlt = (RelativeLayout) findViewById(R.id.headerRlt);
 
-	    
 		database  = new F_Board_LocalData(getApplicationContext());
 
 		schFeedArrlist = database.getAllSchedulledShares();

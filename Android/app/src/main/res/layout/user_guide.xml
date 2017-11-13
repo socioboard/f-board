@@ -75,14 +75,14 @@
                 android:id="@+id/likheader_descriptions11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/likheader1"
-                android:layout_marginLeft="15dp"
                 android:lineSpacingMultiplier="1.6"
+                android:layout_below="@+id/likheader1"
                 android:padding="5dp"
                 android:text="In Scheduler you can choose any number of Facebook accounts to schedule a particular post, even after deleting your app account, a scheduler can post on your timeline, you can also delete scheduled post before it gets posted on the network."
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                />
 
             <ImageView
                 android:id="@+id/schd_imageView"
@@ -104,7 +104,7 @@
                 android:id="@+id/likheader123"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" * Shareagon"
+                android:text=" * Shareagon Link"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/color_light_blue_500"
                 android:textSize="18sp"
@@ -118,7 +118,7 @@
                 android:layout_marginLeft="15dp"
                 android:lineSpacingMultiplier="1.6"
                 android:padding="5dp"
-                android:text="In Scheduler you can choose any number of Facebook accounts to schedule a particular post, even after deleting your app account, a scheduler can post on your timeline, you can also delete scheduled post before it gets posted on the network."
+                android:text="Shareagon feature to auto share selected feed from Home Feeds and My Feeds with given interval and in given page count."
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp"
                 android:textStyle="normal" />
@@ -165,7 +165,7 @@
                 android:layout_marginLeft="15dp"
                 android:lineSpacingMultiplier="1.6"
                 android:padding="5dp"
-                android:text="Share Pageagon feature to auto share selected page feeds with given interval and in given page count."
+                android:text="Shareagon page feature to auto share selected page feeds with given interval and in given page count."
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp"
                 android:textStyle="normal" />
@@ -185,6 +185,54 @@
                 android:textColor="@color/Coral"
                 android:textSize="16sp"
                 android:textStyle="normal" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/shareagon_group_Rlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shareagon_page_Rlt"
+            android:layout_marginTop="5dp"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/likegroupheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" * Shareagon Group"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_light_blue_500"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/likegroupheader_descriptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/likegroupheader"
+                android:layout_marginLeft="15dp"
+                android:lineSpacingMultiplier="1.6"
+                android:padding="5dp"
+                android:text="Shareagon Group will auto share to selected pages feeds with a given time intrval of 1 minute each, this will share upto max 25 recent post to users selected group"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+
+            <!--<TextView-->
+                <!--android:id="@+id/seemore_shareagon_group"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/likegroupheader_descriptions"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:lineSpacingMultiplier="1.6"-->
+                <!--android:padding="15dp"-->
+                <!--android:background="@drawable/buttoncolor"-->
+                <!--android:text="seemore"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:textColor="@color/Coral"-->
+                <!--android:textSize="16sp"-->
+                <!--android:textStyle="normal" />-->
         </RelativeLayout>
     </RelativeLayout>
 

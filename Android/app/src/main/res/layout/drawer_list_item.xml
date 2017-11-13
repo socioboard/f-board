@@ -21,16 +21,16 @@
         android:textColor="@color/text"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/item_new"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/item_text"
-        android:layout_alignParentRight="true"
-        android:padding="3dp"
-        android:visibility="invisible"
-        android:textColor="@color/google_white"
-        android:layout_marginRight="@dimen/drawer_right"
-       />
+    <!--<TextView-->
+        <!--android:id="@+id/item_new"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBaseline="@+id/item_text"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:padding="3dp"-->
+        <!--android:visibility="invisible"-->
+        <!--android:textColor="@color/google_white"-->
+        <!--android:layout_marginRight="@dimen/drawer_right"-->
+       <!--/>-->
 
 </RelativeLayout>

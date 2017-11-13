@@ -26,16 +26,15 @@
 
     <string-array name="drawer_titles">
         <item>My Profile</item>
-        <item>Home Feeds</item>
         <item>My Feeds</item>
         <item>My Friends</item>
         <item>Pages</item>
+        <item>My Groups</item>
         <item>Search</item>
         <item>Like Scheduler</item>
         <item>Schedules</item>
-        <item>Shareagon</item>
+        <item>Shareagon Link</item>
         <item>Shareagon Page</item>
-        <item>My Groups</item>
         <item>Shareagon Group</item>
     </string-array>
     <string-array name="tabs_name">
@@ -45,16 +44,15 @@
 
     <array name="drawer_icons">
         <item>@drawable/profile_icon</item>
-        <item>@drawable/home_feeds_icon</item>
         <item>@drawable/my_feeds_icon</item>
         <item>@drawable/friends_icon</item>
         <item>@drawable/pages_icon</item>
+        <item>@drawable/group_detail</item>
         <item>@drawable/search</item>
         <item>@drawable/like_schedular</item>
         <item>@drawable/schedule_icon</item>
         <item>@drawable/auto_share_icon</item>
         <item>@drawable/shareagon_page</item>
-        <item>@drawable/group_detail</item>
         <item>@drawable/shareagon_page</item>
     </array>
 

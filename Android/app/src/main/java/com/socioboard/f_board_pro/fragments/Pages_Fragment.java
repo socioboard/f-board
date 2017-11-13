@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -78,6 +80,32 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 
 		autoCompleteTextView1 = (AutoCompleteTextView) rootview.findViewById(R.id.autoCompleteTextView1);
 
+
+				autoCompleteTextView1.addTextChangedListener(new TextWatcher() {
+
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+					}
+
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+
+
+						if(autoCompleteTextView1.getText().toString().equals(""))
+						{
+							System.out.println("fsfdfd");
+							new LoadDataTask().execute();
+						}
+					}
+				});
+
+
 		nopages.setVisibility(View.INVISIBLE);
 
 		headerLlt = (RelativeLayout) rootview.findViewById(R.id.headerLlt);
@@ -91,6 +119,7 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 		mListItems = new ArrayList<PagesSearch_Model>();
 
 		new LoadDataTask().execute();
+
 
 		button1.setOnClickListener(new OnClickListener() {
 
@@ -143,7 +172,9 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 
 				MainSingleTon.pageShareagonList.clear();
 
-				button1.setText("Add all pages to Shareagon = "+MainSingleTon.pageShareagonList.size());
+				//button1.setText("Add all pages to Shareagon = "+MainSingleTon.pageShareagonList.size());
+
+				button1.setText("Add all pages to Shareagon Page");
 
 				clearAll.setVisibility(View.INVISIBLE);
 
@@ -198,6 +229,8 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 		protected Void doInBackground(Void... params)
 		{
 			String hirURL ="https://graph.facebook.com/"+MainSingleTon.userid+"/likes?access_token="+MainSingleTon.accesstoken;
+
+			System.out.println("likepage"+hirURL);
 
 			JSONParseraa jsonParser = new JSONParseraa();
 
@@ -307,11 +340,10 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 				nopages.setVisibility(View.INVISIBLE);
 				listView.setVisibility(View.VISIBLE);
 				isAlredyScrolloing = false;
-				
 				adapter  = new CustomerAdapter(getActivity(), R.layout.pages_rowitem, mListItems);
 				listView.setAdapter(adapter);
 				autoCompleteTextView1.setThreshold(1);
-				autoCompleteTextView1.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView  
+				autoCompleteTextView1.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
 				autoCompleteTextView1.setTextColor(Color.BLUE);
 			}
 			else
@@ -321,7 +353,6 @@ public class Pages_Fragment extends Fragment implements OnScrollListener
 				nopages.setVisibility(View.VISIBLE);
 				viewGroup.setVisibility(View.GONE);
 			}
-
 
 		}
 

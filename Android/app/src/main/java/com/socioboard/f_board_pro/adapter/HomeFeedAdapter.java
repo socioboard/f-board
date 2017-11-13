@@ -1,22 +1,25 @@
 package com.socioboard.f_board_pro.adapter;
 //adapter for setting home feed list
 
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -30,6 +33,21 @@ import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 public class HomeFeedAdapter extends BaseAdapter
 {
@@ -37,6 +55,11 @@ public class HomeFeedAdapter extends BaseAdapter
 	private Context context;
 	private ArrayList<HomeFeedModel> feedList;
 	ImageLoader imageLoader ;
+	String URL;
+	public static HttpResponse response=null;
+	String cheackResponseStatus = "null";
+	EditText writcomment;
+	RelativeLayout postet;
 
 	private int lastPosition = -1;
 
@@ -141,15 +164,18 @@ public class HomeFeedAdapter extends BaseAdapter
 		holder.mDescription.setText(rowItem.getDescription());
 
 		holder.mImage=(ImageView) convertView.findViewById(R.id.image);
-		holder.mImage.setBackgroundResource(R.drawable.photo);
+		//holder.mImage.setBackgroundResource(R.drawable.photo);
 
 		if(rowItem.getPicture()!=null)
-
+		{
 			//imageLoader.DisplayImage(rowItem.getPicture(), holder.mImage);
-		Picasso.with(context).load(rowItem.getPicture()).into(holder.mImage);
+			Picasso.with(context).load(rowItem.getPicture()).into(holder.mImage);
+		}
 		else
+		{
+			Picasso.with(context).load(R.drawable.default_image).resize(200,100).into(holder.mImage);
 			holder.mImage.setVisibility(View.VISIBLE);
-
+		}
 
 		holder.profilepic=(ImageView) convertView.findViewById(R.id.profilepic);
 
@@ -183,6 +209,7 @@ public class HomeFeedAdapter extends BaseAdapter
 			@Override
 			public void onClick(View v) {
 
+				Toast.makeText(getApplicationContext(),"try latter",Toast.LENGTH_SHORT).show();
 
 			}
 		});
@@ -202,7 +229,8 @@ public class HomeFeedAdapter extends BaseAdapter
 
 			@Override
 			public void onClick(View v) {
-
+				//Write comment
+				showEditBox();
 
 			}
 		});
@@ -287,7 +315,6 @@ public class HomeFeedAdapter extends BaseAdapter
 				}
 			}).executeAsync();
 
-
 			Bundle params1 = new Bundle();
 
 			params1.putString(AccessToken.ACCESS_TOKEN_KEY, MainSingleTon.accesstoken);
@@ -314,6 +341,135 @@ public class HomeFeedAdapter extends BaseAdapter
 
 	}
 
+	public void showEditBox()
+	{
+
+		final Dialog dialog;
+
+		dialog = new Dialog(HomeFeedAdapter.this.context);
+
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		dialog.setContentView(R.layout.show_editbox);
+
+		//Make transpernt background dialog
+
+		writcomment = (EditText) dialog.findViewById(R.id.writemycommnet);
+		postet       = (RelativeLayout) dialog.findViewById(R.id.post);
+
+
+		dialog.setCancelable(true);
+
+		writcomment.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				writcomment.requestFocus();
+
+			}
+		});
+		postet.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+
+				final String comment  = writcomment.getText().toString();
+
+				if(comment.length()>0)
+				{
+					new CallToFbComment().execute();
+
+				}
+				else
+				{
+					((Activity)context).runOnUiThread(new Runnable()
+					{
+
+						@Override
+						public void run()
+						{
+
+							Toast.makeText(getApplicationContext(), "Please enter your comment...!", Toast.LENGTH_SHORT).show();
+						}
+					});
+
+				}
+
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+
+	public class CallToFbComment extends AsyncTask<String, Void, String>
+	{
+		String comment=null;
+		CallToFbComment()
+		{
+			comment=writcomment.getText().toString();
+		}
+		HttpResponse response;
+
+		@Override
+		protected String doInBackground(String... params)
+		{
+
+
+			HttpClient httpclient = new DefaultHttpClient();
+
+
+			String URL = "https://graph.facebook.com/"+MainSingleTon.selectedHomeFeed.getFeedId() +"/comments";
+
+
+			HttpPost httppost = new HttpPost(URL);
+
+
+			try
+			{
+				// Add your data
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("access_token",MainSingleTon.accesstoken));
+				nameValuePairs.add(new BasicNameValuePair("message",comment));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				// Execute HTTP Post Request
+				response = httpclient.execute(httppost);
+
+
+
+			}
+			catch (ClientProtocolException e)
+			{
+				// TODO Auto-generated catch block
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+			super.onPostExecute(result);
+
+			if (response.getStatusLine().toString().equals("HTTP/1.1 200 OK"))
+			{
+				Toast.makeText(getApplicationContext(), "Comment success", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "Comment failed", Toast.LENGTH_SHORT).show();
+			}
+
+		}
+	}
 
 
 }

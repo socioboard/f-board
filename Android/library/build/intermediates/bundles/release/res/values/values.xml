@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="dimension|reference" name="childSize"/>
+    <attr format="float|reference" name="fromDegrees"/>
+    <attr format="float|reference" name="toDegrees"/>
+    <declare-styleable name="ArcLayout"><attr name="fromDegrees"/><attr name="toDegrees"/><attr name="childSize"/></declare-styleable>
+    <declare-styleable name="ArcMenu"><attr name="fromDegrees"/><attr name="toDegrees"/><attr name="childSize"/></declare-styleable>
+    <declare-styleable name="RayLayout"><attr format="dimension" name="leftHolderWidth"/></declare-styleable>
+</resources>

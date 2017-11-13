@@ -1,11 +1,5 @@
 package com.socioboard.f_board_pro.fragments;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +12,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -28,6 +23,12 @@ import com.socioboard.f_board_pro.adapter.InvitFriend_Adapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.FriendModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class InviteFriend_Fragment extends Fragment implements OnScrollListener{
 
@@ -41,6 +42,7 @@ public class InviteFriend_Fragment extends Fragment implements OnScrollListener{
 	View rootview;
 	TextView nofriends;
 	ListView userfriendListView;
+	ProgressBar progressBar;
 	ArrayList<FriendModel> friendArraylist;
 	
 	public SparseBooleanArray sparseBooleanArray;
@@ -55,6 +57,9 @@ public class InviteFriend_Fragment extends Fragment implements OnScrollListener{
 
 		nofriends          = (TextView) rootview.findViewById(R.id.nofriends);
 		userfriendListView = (ListView) rootview.findViewById(R.id.listview);
+		progressBar = (ProgressBar)rootview.findViewById(R.id.progressBar1);
+		progressBar.setVisibility(View.VISIBLE);
+
 		friendArraylist    = new ArrayList<FriendModel>();
 
 		nofriends.setVisibility(View.INVISIBLE);
@@ -181,13 +186,15 @@ public class InviteFriend_Fragment extends Fragment implements OnScrollListener{
 									isAlredyScrolloing =true;
 									userfriendListView.setVisibility(View.INVISIBLE);
 									viewGroup.setVisibility(View.GONE);
-									nofriends.setVisibility(View.VISIBLE);;
+									nofriends.setVisibility(View.VISIBLE);
+									progressBar.setVisibility(View.INVISIBLE);
 								}
 								else
 								{
 								  invitFriend_Adapter = new InvitFriend_Adapter(getActivity(), friendArraylist, 0, null,sparseBooleanArray);
 								  userfriendListView.setAdapter(invitFriend_Adapter);
 								  isAlredyScrolloing =false;
+									progressBar.setVisibility(View.INVISIBLE);
 								}
  
 							} catch (JSONException e) {

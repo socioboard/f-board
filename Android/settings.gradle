@@ -1,0 +1,3 @@
+include ':app', ':Bolts', ':facebook'
+include ':library'
+include ':viewPagerLib'

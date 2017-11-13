@@ -155,6 +155,7 @@ public class CustomerAdapter extends ArrayAdapter<PagesSearch_Model> {
 				MainSingleTon.pgCategory  = rowItem.getPgCategory();
 				MainSingleTon.pgNAME      = rowItem.getPgName();
 
+				System.out.println("output="+MainSingleTon.pgID+"...."+MainSingleTon.pgCategory+"....."+MainSingleTon.pgNAME);
 				Intent intent = new Intent(context, AllInOneSearchFeeds.class);
 
 				context.startActivity(intent);
@@ -251,7 +252,7 @@ public class CustomerAdapter extends ArrayAdapter<PagesSearch_Model> {
 						});
 					}else
 					{
-						counterTxtView.setText("0 like this");
+						//counterTxtView.setText("0 like this");
 					}
 
 

@@ -1,35 +1,18 @@
 package com.socioboard.f_board_pro.adapter;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
-
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,14 +26,19 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.fragments.SchedulerFragment;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.SchPostModel;
-import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SchTweetsAdapter extends BaseAdapter {
 
 	private Context context;
 	public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
 	private ArrayList<SchPostModel> schTweetModels;
-	private   final SimpleDateFormat monthDayYearformatter = new SimpleDateFormat("MM-dd-yyyy");
+	private   final SimpleDateFormat monthDayYearformatter = new SimpleDateFormat("MM-dd-yyy HH:mm");
 	ImageLoader imageloader;
 	Dialog builder;
 
@@ -111,7 +99,7 @@ public class SchTweetsAdapter extends BaseAdapter {
 		monthDayYearformatter.format(schfeedModel.getFeedtime());
 
 		Calendar calendar = monthDayYearformatter.getCalendar();
-		System.out.println("SchTweetsAdopter----115"+calendar.getTime().getHours());
+		System.out.println("SchTweetsAdopter----115 "+calendar.getTime().getHours());
 
 		userName.setText("@" + MainSingleTon.userdetails.get(schfeedModel.getUserID()).getUsername());
 
@@ -159,6 +147,7 @@ public class SchTweetsAdapter extends BaseAdapter {
 		String date = DateFormat.format("dd-MM-yyyy", cal).toString();
 		return date;
 	}
+
 	public void deleteScheduleDialog(final SchPostModel  schPostModel)
 	{
 

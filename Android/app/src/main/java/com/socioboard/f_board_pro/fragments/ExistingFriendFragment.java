@@ -1,16 +1,10 @@
 package com.socioboard.f_board_pro.fragments;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -19,10 +13,6 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facebook.login.LoginBehavior;
-import com.facebook.login.LoginManager;
-import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.widget.AppInviteDialog;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.adapter.FriendsAdapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
@@ -30,13 +20,18 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.FriendModel;
 import com.socioboard.f_board_pro.viewlibary.GridViewHeaderFooterLib;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class ExistingFriendFragment  extends  Fragment implements OnScrollListener{
 	View rootView;
 	 GridViewHeaderFooterLib mGridView;
 	ProgressBar  mProgressBar;
 	TextView mNoFriends, invite_friend;
 	ArrayList<FriendModel> friendList;
-	View headerview; 
+//	View headerview;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -54,71 +49,24 @@ public class ExistingFriendFragment  extends  Fragment implements OnScrollListen
 		mProgressBar  =(ProgressBar)rootView.findViewById(R.id.progressBar1);
 		mProgressBar.setVisibility(View.VISIBLE);
 		
-		headerview     = 	  inflater.inflate(R.layout.header_existingfriend, null,false);
-		invite_friend  =  (TextView) headerview.findViewById(R.id.invite_friend);
+//		headerview     = 	  inflater.inflate(R.layout.header_existingfriend, null,false);
+//		invite_friend  =  (TextView) headerview.findViewById(R.id.invite_friend);
 		
-		invite_friend.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				sendInvitation();
-			}
-		});
-		mGridView.addHeaderView(headerview,  null,false);
+//		invite_friend.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				sendInvitation();
+//			}
+//		});
+		//mGridView.addHeaderView(headerview,  null,false);
 
 		new GetUserFriends().execute();
 
 		return rootView;
 	}
-	public void sendInvitation()
-	{/*
-		
-		SharePhoto photo = new SharePhoto.Builder()
-		.setImageUrl(Uri.parse("http://i.imgur.com/GQOn2oe.png"))
-		.setUserGenerated(false)
-		.build();
 
-		ShareOpenGraphObject object = new ShareOpenGraphObject.Builder()
-		.putString("og:type", "f-boardproapp:request")
-		.putString("og:title", "Installation Request")
-		.putPhoto("og:image", photo)
-		.putString("og:description", "f-boardpro is a multiple facebook account management app, it helps you to login to multiple facebook accounts from your Android or iOS device and do various facebook activities like post, like, comment,managing pages, groups and much more.")
-		.putString("og:url", "https://play.google.com/store/apps/details?id=com.socioboard.f_board_pro")
-		.build();
-
-		
-		ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
-		.setActionType("f-boardproapp:invite")
-		.putObject("request", object)
-		 
-		.build();
-
-		ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
-		.setPreviewPropertyName("request")
-		.setAction(action)
-		.build();
-
-		ShareApi shareApi = new ShareApi(content);
-
-		ShareDialog.show(getActivity(), content);
-	*/
-		String appLinkUrl, previewImageUrl;
-
-		appLinkUrl = "https://fb.me/965921146783403";
-		previewImageUrl = "http://i.imgur.com/THlqpFs.png";
-		
-		if ( AppInviteDialog.canShow()) {
-			
-		//	LoginManager.getInstance().setLoginBehavior(LoginBehavior.SUPPRESS_SSO);
-		    AppInviteContent content = new AppInviteContent.Builder()
-		                .setApplinkUrl(appLinkUrl)
-		                .setPreviewImageUrl(previewImageUrl)
-		                .build();
-		    AppInviteDialog.show(getActivity(), content);
-		 
-		}	
-	}
 
 	private class UnFriend implements GridView.OnItemClickListener
 	{

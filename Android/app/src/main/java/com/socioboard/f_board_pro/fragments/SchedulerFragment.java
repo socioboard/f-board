@@ -72,7 +72,6 @@ public class SchedulerFragment extends Fragment {
 
 		listview.setAdapter(schTweetsAdapter);
 
-
 		ImageLoader imageLoader = new ImageLoader(getActivity());
 
 		imageLoader.clearCache();

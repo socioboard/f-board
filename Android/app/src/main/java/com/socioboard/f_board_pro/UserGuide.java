@@ -101,7 +101,8 @@ public class UserGuide  extends Activity{
 
 	}
 
-	protected void openWarning1() {
+	protected void openWarning1()
+	{
 
 		final Dialog dialog;
 
@@ -137,7 +138,8 @@ public class UserGuide  extends Activity{
 			}
 		});
 
-		new Handler().post(new Runnable() {
+		new Handler().post(new Runnable()
+		{
 
 			@Override
 			public void run() {

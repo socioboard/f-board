@@ -36,7 +36,8 @@ public class SearchFragment  extends Fragment {
 
 		//LoadAd();
 
-		final MySchedulerPagerAdapter pageAdapter = new MySchedulerPagerAdapter(getChildFragmentManager());
+		 pageAdapter = new MySchedulerPagerAdapter(getChildFragmentManager());
+
 
 		final ViewPager pager = (ViewPager) rootView.findViewById(R.id.horizontalScro);
 
@@ -46,11 +47,11 @@ public class SearchFragment  extends Fragment {
 		
 		if(MainSingleTon.searchKey1==null)
 		{
-			  
+
 		}else
 		{
-			edsearchView1.setText(MainSingleTon.searchKey1); 
-			
+			edsearchView1.setText(MainSingleTon.searchKey);
+
 			pager.setAdapter(pageAdapter);
 		}
 
@@ -62,9 +63,8 @@ public class SearchFragment  extends Fragment {
 				if( !edsearchView1.getText().toString().isEmpty())
 				{
 					String edtString = edsearchView1.getText().toString();
-					MainSingleTon.searchKey1= edtString;
+					//MainSingleTon.searchKey1= edtString;
 					MainSingleTon.searchKey = URLEncoder.encode(edtString).replace("+", "%20");
-
 					pager.setAdapter(pageAdapter);
 				}else
 				{

@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView1"
             android:layout_centerHorizontal="true"
-            android:text="v 1.8"
+            android:text="v 4.1"
             android:textStyle="bold" />
 
     </RelativeLayout>

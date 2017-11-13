@@ -3,7 +3,7 @@ package com.socioboard.f_board_pro.viewlibary;
 public class Items {
 
     private String title;// Name
-	private String item_new;
+//	private String item_new;
 	private int icon;
 	String userid;
 	String userAcessToken;
@@ -15,7 +15,7 @@ public class Items {
 	public Items(String title, String item_new, int icon, String userid,
 			String userAcessToken) {
  		this.title = title;
-		this.item_new = item_new;
+//		this.item_new = item_new;
 		this.icon = icon;
 		this.userid = userid;
 		this.userAcessToken = userAcessToken;
@@ -58,11 +58,11 @@ public class Items {
 		this.icon = icon;
 	}
 
-	public String getItem_new() {
-		return item_new;
-	}
-
-	public void setItem_new(String item_new) {
-		this.item_new = item_new;
-	}
+//	public String getItem_new() {
+//		return item_new;
+//	}
+//
+//	public void setItem_new(String item_new) {
+//		this.item_new = item_new;
+//	}
 }

@@ -1,11 +1,5 @@
 package com.socioboard.f_board_pro.service_classes;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -15,20 +9,17 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.SplashActivity;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
-import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 
 public class GroupShareagonBroadcastReciver extends BroadcastReceiver {
 
@@ -45,18 +36,19 @@ public class GroupShareagonBroadcastReciver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
+
 		database = new F_Board_LocalData(context);
 
 		getResponseCode = intent.getIntExtra("respcode", 404);
 		sharedPreferences = context.getSharedPreferences(
-				"FacebookBoardShareagon", Context.MODE_PRIVATE);
+				"FacebookBoardShareagongrp", Context.MODE_PRIVATE);
 		this.context = context;
 
 		System.out
 				.println("++++++++++++++++++++++++++++++++++  Share link Broadcast Reciever  +++++++++++++++++++ getResponseCode"
 						+ getResponseCode);
 
-		SchPostModel schTweetModel = database.getPageShareagon(""
+		SchPostModel schTweetModel = database.getGroupShareagon(""
 				+ getResponseCode);
 
 		if (schTweetModel != null) {
@@ -75,7 +67,7 @@ public class GroupShareagonBroadcastReciver extends BroadcastReceiver {
 
 			context.startService(intentService);
 
-			sharedPreferences.edit().putBoolean("isShareagonPageStarted", true)
+			sharedPreferences.edit().putBoolean("isShareagonGroupStarted", true)
 					.commit();
 
 			Intent intent1 = new Intent(context, SplashActivity.class);
@@ -94,11 +86,11 @@ public class GroupShareagonBroadcastReciver extends BroadcastReceiver {
 
 			mBuilder.setAutoCancel(true);
 
-			mBuilder.setTicker("Group Shareagon started!!");
+			mBuilder.setTicker("Shareagon Group started!!");
 
 			mBuilder.setContentIntent(pIntent);
 
-			mBuilder.setContentTitle("Group Shareagon started");
+			mBuilder.setContentTitle("Shareagon Group started");
 
 			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
 					.bigPicture(BitmapFactory.decodeFile(schTweetModel

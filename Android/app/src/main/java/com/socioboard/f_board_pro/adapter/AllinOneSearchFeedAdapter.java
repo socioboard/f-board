@@ -1,30 +1,18 @@
 package com.socioboard.f_board_pro.adapter;
 //adapter for setting home feed list
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
-import javax.crypto.spec.PSource;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.socioboard.f_board_pro.AllInOneSearchFeeds;
 import com.socioboard.f_board_pro.MainActivity;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.ShowPostDetails;
@@ -33,6 +21,11 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 
 public class AllinOneSearchFeedAdapter extends BaseAdapter
@@ -149,38 +142,38 @@ public class AllinOneSearchFeedAdapter extends BaseAdapter
 		else
 			profilepic.setBackgroundResource(R.drawable.profile);
 
-		TextView likes=(TextView) convertView.findViewById(R.id.likes);
-		TextView comments=(TextView) convertView.findViewById(R.id.comments);
+		//TextView likes=(TextView) convertView.findViewById(R.id.likes);
+		//TextView comments=(TextView) convertView.findViewById(R.id.comments);
 		if(rowItem.getLikescount()!=null)
 		{
-			likes.setText(rowItem.getLikescount());
+			//likes.setText(rowItem.getLikescount());
 		}
 		else
 		{
 			//likes.setText("Like");
-			setDetails(rowItem.getFeedId(), likes, comments, position,rowItem);
+			//setDetails(rowItem.getFeedId(), likes, comments, position,rowItem);
 		}
 
 
 		if(rowItem.getCommentscount()!=null)
 		{
-			comments.setText(rowItem.getCommentscount());
+			//comments.setText(rowItem.getCommentscount());
 		}
 		else
 		{
 			//comments.setText("Comment");
-			setDetails(rowItem.getFeedId(), likes, comments, position,rowItem);
+			//setDetails(rowItem.getFeedId(), likes, comments, position,rowItem);
 		}
 
 
-		TextView share=(TextView) convertView.findViewById(R.id.share);
+		//TextView share=(TextView) convertView.findViewById(R.id.share);
 		if(rowItem.getShares()>0)
 		{
-			share.setText("Shares "+rowItem.getShares());
+			//share.setText("Shares "+rowItem.getShares());
 		}
 		else
 		{
-			share.setText("Share");
+			//share.setText("Share");
 
 		}
 

@@ -1,18 +1,7 @@
 package com.socioboard.f_board_pro;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.facebook.ads.*;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -27,9 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-//import com.appnext.appnextsdk.AppnextTrack;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -39,6 +26,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONArrayCallback;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAd;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -46,9 +36,19 @@ import com.socioboard.f_board_pro.adapter.Viewpageradapter;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
-import com.socioboard.f_board_pro.database.util.Utilsss;
 import com.socioboard.f_board_pro.models.IntroViewPagerModel;
 import com.viewpagerindicator.PageIndicator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+//import com.appnext.appnextsdk.AppnextTrack;
 
 public class WelcomeActivity extends Activity {
 
@@ -149,7 +149,8 @@ public class WelcomeActivity extends Activity {
 
 	}
 
-	public void LoginWithFB() {
+	public void LoginWithFB()
+	{
 
 		LoginManager.getInstance().setLoginBehavior(LoginBehavior.WEB_VIEW_ONLY);
 		callbackManager = CallbackManager.Factory.create();
@@ -160,7 +161,8 @@ public class WelcomeActivity extends Activity {
 						"user_birthday", "user_about_me",
 						"user_managed_groups"));
 
-		LoginManager.getInstance().registerCallback(callbackManager,new FacebookCallback<LoginResult>() {
+		LoginManager.getInstance().registerCallback(callbackManager,new FacebookCallback<LoginResult>()
+		{
 
 					@Override
 					public void onSuccess(LoginResult loginResult) {
@@ -229,7 +231,7 @@ public class WelcomeActivity extends Activity {
 						AccessToken.setCurrentAccessToken(null);
 						MainSingleTon.showMyToast(WelcomeActivity.this,"Cancel Permission ,Please! Allow Permissions");
 					}
-				});
+		});
 
 	}
 
@@ -244,7 +246,6 @@ public class WelcomeActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		callbackManager.onActivityResult(requestCode, resultCode, data);
-
 	}
 
 	@Override

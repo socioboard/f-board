@@ -43,12 +43,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 @SuppressLint("ValidFragment")
 public class ProfileFragment extends Fragment
 {
-
 	TextView mLocation, mWork, mBirthDay, mHomeTown, mEmail, mUserName,
 	mGender;
 	ImageView mProfilePic, mCoverPic, mGenderPic;
@@ -68,6 +69,8 @@ public class ProfileFragment extends Fragment
 	{
 		this.UserId = UserId;
 		mUserImageList = new ArrayList<AlbumModel>();
+
+		System.out.println("useridddddd...."+UserId);
 	}
 
 	@Override
@@ -142,7 +145,7 @@ public class ProfileFragment extends Fragment
 
 	public void setvisible(boolean visible)
 	{
-		if (!visible) 
+		if (!visible)
 		{
 			locatinLnr.setVisibility(View.GONE);
 			workLnr.setVisibility(View.GONE);
@@ -232,8 +235,16 @@ public class ProfileFragment extends Fragment
 		//getBitmap(mProfilePic, model.getUserProfilePic());
 		System.out.println("ProfileFragment----------"+mProfilePic+" "+model.getUserProfilePic());
 		//getBitmap(mCoverPic, model.getUserCoverPic());
+//		if(model.getUserCoverPic() == null)
+//		{
+//			mUserName.setTextColor(getResources().getColor(R.color.black));
+//			mEmail.setTextColor(getResources().getColor(R.color.black));
+//		}
 		Picasso.with(getActivity()).load(model.getUserCoverPic()).into(mCoverPic);
-		System.out.println("ProfileFragment--------"+mCoverPic+" "+model.getUserCoverPic());
+        Picasso.with(getActivity()).load(model.getUserCoverPic()).placeholder(R.drawable.header_image)
+                .error(R.drawable.header_image).into(mCoverPic);
+
+        System.out.println("ProfileFragment--------"+mCoverPic+" "+model.getUserCoverPic());
 	}
 
 	/*public void getBitmap(final ImageView profilePic, final String iconUrl) {
@@ -279,7 +290,17 @@ public class ProfileFragment extends Fragment
 			// cover url
 			// https://graph.facebook.com/469111716576852?fields=cover&access_token=CAANGZCSfBfk0BAP6Vnuu2X3PvGRwSCD970VxM4OaTmwO49ysexlKNVNxGToCYg0XVtBYeYlnVHv5rNVxCvOjgFwoQjLC5UDape3LZAcZB2Gg3Mnr7vVZAZBVoRZBkUnoa2otSzbeR1ngjmKymcFCHxCYMUXZAOq6IeGZA7JlgzfUSZBAv39Onw8SYWaO5nHaKJdkZD
 
-			String tokenURL = "https://graph.facebook.com/" + UserId+ "/?access_token=" + userFBaccesToken;
+			String q = "birthday,cover,work,first_name,hometown,location,email,name,gender";
+
+//			String tokenURL = "https://graph.facebook.com/" + UserId+ "/?access_token=" + userFBaccesToken;
+
+			String tokenURL = null;
+			try {
+				tokenURL = "https://graph.facebook.com/"+UserId+"?fields="+ URLEncoder.encode(q,"UTF-8")+"&"+"access_token="+userFBaccesToken;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
 			String coverUrl = "https://graph.facebook.com/" + UserId+ "?fields=cover&access_token=" + userFBaccesToken;
 			user_id=UserId;
 			token=userFBaccesToken;
@@ -319,7 +340,6 @@ public class ProfileFragment extends Fragment
 				userModel.setUserLorgeProfilePic("https://graph.facebook.com/"+ UserId + "/picture?type=large");
 				s_path="https://graph.facebook.com/"+ UserId + "/picture?type=small";
 				try {
-
 
 
 						if (jsonObject.has("work")) {

@@ -16,15 +16,10 @@ public class SchPostModel {
 	
 	int interval;
 
-
-	public int getInterval() {
-		return interval;
-	}
+	int total_count;
 
 
-	public void setInterval(int interval) {
-		this.interval = interval;
-	}
+	String group_name;
 
 
 	public SchPostModel() {
@@ -49,7 +44,7 @@ public class SchPostModel {
 		this.feedText =feedText;
 
 	}
-
+//for post data scheduler
 	public SchPostModel(int feedId , String userID,  String feedText, String feedImagePath, long feedtime)
 	{	
 		this.feedId = feedId;
@@ -62,14 +57,14 @@ public class SchPostModel {
 	
 	//for share-link scheduler
 	public SchPostModel(int feedId,  String userID, String feedText, long feedtime, int interval)
-	{	
+	{
 		this.feedId = feedId;
 		this.userID = userID;
 		this.feedText =feedText;
 		this.feedtime = feedtime;
 		this.interval = interval;
 	}
-
+    //for share-link schedular
 	public SchPostModel(String userID,  String feedText, long feedtime, int interval) {
 
 		this.userID   = userID;
@@ -85,6 +80,76 @@ public class SchPostModel {
 		this.feedText =feedText;
 		this.interval = interval;
 
+	}
+
+
+
+	//this is used for ShareagonPage Module to share link
+	public SchPostModel(int feedId,  String userID, String feedText, long feedtime, int interval, int total_count)
+	{
+		this.feedId = feedId;
+		this.userID = userID;
+		this.feedText =feedText;
+		this.feedtime = feedtime;
+		this.interval = interval;
+		this.total_count = total_count;
+	}
+
+
+
+
+	//this is using for Shareagon Page module.
+	public SchPostModel(String userID,  String feedText, long feedtime, int interval, int total_count) {
+
+		this.userID   = userID;
+		this.feedtime = feedtime;
+
+		this.feedId = new Random().nextInt();
+
+		if (this.feedId < 0) {
+
+			this.feedId = -this.feedId;
+		}
+
+		this.feedText =feedText;
+		this.interval = interval;
+
+		this.total_count = total_count;
+
+	}
+
+	//this is using for Shareagon Group module.
+	public SchPostModel(String userID,  String feedText, long feedtime, int interval, int total_count, String group_name) {
+
+		this.userID   = userID;
+		this.feedtime = feedtime;
+
+		this.feedId = new Random().nextInt();
+
+		if (this.feedId < 0) {
+
+			this.feedId = -this.feedId;
+		}
+
+		this.feedText =feedText;
+		this.interval = interval;
+
+		this.total_count = total_count;
+		this.group_name = group_name;
+
+	}
+
+
+	//this is used for ShareagonGroup Module to share link
+	public SchPostModel(int feedId,  String userID, String feedText, long feedtime, int interval, int total_count, String group_name)
+	{
+		this.feedId = feedId;
+		this.userID = userID;
+		this.feedText =feedText;
+		this.feedtime = feedtime;
+		this.interval = interval;
+		this.total_count = total_count;
+		this.group_name = group_name;
 	}
 	
 
@@ -136,5 +201,31 @@ public class SchPostModel {
 	public void setFeedText(String feedText) {
 		this.feedText = feedText;
 	}
+
+	public int getTotal_count() {
+		return total_count;
+	}
+
+	public void setTotal_count(int total_count) {
+		this.total_count = total_count;
+	}
+
+	public String getGroup_name() {
+		return group_name;
+	}
+
+	public void setGroup_name(String group_name) {
+		this.group_name = group_name;
+	}
+
+	public int getInterval() {
+		return interval;
+	}
+
+
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
 
 }

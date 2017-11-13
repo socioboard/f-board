@@ -1,13 +1,12 @@
 package com.socioboard.f_board_pro.service_classes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.IBinder;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -20,13 +19,16 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.socioboard.f_board_pro.models.SchPostModel;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.IBinder;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class GroupsharegonService extends Service {
 	int getResponseCode;
@@ -38,6 +40,8 @@ public class GroupsharegonService extends Service {
 	SharedPreferences sharedPreferences;
 
 	ArrayList<HomeFeedModel> arrlist = new ArrayList<HomeFeedModel>();
+
+	ArrayList<SchPostModel> schFeedArrlist = new ArrayList<SchPostModel>();
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -53,7 +57,7 @@ public class GroupsharegonService extends Service {
 
 		System.out.println("start command ");
 
-		sharedPreferences = getSharedPreferences("FacebookBoardShareagon",
+		sharedPreferences = getSharedPreferences("FacebookBoardShareagongrp",
 				Context.MODE_PRIVATE);
 
 		complted_count = sharedPreferences.getInt("completed_links", 0);
@@ -62,7 +66,7 @@ public class GroupsharegonService extends Service {
 
 		database = new F_Board_LocalData(getApplicationContext());
 
-		SchPostModel schTweetModel = database.getPageShareagon(""
+		SchPostModel schTweetModel = database.getGroupShareagon(""
 				+ getResponseCode);
 
 		if (schTweetModel != null) {
@@ -73,6 +77,16 @@ public class GroupsharegonService extends Service {
 
 		}
 		return Service.START_REDELIVER_INTENT;
+
+	}
+
+	public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds)
+	{
+		Date date = new Date();
+		date.setTime(timestampInMilliSeconds);
+		String formattedDate=new SimpleDateFormat("MMM d, yyyy HH:mm").format(date);
+		return formattedDate;
+
 	}
 
 	private void postSharePostWall(final SchPostModel schTweetModel) {
@@ -104,8 +118,9 @@ public class GroupsharegonService extends Service {
 
 						long sleepInMiliseconds = (share_interval_baby / 1) * 1000;
 
+
 						if (sharedPreferences.getBoolean(
-								"isShareagonPageRunning", false)) {
+								"isShareagonGroupRunning", false)) {
 							System.out.println("running");
 						} else {
 							System.out.println("Breakedddd");
@@ -117,10 +132,10 @@ public class GroupsharegonService extends Service {
 
 							sharedPreferences
 									.edit()
-									.putBoolean("isShareagonPageRunning", false)
+									.putBoolean("isShareagonGroupRunning", false)
 									.commit();
 							sharedPreferences.edit().clear().commit();
-							database.deleteThisSharePages(schTweetModel
+							database.deleteThisShareGroup(schTweetModel
 									.getFeedId());
 							break;
 						}
@@ -132,16 +147,8 @@ public class GroupsharegonService extends Service {
 									.putInt("completed_links", complted_count)
 									.commit();
 						}
-						if (complted_count == postlinksArray.length()) {
-							GroupsharegonService.this.stopSelf();
-							GroupsharegonService.this.onDestroy();
-							sharedPreferences.edit()
-									.putBoolean("isShareagonPageRunning", false)
-									.commit();
-							database.deleteThisSharePages(schTweetModel
-									.getFeedId());
-							break;
-						}
+
+
 
 						for (int j = 0; j < userlist_array.length(); j++) {
 
@@ -153,10 +160,10 @@ public class GroupsharegonService extends Service {
 										.get(i).toString(), accesstokn,
 										schTweetModel.getInterval() + "",
 										group_id);*/
-								
-								
+
+
 								new PostRequest().execute(postlinksArray
-										.get(i).toString(), accesstokn,
+												.get(i).toString(), accesstokn,
 										schTweetModel.getInterval() + "",
 										group_id);
 
@@ -165,6 +172,50 @@ public class GroupsharegonService extends Service {
 							}
 
 						}
+
+
+
+
+						if (complted_count == postlinksArray.length()) {
+							GroupsharegonService.this.stopSelf();
+							GroupsharegonService.this.onDestroy();
+
+							database.deleteThisShareGroup(schTweetModel
+									.getFeedId());
+
+							schFeedArrlist = database.getAllSchedulledGroupShareagon();
+
+							System.out.println("inside testtttttttttttttttttttttttttt");
+
+							if(schFeedArrlist.size()>0)
+							{
+								sharedPreferences.edit()
+										.putBoolean("isShareagonGroupRunning", true)
+										.commit();
+
+								sharedPreferences.edit()
+										.putInt("completed_links", 0)
+										.commit();
+
+								sharedPreferences.edit()
+										.putInt("total_share_links", schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count())
+										.commit();
+
+								sharedPreferences.edit().putInt("total_pages_select",MainSingleTon.pageShareagonList.size()).commit();
+
+								sharedPreferences.edit().putLong("startTime", Long.parseLong(getFormattedDateFromTimestamp(schFeedArrlist.get(0).getFeedtime()))).commit();
+
+
+							}else
+							{
+								sharedPreferences.edit()
+										.putBoolean("isShareagonGroupRunning", false)
+										.commit();
+								System.out.println("inside falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+							}
+							break;
+						}
+
 
 						try {
 

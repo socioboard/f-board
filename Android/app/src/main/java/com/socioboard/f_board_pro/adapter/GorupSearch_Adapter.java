@@ -1,10 +1,7 @@
 package com.socioboard.f_board_pro.adapter;
 //adapter for setting pages 
-import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -20,6 +17,11 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.PagesSearch_Model;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class GorupSearch_Adapter  extends BaseAdapter
 {
@@ -130,7 +132,13 @@ public class GorupSearch_Adapter  extends BaseAdapter
 						});
 					}else
 					{
-						counterTxtView.setText(" ");
+						((Activity)context).runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								counterTxtView.setText(" ");
+							}
+						});
+
 					}
 
 

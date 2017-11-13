@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <ScrollView
+        android:id="@+id/create_newSchareagon"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/adView"
+        android:layout_height="match_parent"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:id="@+id/scheduler"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/rlt" >
+
+            <RelativeLayout
+                android:id="@+id/reloutDAtePicker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/card_frame_normal_9"
+                android:padding="5dp"
+                android:paddingTop="25dp" >
+
+                <RelativeLayout
+                    android:id="@+id/selectDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/buttoncolor" >
+
+                    <ImageView
+                        android:id="@+id/imageView1Cal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_menu_today" />
+
+                    <TextView
+                        android:id="@+id/textView1date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/imageView1Cal"
+                        android:text="MM-DD-yyyy"
+                        android:textColor="@color/Gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/select_time"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/buttoncolor" >
+
+                    <TextView
+                        android:id="@+id/textView1time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:text="hh:mm"
+                        android:textColor="@color/Gray" />
+
+                    <ImageView
+                        android:id="@+id/imageView2Time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/textView1time"
+                        android:background="@drawable/buttoncolor"
+                        android:src="@drawable/perm_group_device_alarms" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/timerRLt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reloutDAtePicker"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edittextbg" >
+
+                <TextView
+                    android:id="@+id/Editbox_sharesperminute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="start"
+                    android:background="@android:color/transparent"
+                    android:editable="false"
+                    android:hint="Share 1 post per minute"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" >
+                </TextView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/topPostRlt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/timerRLt"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edittextbg" >
+
+                <EditText
+                    android:id="@+id/toppost_countEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="start"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter recent post count = (5 - 150)"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" >
+                </EditText>
+            </RelativeLayout>
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/account_Rlt"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/topPostRlt"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:background="@drawable/card_frame_normal_9" >-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/textView1Counted"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:text="Selected : 3"-->
+                    <!--android:textColor="@color/Gray" />-->
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/addUsersRlt"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_centerVertical="true" >-->
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/imageViewAddUsers"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="17dp"-->
+                        <!--android:src="@drawable/ic_menu_invite" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/textView1"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:layout_toRightOf="@+id/imageViewAddUsers"-->
+                        <!--android:text="Add Users"-->
+                        <!--android:textColor="@color/Gray"-->
+                        <!--android:textSize="10sp" />-->
+                <!--</RelativeLayout>-->
+            <!--</RelativeLayout>-->
+
+            <RelativeLayout
+                android:id="@+id/total_selectedlinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topPostRlt"
+                android:layout_marginTop="10dp"
+                android:background="@color/AliceBlue" >
+
+                <TextView
+                    android:id="@+id/total_selected_links"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="18dp"
+                    android:text="Total selected pages : 0"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/Red"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/clear_total_links"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:background="@drawable/buttoncolor"
+                    android:padding="15dp"
+                    android:text="Clear"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/total_selectedGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/total_selectedlinks"
+                android:layout_marginTop="10dp"
+                android:background="@color/AliceBlue" >
+
+                <TextView
+                    android:id="@+id/total_selected_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="18dp"
+                    android:text="Total selected Group : 0"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/Red"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/clear_total_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:background="@drawable/buttoncolor"
+                    android:padding="15dp"
+                    android:text="Clear"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/NextSchedulingTime"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/total_selectedGroup"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edittextbg" >
+
+                <TextView
+                    android:id="@+id/next_scheduling_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="start"
+                    android:background="@android:color/transparent"
+                    android:editable="false"
+                    android:hint="Next Scheduling Time After : 0"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/Red"
+                    android:textSize="14sp" >
+                </TextView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/footer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/NextSchedulingTime"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_frame_normal_9" >
+
+                <Button
+                    android:id="@+id/buttonshgrp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                    android:text="@string/Schedulle"
+                    android:textColor="@color/White" />
+
+                <!--<View-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:layout_below="@+id/button1"-->
+                    <!--android:layout_marginTop="5dp" />-->
+            </RelativeLayout>
+
+
+
+
+
+            <RelativeLayout
+                android:id="@+id/pending_grouptpost_RTL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/footer"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_frame_normal_9" >
+
+                <Button
+                    android:id="@+id/pendingpostbutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                    android:text="Pending Post"
+                    android:textColor="@color/White" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/button1"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/ruuningbuttonRTL"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/pending_grouptpost_RTL"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:background="@drawable/card_frame_normal_9" >-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/buttonrunningserv"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--android:layout_marginBottom="5dp"-->
+                    <!--android:layout_marginLeft="30dp"-->
+                    <!--android:layout_marginRight="30dp"-->
+                    <!--android:background="?attr/colorPrimary"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="Running Status"-->
+                    <!--android:textColor="@color/White" />-->
+
+                <!--&lt;!&ndash;<View&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="1dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="1dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_below="@+id/button1"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_marginTop="10dp" />&ndash;&gt;-->
+            <!--</RelativeLayout>-->
+
+
+
+
+            <TextView
+                android:id="@+id/tsss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/footer"
+                android:layout_below="@+id/timerRLt"
+                android:text="Ex : 1-share per 5min"
+                android:textColor="@color/Gray"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/service_runninggrp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/adView"
+        android:background="#DD000000"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/warningtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Shareagon is running!!"
+            android:textColor="@color/Red"
+            android:textSize="22sp" />
+
+        <RelativeLayout
+            android:id="@+id/statusRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/warningtext" >
+
+            <TextView
+                android:id="@+id/total_pages_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                android:text="Total Pages assigned :"
+                android:textColor="@color/White"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/arleadyLikedRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statusRlt" >
+
+            <TextView
+                android:id="@+id/total_posts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Total Posts assigned :"
+                android:textColor="@color/White"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pending"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/arleadyLikedRlt" >
+
+            <TextView
+                android:id="@+id/pending_shares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Pending shares :"
+                android:textColor="@color/White"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/complted_counts_rlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pending" >
+
+            <TextView
+                android:id="@+id/completed_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Shared :"
+                android:textColor="@color/White"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/hourstocomplete"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/complted_counts_rlt" >
+
+            <TextView
+                android:id="@+id/start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Starts :"
+                android:textColor="@color/White"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/refreshRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hourstocomplete"
+            android:layout_marginTop="10dp" >
+
+            <ImageView
+                android:id="@+id/refreshImage"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/buttoncolor"
+                android:src="@drawable/ic_action_refresh" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cancel_schedulerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/refreshRlt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle" >
+
+            <TextView
+                android:id="@+id/cancel_scheduler_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="Stop Scheduler"
+                android:textColor="@color/White"
+                android:textSize="18sp" >
+            </TextView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/addPost_schedulerRlt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cancel_schedulerRlt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle" >
+
+            <TextView
+                android:id="@+id/addPost_scheduler_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="Add Post"
+                android:textColor="@color/White"
+                android:textSize="18sp" >
+            </TextView>
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/adviewRTL"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:gravity="bottom"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
+    <!--</RelativeLayout>-->
+
+
+
+</RelativeLayout>

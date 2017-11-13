@@ -148,7 +148,6 @@ public class PlacesSearch_Fragment  extends Fragment implements OnScrollListener
 			}
 
 		} 
-	
 
 	}
 
@@ -156,6 +155,7 @@ public class PlacesSearch_Fragment  extends Fragment implements OnScrollListener
 
 		@Override
 		protected ArrayList<PagesSearch_Model> doInBackground(Void... params) {
+			System.out.println("MainSingleTon.searchKey===="+MainSingleTon.searchKey);
 
 			String hitURL = "https://graph.facebook.com/search?q="
 					+ MainSingleTon.searchKey + "+&type=place&access_token="

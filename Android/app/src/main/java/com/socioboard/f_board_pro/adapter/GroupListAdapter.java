@@ -1,26 +1,6 @@
 package com.socioboard.f_board_pro.adapter;
 //adapter for setting group list
 
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
- 
-
-
-
-
-
-
-
-
-import com.socioboard.f_board_pro.MainActivity;
-import com.socioboard.f_board_pro.R;
-import com.socioboard.f_board_pro.database.util.JSONParseraa;
-import com.socioboard.f_board_pro.database.util.MainSingleTon;
-import com.socioboard.f_board_pro.models.GroupModel;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -29,10 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.socioboard.f_board_pro.MainActivity;
+import com.socioboard.f_board_pro.R;
+import com.socioboard.f_board_pro.database.util.JSONParseraa;
+import com.socioboard.f_board_pro.database.util.MainSingleTon;
+import com.socioboard.f_board_pro.models.GroupModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class GroupListAdapter extends BaseAdapter 
 {
@@ -116,8 +106,21 @@ public class GroupListAdapter extends BaseAdapter
 				{
 					MainSingleTon.groupsharegonList.add(model.getGroupId());
 
-					MainActivity.makeToast("Added to Shareagon_Page "+MainSingleTon.groupsharegonList.size());
+					MainActivity.makeToast("Added to Shareagon_Group "+MainSingleTon.groupsharegonList.size());
 				}
+
+				///////////////////////////////////////////////////////////////////////
+				//this is used to add name into groupshareagonNameList
+				if(MainSingleTon.groupsharegonNameList.contains(model.getGroupName()))
+				{
+
+					//MainActivity.makeToast("Already exists !!");
+				}else
+				{
+					MainSingleTon.groupsharegonNameList.add(model.getGroupName());
+
+				}
+				//////////////////////////////////////////////////////////////////////
 			
 				
 			}

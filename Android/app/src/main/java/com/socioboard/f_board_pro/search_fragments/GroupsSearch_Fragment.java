@@ -63,6 +63,7 @@ public class GroupsSearch_Fragment extends Fragment implements  OnScrollListener
 		addFooterView();
 
 		new SearchPagesAys().execute();
+
 		
 		groupSearclistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -262,8 +263,6 @@ public class GroupsSearch_Fragment extends Fragment implements  OnScrollListener
 						}else
 						{
 							cursor= null;
-
-
 						}
 					}
 					else

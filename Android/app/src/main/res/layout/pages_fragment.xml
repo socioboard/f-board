@@ -15,42 +15,57 @@
             android:id="@+id/button1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_apps"
+            android:background="@drawable/btn_global_fb_dark_9"
             android:gravity="center"
-            android:padding="10dp"
-            android:text="Add all pages to page_shareagon"
-            android:textColor="@color/White" />
+            android:padding="5dp"
+            android:text="Add all pages to Shareagon Page"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/clearAll"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_blue_matte_9"
             android:gravity="center"
+            android:padding="5dp"
+            android:background="@drawable/btn_blue_matte_9"
             android:text="Clear all selected pages from Shareagon"
-            android:textColor="@color/White"
+            android:textColor="@color/white"
             android:visibility="invisible" />
     </RelativeLayout>
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/headerLlt"
-        android:padding="10dp"
-        android:ems="10"
-        android:textColor="@android:color/black"
-        android:hint="Search liked page"
-          >
-    </AutoCompleteTextView>
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_above="@+id/adView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/autoCompleteTextView1" />
+        <AutoCompleteTextView
+            android:layout_below="@+id/headerLlt"
+            android:id="@+id/autoCompleteTextView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:padding="10dp"
+            android:ems="10"
+            android:textColor="@android:color/black"
+            android:hint="Search liked page"
+            >
+        </AutoCompleteTextView>
+
+
+        <ListView
+            android:layout_above="@+id/adView"
+            android:layout_below="@+id/autoCompleteTextView1"
+            android:id="@+id/listView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
+
 
     <ProgressBar
         android:id="@+id/progressbar"
@@ -68,14 +83,5 @@
         android:text="No pages" />
 
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

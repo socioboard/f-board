@@ -1,10 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,12 +9,18 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.adapter.CustomPagerAdapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.Utilsss;
 import com.socioboard.f_board_pro.models.ImageModel;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class ShowAlbum extends Activity
 {
@@ -73,7 +74,17 @@ public class ShowAlbum extends Activity
 			//photos :https://graph.facebook.com/371696929651665/photos?access_token=CAANGZCSfBfk0BAFCVmwYYmhS2ZCyoxCIkimPyUDyuEiFcwnFb5ZCZCkv2EptfJAmhnTxQDhLq9LDyKV8GzJzNgDT6NuYugXHbiZBRyrMKt1AcrZCDk91wCCPKryAf6MNaDAXZC1GDhfiTQxNijUZAxCJx1v5krRrqUE27XM2fpVth2N7It1px8PovKQtHUCfSgBjnqFyfs6YURDbE9UZBalgzOhqdqbViZCTVeqc2E7wx1DZBTBEQvCc2M4
 
 			imageList.clear();
-			String tokenURL = "https://graph.facebook.com/"+albumID+"/photos?access_token="+ userFBaccesToken;
+			System.out.println("album id="+albumID);
+			//String tokenURL = "https://graph.facebook.com/"+albumID+"/photos?access_token="+ userFBaccesToken;
+			String q="photos{images,name}";
+			String tokenURL=null;
+			try {
+				tokenURL = "https://graph.facebook.com/"+albumID+"?fields="+ URLEncoder.encode(q,"UTF-8")+"&"+"access_token="+ userFBaccesToken;
+			}catch (UnsupportedEncodingException e)
+			{
+				e.printStackTrace();
+			}
+
 			System.out.println("user photos tokenURL "+tokenURL); 
 			JSONParseraa jsonParser = new JSONParseraa();
 
@@ -82,7 +93,8 @@ public class ShowAlbum extends Activity
 			System.out.println("user photos "+jsonObject); 
 			try 
 			{
-				JSONArray jsonArray = jsonObject.getJSONArray("data");
+				JSONObject jsonObject1 = jsonObject.getJSONObject("photos");
+				JSONArray jsonArray = jsonObject1.getJSONArray("data");
 				for (int i = 0; i < jsonArray.length(); i++)
 				{
 					ImageModel model=new ImageModel();
@@ -104,6 +116,7 @@ public class ShowAlbum extends Activity
 					{
 						JSONArray jsonArray1 =  jsonObject2.getJSONArray("images");
 						model.setImageUrl(jsonArray1.getJSONObject(0).getString("source"));
+						System.out.println("imagesssss"+jsonArray1.getJSONObject(0).getString("source"));
 					}
 					if (jsonObject2.has("likes"))
 					{

@@ -1,19 +1,7 @@
 package com.socioboard.f_board_pro.fragments;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -30,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +41,7 @@ import com.facebook.HttpMethod;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.socioboard.f_board_pro.DetailsAboutPendingGroupShareagon;
 import com.socioboard.f_board_pro.MainActivity;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.adapter.SelectAccountAdapter;
@@ -62,26 +52,44 @@ import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.socioboard.f_board_pro.models.SchPostModel;
 import com.socioboard.f_board_pro.service_classes.GroupShareagonBroadcastReciver;
-import com.socioboard.f_board_pro.service_classes.PageShareagonBroadcastReceiver;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ShareagonGroup extends Fragment {
 
 	View rootview;
 	RelativeLayout selectDate, select_time, timerRLt, account_Rlt,
-	cancel_schedulerRlt, service_running;
+	cancel_schedulerRlt, service_running,add_post_schedulerRlt;
 
 	DatePicker datePicker;
 	TimePicker timePicker;
 
 	int total_pager_minute, total_shareperMinute;
-	TextView textViewCount, closewarningdialog, total_selected_links,
-	clear_total_links;
+	TextView textViewCount, closewarningdialog, total_selected_links, total_selected_group,next_scheduling_time,
+	clear_total_links,clear_total_groups,addPost_scheduler_image;
 	TextView textViewDate;
 	TextView textViewTime, completed_textview;
 	AlarmManager alarmManagers;
-	Button schedule_btn;
+	Button schedule_btn,runnig_button, pendingpost_button;
 	List<String> arrlistSSS = Collections
 			.synchronizedList(new ArrayList<String>());
+
+
 
 	F_Board_LocalData database;
 	ArrayList<ModelUserDatas> navDrawerItems;
@@ -95,8 +103,8 @@ public class ShareagonGroup extends Fragment {
 	Handler handler = new Handler();
 	int complted_count, total_counts;
 	int currenthour;
-	boolean isShareagonPageRunning = false;
-	int shares_perminute ;
+	boolean isShareagonGroupRunning=false;
+	int shares_perminute = 1 ;
 	int currentminute;
 
 	JSONParseraa jsonParser = new JSONParseraa();
@@ -106,18 +114,25 @@ public class ShareagonGroup extends Fragment {
 	public Timer timersa, refreshTmer = new Timer();
 
 	// ArrayList<String> user_accesstoken=new ArrayList<String>();
+	ArrayList<String> pendingtimelist = new ArrayList<>();
 	SharedPreferences sharedpreferences;
 	long startTime;
 
 	Context context;
 
-	TextView total_pages_selected, total_posts, pending_shares, start_time;
+	TextView total_pages_selected;
+	TextView total_posts;
+	TextView pending_shares;
+	TextView start_time;
+
+	long time=0;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		database = new F_Board_LocalData(getActivity());
-		rootview = inflater.inflate(R.layout.shareagon_page, container, false);
+		rootview = inflater.inflate(R.layout.shareagon_group, container, false);
 
 		LoadAd();
 
@@ -127,41 +142,53 @@ public class ShareagonGroup extends Fragment {
 		pending_shares = (TextView) rootview.findViewById(R.id.pending_shares);
 		start_time = (TextView) rootview.findViewById(R.id.start_time);
 		service_running = (RelativeLayout) rootview
-				.findViewById(R.id.service_running);
+				.findViewById(R.id.service_runninggrp);
 		cancel_schedulerRlt = (RelativeLayout) rootview.findViewById(R.id.cancel_schedulerRlt);
+		add_post_schedulerRlt = (RelativeLayout) rootview.findViewById(R.id.addPost_schedulerRlt);
 		completed_textview =  (TextView) rootview.findViewById(R.id.completed_textview);
 
 		alarmManagers = (AlarmManager) getActivity().getSystemService(
 				getActivity().ALARM_SERVICE);
 
-		schFeedArrlist = database.getAllSchedulledPageShareagon();
-		
+		schFeedArrlist = database.getAllSchedulledGroupShareagon();
+
 		selectDate = (RelativeLayout) rootview.findViewById(R.id.selectDate);
 		select_time = (RelativeLayout) rootview.findViewById(R.id.select_time);
 		textViewDate = (TextView) rootview.findViewById(R.id.textView1date);
 		textViewTime = (TextView) rootview.findViewById(R.id.textView1time);
 		timerRLt = (RelativeLayout) rootview.findViewById(R.id.timerRLt);
 
-		Editbox_sharesperminute = (EditText) rootview
-				.findViewById(R.id.Editbox_sharesperminute);
+//		Editbox_sharesperminute = (EditText) rootview
+//				.findViewById(R.id.Editbox_sharesperminute);
 		toppost_countEdit = (EditText) rootview
 				.findViewById(R.id.toppost_countEdit);
 
-		account_Rlt = (RelativeLayout) rootview.findViewById(R.id.account_Rlt);
+		//account_Rlt = (RelativeLayout) rootview.findViewById(R.id.account_Rlt);
 		textViewCount = (TextView) rootview.findViewById(R.id.textView1Counted);
-		schedule_btn = (Button) rootview.findViewById(R.id.button1);
+		schedule_btn = (Button) rootview.findViewById(R.id.buttonshgrp);
+		//runnig_button = (Button)rootview.findViewById(R.id.buttonrunningserv);
+		pendingpost_button = (Button) rootview.findViewById(R.id.pendingpostbutton);
 		total_selected_links = (TextView) rootview
 				.findViewById(R.id.total_selected_links);
+		total_selected_group = (TextView)rootview.findViewById(R.id.total_selected_group);
+		next_scheduling_time = (TextView)rootview.findViewById(R.id.next_scheduling_time);
 		clear_total_links = (TextView) rootview
 				.findViewById(R.id.clear_total_links);
+		clear_total_groups = (TextView)rootview.findViewById(R.id.clear_total_group);
+		addPost_scheduler_image = (TextView) rootview.findViewById(R.id.addPost_scheduler_image);
+
+
 		initView();
+
+		pendingpost_button.setText("Show pending links :"+schFeedArrlist.size());
 		// ++++++++++++++++++++++++++++++++++++
 
 		navDrawerItems = database.getAllUsersDataArlist();
 
 		sparseBooleanArray = new SparseBooleanArray(navDrawerItems.size());
 
-		for (int i = 0; i < navDrawerItems.size(); ++i) {
+		for (int i = 0; i < navDrawerItems.size(); ++i)
+		{
 
 			sparseBooleanArray.put(i, false);
 
@@ -175,7 +202,7 @@ public class ShareagonGroup extends Fragment {
 
 		}
 
-		textViewCount.setText("Selected : " + count);
+		//textViewCount.setText("Selected : " + count);
 		// ++++++++++++++++++++++++++++++++++++
 
 		// textViewCount.setText("Selected : " + 0);
@@ -183,16 +210,17 @@ public class ShareagonGroup extends Fragment {
 		total_selected_links.setText("Total selected pages :  "
 				+ MainSingleTon.pageShareagonList.size());
 
+		total_selected_group.setText("Total selected groups : "+MainSingleTon.groupsharegonList.size());
+
 		if (MainSingleTon.pageShareagonList.size() == 0) {
 
 			//schedule_btn.setAlpha(45);
 
 		}
 
-		
-
 		return rootview;
 	}
+
 
 	void LoadAd()
 	{
@@ -208,17 +236,23 @@ public class ShareagonGroup extends Fragment {
 		pd.setMessage("loading");
 		pd.setCancelable(false);
 
-		sharedpreferences = getActivity().getSharedPreferences("FacebookBoardShareagon", Context.MODE_PRIVATE);
+		sharedpreferences = getActivity().getSharedPreferences("FacebookBoardShareagongrp", Context.MODE_PRIVATE);
 
-		isShareagonPageRunning = sharedpreferences.getBoolean(
-				"isShareagonPageRunning", false);
+		isShareagonGroupRunning = sharedpreferences.getBoolean(
+				"isShareagonGroupRunning", false);
 
-		if (isShareagonPageRunning) {
-			service_running.setVisibility(View.VISIBLE);
 
-		} else {
-			service_running.setVisibility(View.GONE);
+//		runnig_button.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				service_running.setVisibility(View.VISIBLE);
+//			}
+//		});
 
+//This is used to show date in ShaeagonGroup Module
+		if(schFeedArrlist.size()>0)
+		{
+			next_scheduling_time.setText("Next Scheduling Time After : "+getDate(schFeedArrlist.get(schFeedArrlist.size() - 1).getFeedtime() + (1 * (schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count()) * 1000 * 60 + 60000),"yyyy-MM-dd hh:mm:ss"));
 		}
 
 		clear_total_links.setOnClickListener(new OnClickListener() {
@@ -232,20 +266,49 @@ public class ShareagonGroup extends Fragment {
 			}
 		});
 
+		clear_total_groups.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MainSingleTon.groupsharegonList.clear();
+				total_selected_group.setText("Total selected groups : "+MainSingleTon.groupsharegonList.size());
+				MainSingleTon.groupsharegonNameList.clear();//clear name of group store in groupshareagonNameList
+			}
+		});
+
 		cancel_schedulerRlt.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				sharedpreferences = getActivity().getSharedPreferences("FacebookBoardShareagon",
+				sharedpreferences = getActivity().getSharedPreferences("FacebookBoardShareagongrp",
 						Context.MODE_PRIVATE);
 
-				sharedpreferences.edit().putBoolean("isShareagonPageRunning", false).commit();
-				database.deleteThisSharePages(sharedpreferences.getInt("respcodepageagon", 12333));
+				sharedpreferences.edit().putBoolean("isShareagonGroupRunning", false).commit();
+				database.deleteThisShareGroup(sharedpreferences.getInt("respcodepageagon", 12333));
 				sharedpreferences.edit().clear().commit();
 
+			}
+		});
+
+		add_post_schedulerRlt.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				service_running.setVisibility(View.INVISIBLE);
+			}
+		});
 
 
+		pendingpost_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent(getActivity(), DetailsAboutPendingGroupShareagon.class);
+				startActivity(intent);
+
+				if(schFeedArrlist.size()>0)
+				{
+					next_scheduling_time.setText("Next Scheduling Time After : "+getDate(schFeedArrlist.get(schFeedArrlist.size() - 1).getFeedtime() + (1 * (schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count()) * 1000 * 60 + 60000),"yyyy-MM-dd hh:mm:ss"));
+				}
 			}
 		});
 
@@ -293,128 +356,168 @@ public class ShareagonGroup extends Fragment {
 			}
 		});
 
-		account_Rlt.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				openSelectDialog();
-			}
-		});
-
 		schedule_btn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 
-				
-				
-				//new RunGraphRequest().execute("http://google.com","CAANGZCSfBfk0BAK2yZA7tsui3QpQOjjKlsO1EEyZCNZAttm15NVtVBo7sImmJ55MHEMKE3R1RjDMtZA6IeNCWcfWZCGNZBQZAF3xSwCm3Pxeqr6CkRyzSOmNo1L8Eaa4C8hqgUDun7jc126ounFle4PVAmp9Jn2GPbVv3TK91QFrgTw9qQ134oKP","1","1655052058077718");
-				
-				
-				if (MainSingleTon.pageShareagonList.size() == 0) {
-
+				if (MainSingleTon.pageShareagonList.size() == 0 || MainSingleTon.groupsharegonList.size()==0)
+				{
 					openWarning();
-
-				} else {
-
-					if (!Editbox_sharesperminute.getText().toString().isEmpty()) {
-
-						shares_perminute = Integer
-								.parseInt(Editbox_sharesperminute.getText()
-										.toString());
-
-						if (!toppost_countEdit.getText().toString().isEmpty()) {
-							int toppost_Count = Integer
+				}
+				else
+				{
+					if (!toppost_countEdit.getText().toString().isEmpty())
+					{
+						int toppost_Count = Integer
 									.parseInt(toppost_countEdit.getText()
 											.toString());
 
-							if (shares_perminute > 0 ) {
+						if (toppost_Count >= 5 && toppost_Count <= 150)
+						{
 
-								if (toppost_Count >= 5 && toppost_Count <= 150) {
-
-									total_shareperMinute = shares_perminute;
+							total_shareperMinute = shares_perminute;
 									
-									System.out.println("shares_perminute**********************"+shares_perminute);
+							System.out.println("shares_perminute**********************"+shares_perminute);
 									
-									total_pager_minute = toppost_Count;
+							total_pager_minute = toppost_Count;
 									
-									Calendar calendar = Calendar.getInstance();
+							Calendar calendar = Calendar.getInstance();
 
-									if (datePicker != null
-											&& timePicker != null) {
+							if (datePicker != null && timePicker != null)
+							{
+								calendar.set(datePicker.getYear(),
+										datePicker.getMonth(),
+										datePicker.getDayOfMonth(),
+										timePicker.getCurrentHour(),
+										timePicker.getCurrentMinute(),
+										0);
 
-										calendar.set(datePicker.getYear(),
-												datePicker.getMonth(),
-												datePicker.getDayOfMonth(),
-												timePicker.getCurrentHour(),
-												timePicker.getCurrentMinute(),
-												0);
+								startTime = calendar.getTimeInMillis();
 
-										startTime = calendar.getTimeInMillis();
-
-										if (startTime > System
-												.currentTimeMillis()) {
-											sharedpreferences
-											.edit()
-											.putInt("total_share_links",
-													0).commit();
-											sharedpreferences
-											.edit()
-											.putInt("completed_links",
-													0).commit();
-											new GetPagePostAsyncTask()
-											.execute();
-										} else {
-											MainActivity
-											.makeToast("Date & Time should be more than current Date & Time");
-										}
-
-									} else {
-
-										if (startTime > System
-												.currentTimeMillis()) {
-											sharedpreferences
-											.edit()
-											.putInt("total_share_links",
-													0).commit();
-											sharedpreferences
-											.edit()
-											.putInt("completed_links",
-													0).commit();
-											new GetPagePostAsyncTask()
-											.execute();
-										} else {
-											MainActivity
-											.makeToast("Date & Time should be more than current Date & Time");
-										}
-
-										// MainActivity
-										// .makeToast("Please select data & time");
-
-									}
-
-									// schedulleThisPost(shares_perminute,toppost_Count);
-
-								} else {
-									toppost_countEdit
-									.setError("Enter a number between 5 to 150");
+								if (schFeedArrlist.size() > 0)
+								{
+									time = schFeedArrlist.get(schFeedArrlist.size() - 1).getFeedtime() + ((schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count()) * 1 * 1000 * 60 + 60000);
 								}
 
-							} else {
-								Editbox_sharesperminute
-								.setError("value must be between 1 to 10 minutes");
+								if (startTime >= time) {
+
+									if (startTime > System
+											.currentTimeMillis()) {
+										sharedpreferences
+												.edit()
+												.putInt("total_share_links",
+														0).commit();
+										sharedpreferences
+												.edit()
+												.putInt("completed_links",
+														0).commit();
+
+										new GetPagePostAsyncTask()
+												.execute();
+
+										//runnig_button.setText("Time : "+getDate((startTime + (total_pager_minute * count * 1000 * 60 + 60000)), "yyyy-MM-dd hh:mm:ss"));
+
+									} else {
+										MainActivity.makeToast("Date & Time should be more than current Date & Time");
+									}
+								} else {
+
+									final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+									alert.setTitle("Date & Time Error");
+
+									alert.setMessage("Scheduling Time Must Be Above Of: \n" + (getDate(time, "yyyy-MM-dd hh:mm:ss")));
+
+									alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											alert.setCancelable(true);
+										}
+									});
+
+									alert.show();
+								}
+
+							}
+							else
+							{
+								SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+
+								sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+								String date1 = textViewDate.getText().toString();
+
+								String tt = textViewTime.getText().toString();
+
+								Date date = null;
+
+								try {
+										date = sdf.parse(date1+""+tt);
+
+									} catch (ParseException e)
+										{
+											e.printStackTrace();
+										}
+
+								startTime = date.getTime()-(5*3600000+1800000);//when convert MM-dd-yyyy HH:mm to milliseceon it return 05:30 extra time so minus (5*3600000+1800000)
+
+								if(schFeedArrlist.size()>0)
+								{
+									time = schFeedArrlist.get(schFeedArrlist.size()-1).getFeedtime()+((schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count()) * 1 * 1000 * 60 + 60000);
+								}
+
+								if(startTime>=time)
+								{
+
+									if (startTime > System
+													.currentTimeMillis())
+									{
+
+										sharedpreferences
+														.edit()
+														.putInt("total_share_links",
+																0).commit();
+
+										sharedpreferences
+														.edit()
+														.putInt("completed_links",
+																0).commit();
+
+
+										new GetPagePostAsyncTask()
+														.execute();
+
+										//runnig_button.setText("Time : "+getDate((startTime + (total_pager_minute * count * 1000 * 60 + 60000)), "yyyy-MM-dd hh:mm:ss"));
+
+									} else {
+												MainActivity.makeToast("Date & Time should be more than current Date & Time");
+											}
+								}else
+								{
+									final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+									alert.setTitle("Date & Time Error");
+									alert.setMessage("Scheduling Time Must Be Above Of :\n "+(getDate(time,"yyyy-MM-dd hh:mm:ss")));
+									alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialog, int which) {
+												alert.setCancelable(true);
+												}
+											});
+
+									alert.show();
+								}
+
 							}
 
 						} else {
+									toppost_countEdit.setError("Enter a number between 5 to 150");
+								}
+					} else {
 							toppost_countEdit
 							.setError("Enter a number between 5 to 150");
 						}
-
-					} else {
-						Editbox_sharesperminute
-						.setError("Please select value between 1 to 10 minutes");
-					}
 				}
 			}
 		});
@@ -428,7 +531,9 @@ public class ShareagonGroup extends Fragment {
 		currenthour = calendar.get(Calendar.HOUR_OF_DAY);
 
 		day = calendar.get(Calendar.DAY_OF_MONTH);
+
 		month = calendar.get(Calendar.MONTH);
+
 		year = calendar.get(Calendar.YEAR);
 
 		textViewDate.setText(new StringBuilder().append(month + 1).append("-")
@@ -438,8 +543,17 @@ public class ShareagonGroup extends Fragment {
 
 		startTime = calendar.getTimeInMillis();
 
-		// /database.getPageShareagon(schId)
+	}
 
+	private String getDate(long milliSeconds, String dateFormat)
+	{
+		// Create a DateFormatter object for displaying date in specified format.
+		DateFormat formatter = new SimpleDateFormat(dateFormat);
+
+		// Create a calendar object that will convert the date and time value in milliseconds to date.
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(milliSeconds);
+		return formatter.format(calendar.getTime());
 	}
 
 	private OnTimeSetListener timelistner = new OnTimeSetListener() {
@@ -477,7 +591,7 @@ public class ShareagonGroup extends Fragment {
 
 	};
 
-	protected void openSelectDialog() {
+	protected void openSelectDialog() {//used to select account
 
 		final Dialog dialog;
 
@@ -617,13 +731,21 @@ public class ShareagonGroup extends Fragment {
 
 	}
 
-	protected void schedulleThisPost(int shares_perminute, int toppost_count) {
+	protected void schedulleThisPost(int shares_perminute, int toppost_count)
+	{
 
 		String arrayList = null;
+		String name="";
+        String groupName = null;
+		groupName = MainSingleTon.groupsharegonNameList.toString();
 
 		for (int i = 0; i < navDrawerItems.size(); i++) {
 
 			userID_list.add(navDrawerItems.get(i).getUserid());
+			if(sparseBooleanArray.get(i))
+			{
+				name=name+" "+MainSingleTon.userdetails.get(navDrawerItems.get(i).getUserid()).getUsername();
+			}
 		}
 
 		try {
@@ -641,13 +763,20 @@ public class ShareagonGroup extends Fragment {
 
 		MainActivity.makeToast("Post Schedule");
 
-	
-		SchPostModel schTweetModel = new SchPostModel("a", arrayList, System.currentTimeMillis(), shares_perminute);
+		SchPostModel schTweetModel = new SchPostModel(name, arrayList, startTime, shares_perminute, toppost_count, groupName);
+
+		database.addNewGroupShareagon(schTweetModel);
 
 		setAlarmThisPost(schTweetModel);
 
-		database.addNewPageShareagon(schTweetModel);
+		schFeedArrlist = database.getAllSchedulledGroupShareagon();
 
+		pendingpost_button.setText("Show pending links :"+schFeedArrlist.size());
+
+		if(schFeedArrlist.size()>0)
+		{
+			next_scheduling_time.setText("Next Scheduling Time After : "+getDate(schFeedArrlist.get(schFeedArrlist.size() - 1).getFeedtime() + ((schFeedArrlist.get(schFeedArrlist.size()-1).getTotal_count()) * 1 * 1000 * 60 + 60000),"yyyy-MM-dd hh:mm:ss"));
+		}
 	}
 
 	void setAlarmThisPost(SchPostModel schTweetModel) {
@@ -668,17 +797,19 @@ public class ShareagonGroup extends Fragment {
 		// **************************************
 		schFeedArrlist.clear();
 
-		schFeedArrlist = database.getAllSchedulledPageShareagon();
-		
-		sharedpreferences.edit().putInt("completed_links", 0).commit();
-		sharedpreferences.edit().putInt("total_share_links", arrlistSSS.size()).commit();
-		sharedpreferences.edit().putInt("total_pages_select",MainSingleTon.pageShareagonList.size()).commit();
-		sharedpreferences.edit().putInt("respcodepageagon", schTweetModel.getFeedId()).commit();
-		sharedpreferences.edit().putLong("startTime", startTime).commit();
-		sharedpreferences.edit().putBoolean("isShareagonPageRunning", true).commit();
+		schFeedArrlist = database.getAllSchedulledGroupShareagon();
 
-		schedullerInner();
+			sharedpreferences.edit().putInt("completed_links", 0).commit();
+			sharedpreferences.edit().putInt("total_share_links", arrlistSSS.size()).commit();
+			sharedpreferences.edit().putInt("total_pages_select",MainSingleTon.pageShareagonList.size()).commit();
+			sharedpreferences.edit().putInt("respcodepageagon", schTweetModel.getFeedId()).commit();
+			sharedpreferences.edit().putLong("startTime", startTime).commit();
+			sharedpreferences.edit().putBoolean("isShareagonGroupRunning", true).commit();
+			sharedpreferences.edit().putBoolean("nextpostrunning", false);
+			schedullerInner();
+
 	}
+
 
 	class GetPagePostAsyncTask extends AsyncTask<Void, Void, Void> {
 		@Override
@@ -739,10 +870,10 @@ public class ShareagonGroup extends Fragment {
 					try {
 						hitURL = "https://graph.facebook.com/"
 								+ MainSingleTon.pageShareagonList.get(indx)
-								+ "/feed?limit=" + pagelimit + "&access_token="
+								+ "/feed?fields=permalink_url&limit=" + pagelimit + "&access_token="
 								+ MainSingleTon.accesstoken;
 
-						System.out.println("HITTTTTTMEEEEEFEED" + hitURL);
+						System.out.println("HITTTTTTMEEEEEFEED1234" + hitURL);
 
 						JSONObject jsonObject = jsonParser
 								.getJSONFromUrl(hitURL);
@@ -767,10 +898,10 @@ public class ShareagonGroup extends Fragment {
 											.getString("id"));
 								}
 
-								if (jsonObject2.has("link")) {
+								if (jsonObject2.has("permalink_url")) {
 
 									arrlistSSS.add(jsonObject2
-											.getString("link"));
+											.getString("permalink_url"));
 								} else {
 									if (jsonObject2.has("actions")) {
 										try {
@@ -828,7 +959,6 @@ public class ShareagonGroup extends Fragment {
 		}
 
 		Collections.shuffle(arrlistSSS);
-
 	}
 
 	void schedullerInner() {
@@ -849,20 +979,29 @@ public class ShareagonGroup extends Fragment {
 
 						System.out.println("share page timer");
 						SharedPreferences lisharedpref = context
-								.getSharedPreferences("FacebookBoardShareagon",
+								.getSharedPreferences("FacebookBoardShareagongrp",
 										Context.MODE_PRIVATE);
+
+						if(lisharedpref.getBoolean("nextpostrunning",false)) {
+
+						}
 
 						complted_count = lisharedpref.getInt("completed_links",
 								0);
+
 						total_counts = lisharedpref.getInt("total_share_links",
 								0);
 
-						isShareagonPageRunning = lisharedpref.getBoolean(
-								"isShareagonPageRunning", false);
+						isShareagonGroupRunning = lisharedpref.getBoolean(
+								"isShareagonGroupRunning", false);
 
-						if (isShareagonPageRunning) {
+						System.out.println("issharegonGouprRunning"+isShareagonGroupRunning);
 
-							service_running.setVisibility(View.VISIBLE);
+						if (isShareagonGroupRunning) {
+
+							System.out.println("Sharegon page is running");
+
+							//service_running.setVisibility(View.VISIBLE);
 
 							complted_count = lisharedpref.getInt(
 									"completed_links", 0);
@@ -879,7 +1018,7 @@ public class ShareagonGroup extends Fragment {
 
 							completed_textview.setText("Shared : "+complted_count);
 							
-							if(lisharedpref.getBoolean("isShareagonPageStarted", false))
+							if(lisharedpref.getBoolean("isShareagonGroupStarted", false))
 							{
 								start_time.setText("Started at : "
 										+ DateUtils.getRelativeTimeSpanString(
@@ -891,9 +1030,11 @@ public class ShareagonGroup extends Fragment {
 								start_time.setText("Starts at : "+ usingDateAndCalendar(lisharedpref.getLong("startTime", 5454)));
 							}
 							
-							schedule_btn.setEnabled(false);
+							//schedule_btn.setEnabled(false);
 						} else {
-							
+
+							System.out.println("Sharegon page is not running");
+
 							service_running.setVisibility(View.GONE);
 
 							complted_count = lisharedpref.getInt(
@@ -911,15 +1052,15 @@ public class ShareagonGroup extends Fragment {
 							start_time.setText("");
 							schedule_btn.setEnabled(true);
 						}
-						/*if (total_counts == complted_count) {
-
-							service_running.setVisibility(View.GONE);
-
-							lisharedpref.edit().clear().commit();
-
-						} else {
-
-						}*/
+//						if (total_counts == complted_count) {
+//
+//							service_running.setVisibility(View.GONE);
+//
+//							lisharedpref.edit().clear().commit();
+//
+//						} else {
+//
+//						}
 					}
 				});
 
@@ -1025,7 +1166,6 @@ public class ShareagonGroup extends Fragment {
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
-			 
 		}
 
 	}

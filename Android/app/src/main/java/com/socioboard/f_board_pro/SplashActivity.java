@@ -93,7 +93,6 @@ public class SplashActivity extends Activity
 			Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
 			startActivity(intent); // start welcome activity to sign_In  Facebook;
 			finish();
-
 		} 
 		else
 		{

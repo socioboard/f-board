@@ -121,7 +121,7 @@ public class PagesSearch_Fragment extends Fragment implements OnScrollListener {
 					for (int i = 0; i < jsonArray.length(); i++) {
 						PagesSearch_Model pagessearch_model = new PagesSearch_Model();
 						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-						pagessearch_model.setPgCategory(jsonObject2.getString("category"));
+						//pagessearch_model.setPgCategory(jsonObject2.getString("category"));
 						pagessearch_model.setPgID(jsonObject2.getString("id"));
 						pagessearch_model.setPgName(jsonObject2.getString("name"));
 						pagessearch_model.setLikesCount(null);

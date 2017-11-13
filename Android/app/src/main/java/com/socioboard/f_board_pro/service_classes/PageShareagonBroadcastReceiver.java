@@ -1,15 +1,5 @@
 package com.socioboard.f_board_pro.service_classes;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-
-import com.socioboard.f_board_pro.R;
-import com.socioboard.f_board_pro.SplashActivity;
-import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
-import com.socioboard.f_board_pro.models.HomeFeedModel;
-import com.socioboard.f_board_pro.models.SchPostModel;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -21,6 +11,16 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
+import com.socioboard.f_board_pro.R;
+import com.socioboard.f_board_pro.SplashActivity;
+import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
+import com.socioboard.f_board_pro.models.HomeFeedModel;
+import com.socioboard.f_board_pro.models.SchPostModel;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+
 public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 
 	String userFBiD = null;
@@ -30,6 +30,7 @@ public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 	JSONArray postlinksArray = null, userlist_array = null;
 	int getResponseCode;
 	ArrayList<HomeFeedModel> arrlist = new ArrayList<HomeFeedModel>();
+	ArrayList feedid = new ArrayList();
 	SharedPreferences sharedPreferences;
 	Context context;
 
@@ -39,32 +40,36 @@ public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 		database = new F_Board_LocalData(context);
 
 		getResponseCode = intent.getIntExtra("respcode", 404);
+
+		feedid = intent.getStringArrayListExtra("feedid");//get feedId from ShareagonPage
+
 		sharedPreferences = context.getSharedPreferences(
 				"FacebookBoardShareagon", Context.MODE_PRIVATE);
 		this.context = context;
 
-		System.out
-				.println("++++++++++++++++++++++++++++++++++  Share link Broadcast Reciever  +++++++++++++++++++ getResponseCode"
-						+ getResponseCode);
+		System.out.println("++++++++++++++++++++++++++++++++++  Share link Broadcast Reciever  +++++++++++++++++++ getResponseCode" + getResponseCode);
 
 		SchPostModel schTweetModel = database.getPageShareagon(""
 				+ getResponseCode);
+
 
 		if (schTweetModel != null) {
 
 			myprint(schTweetModel);
 
-			// post this post
-			// postSharePostWall(schTweetModel);
-			// postSharePostWall(schTweetModel,
-			// database.getUserData(schTweetModel.getUserID()).getUserAcessToken());
+//			 post this post
+//			 postSharePostWall(schTweetModel);
+//			 postSharePostWall(schTweetModel,
+//			 database.getUserData(schTweetModel.getUserID()).getUserAcessToken());
 
-			Intent intentService = new Intent(context,
-					ShareagonpageServiceClass.class);
+			Intent intentService = new Intent(context, ShareagonpageServiceClass.class);
 
 			intentService.putExtra("shareagonService", getResponseCode);
 
+			intentService.putExtra("feedida",feedid);
+
 			context.startService(intentService);
+
 
 			sharedPreferences.edit().putBoolean("isShareagonPageStarted", true)
 					.commit();
@@ -85,11 +90,11 @@ public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 
 			mBuilder.setAutoCancel(true);
 
-			mBuilder.setTicker("Page Shareagon started!!");
+			mBuilder.setTicker("Shareagon Page started!!");
 
 			mBuilder.setContentIntent(pIntent);
 
-			mBuilder.setContentTitle("Page Shareagon started");
+			mBuilder.setContentTitle("Shareagon Page started");
 
 			mBuilder.setStyle(new NotificationCompat.BigPictureStyle()
 					.bigPicture(BitmapFactory.decodeFile(schTweetModel
@@ -109,7 +114,6 @@ public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 		} else {
 
 			myprint("NO DATA FOUND IN TABLE FROM THAT RESPONSE CODE");
-
 		}
 
 	}
@@ -119,5 +123,4 @@ public class PageShareagonBroadcastReceiver extends BroadcastReceiver {
 		System.out.println(msg.toString());
 
 	}
-
 }

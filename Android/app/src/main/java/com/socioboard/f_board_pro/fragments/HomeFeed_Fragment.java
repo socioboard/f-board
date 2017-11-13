@@ -81,8 +81,7 @@ public class HomeFeed_Fragment extends  Fragment implements OnScrollListener
 		addFooterView();
 		
 		myFeedListView.setOnScrollListener(HomeFeed_Fragment.this);
-		
-		 
+
 		myFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -437,7 +436,6 @@ public class HomeFeed_Fragment extends  Fragment implements OnScrollListener
 
 						}
 					}
-
 					if(jsonObject.has("paging"))
 					{
 						JSONObject js56 =  jsonObject.getJSONObject("paging");

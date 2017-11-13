@@ -1,9 +1,6 @@
 package com.socioboard.f_board_pro.database.util;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressLint("UseValueOf")
 public class F_Board_LocalData extends SQLiteOpenHelper {
@@ -25,12 +25,15 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 	public static final String sch_table_name = "schedullertable";
 	public static final String share_table_name = "sharelink";
 	public static final String page_shareagon_table_name = "pageshareagon";
+	public static final String group_shareagon_table_name = "groupshareagonnew";
 	public static final String KEY_SchTID = "schtid";
 	public static final String KEY_FeedText = "feedtext";
 	public static final String KEY_ShareLink = "shareLink";
 	public static final String KEY_FeedImagePath ="feedImagePath";
 	public static final String KEY_Interval ="shareinterval";
 	public static final String KEY_FeedTime = "feedtimestamp";
+	public static final String KEY_Total_count = "total_post_count";
+	public static final String KEY_Group_Name = "group_name";
 	public static final String tableSelectedUser="selecteduser";
 
 	public F_Board_LocalData(Context context) {
@@ -70,7 +73,11 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 		
 		String querry4 = "CREATE TABLE IF NOT EXISTS " + page_shareagon_table_name + "("
 				+ KEY_SchTID + " INTEGER,"+ KEY_UserID + " TEXT,"+KEY_ShareLink+
-				" TEXT,"  + KEY_FeedTime + " INTEGER," + KEY_Interval + " INTEGER)";
+				" TEXT,"  + KEY_FeedTime + " INTEGER," + KEY_Interval + " INTEGER," + KEY_Total_count + " INTEGER)";
+
+		String querry5 = "CREATE TABLE IF NOT EXISTS " + group_shareagon_table_name + "("
+				+ KEY_SchTID + " INTEGER,"+ KEY_UserID + " TEXT,"+KEY_ShareLink+
+				" TEXT,"  + KEY_FeedTime + " INTEGER," + KEY_Interval + " INTEGER," + KEY_Total_count + " INTEGER," + KEY_Group_Name +" TEXT)";
 
 		//String querry5="CREATE TABLE IF NOT EXISTS "+ tableSelectedUser + " ("+")";
 
@@ -81,11 +88,13 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 		database.execSQL(querry2);
 		database.execSQL(querry3);
 		database.execSQL(querry4);
+		database.execSQL(querry5);
 
 		System.out.println("CreateTable " + querry);
 		System.out.println("CreateTable2 " + querry2);
 		System.out.println("CreateTable3 " + querry3);
-		System.out.println("CreateTable3 " + querry4);
+		System.out.println("CreateTable4 " + querry4);
+		System.out.println("CreateTable5 " + querry5);
 		
 
 	}
@@ -272,7 +281,7 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 	}
 
-	//Create sharescheduler
+	//this is use to add data in SharegonPage module.
 	public void addNewPageShareagon(SchPostModel schTweetModel) {
 
 		SQLiteDatabase database = this.getWritableDatabase();
@@ -289,9 +298,38 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 		contentValues.put(KEY_Interval, schTweetModel.getInterval());
 
+		contentValues.put(KEY_Total_count, schTweetModel.getTotal_count());
+
 		database.insert(page_shareagon_table_name, null, contentValues);
 
 		System.out.println("add new Share scheduler " + contentValues);
+
+	}
+
+	//this is used to add new record for ShareagonGroup Module
+	public void addNewGroupShareagon(SchPostModel schTweetModel)
+	{
+		SQLiteDatabase database = this.getWritableDatabase();
+
+		ContentValues contentValues = new ContentValues();
+
+		contentValues.put(KEY_SchTID, schTweetModel.getFeedId());
+
+		contentValues.put(KEY_UserID, schTweetModel.getUserID());
+
+		contentValues.put(KEY_ShareLink, schTweetModel.getFeedText());
+
+		contentValues.put(KEY_FeedTime, schTweetModel.getFeedtime());
+
+		contentValues.put(KEY_Interval, schTweetModel.getInterval());
+
+		contentValues.put(KEY_Total_count, schTweetModel.getTotal_count());
+
+		contentValues.put(KEY_Group_Name, schTweetModel.getGroup_name());
+
+		database.insert(group_shareagon_table_name, null, contentValues);
+
+		System.out.println("add new Group Sharegon schedular " + contentValues);
 
 	}
 	
@@ -317,6 +355,8 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 	}
 
+
+//this is use to get ShareagonPage Module data.
 	public SchPostModel getPageShareagon(String schId) {
 
 		SchPostModel schFeedModel = null;
@@ -341,6 +381,41 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 			int interval     = new Integer(cursor.getString(4));
 
 			schFeedModel     = new SchPostModel(feedID, userID, sharelink, feedtime.longValue(), interval);
+		}
+
+		return schFeedModel;
+	}
+
+
+	//This is use to retrive data for SharagonGroup Module.
+	public SchPostModel getGroupShareagon(String schId)
+	{
+		SchPostModel schFeedModel = null;
+
+		String query = "SELECT * FROM " + group_shareagon_table_name + " WHERE "
+				+ KEY_SchTID + " = '" + schId + "'";
+
+		SQLiteDatabase database = this.getReadableDatabase();
+
+		Cursor cursor = database.rawQuery(query, null);
+
+		if (cursor.moveToFirst()) {
+
+			int feedID       = cursor.getInt(0);
+
+			String userID    = cursor.getString(1);
+
+			String sharelink = cursor.getString(2);
+
+			Long feedtime    = new Long(cursor.getString(3));
+
+			int interval     = new Integer(cursor.getString(4));
+
+			int totalpostcount = new Integer(cursor.getString(5));
+
+			String groupName = new String(cursor.getString(6));
+
+			schFeedModel     = new SchPostModel(feedID, userID, sharelink, feedtime.longValue(), interval, totalpostcount, groupName);
 		}
 
 		return schFeedModel;
@@ -487,7 +562,7 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 	}
 
-	//Share getall
+	//This is used to get all data of sharegon Page module.
 		public ArrayList<SchPostModel> getAllSchedulledPageShareagon() {
 
 			String query = "SELECT * FROM " + page_shareagon_table_name;
@@ -516,7 +591,9 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 					int interval     = new Integer(cursor.getString(4));
 
-					schTweetModel   = new SchPostModel(feedID, userID, sharelinks, feedtime, interval);
+					int post_count = new Integer(cursor.getString(5));
+
+					schTweetModel   = new SchPostModel(feedID, userID, sharelinks, feedtime, interval, post_count);
 
 					allschTweets.add(schTweetModel);
 
@@ -527,6 +604,51 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 			return allschTweets;
 
 		}
+
+
+//This is used to retrive all dara for Shareagon Group module.
+	public ArrayList<SchPostModel> getAllSchedulledGroupShareagon() {
+
+		String query = "SELECT * FROM " + group_shareagon_table_name;
+
+		ArrayList<SchPostModel> allschTweets = new ArrayList<SchPostModel>();
+
+		System.out.println(query);
+
+		SQLiteDatabase database = this.getReadableDatabase();
+
+		Cursor cursor = database.rawQuery(query, null);
+
+		SchPostModel schTweetModel;
+
+		if (cursor.moveToFirst()) {
+
+			do {
+
+				int feedID = cursor.getInt(0);
+
+				String userID = cursor.getString(1);
+
+				String sharelinks = cursor.getString(2);
+
+				Long feedtime    = new Long(cursor.getString(3));
+
+				int interval     = new Integer(cursor.getString(4));
+
+				int totalpostcount = new Integer(cursor.getString(5));
+
+				String groupName = cursor.getString(6);
+
+				schTweetModel   = new SchPostModel(feedID, userID, sharelinks, feedtime, interval, totalpostcount, groupName);
+
+				allschTweets.add(schTweetModel);
+
+			} while (cursor.moveToNext());
+		}
+
+		return allschTweets;
+
+	}
 
 	
 	public void deleteThisPost(int schid) 
@@ -556,12 +678,26 @@ public class F_Board_LocalData extends SQLiteOpenHelper {
 
 	}
 	
-	
-	public void deleteThisSharePages(int schid) 
+	//this is use to delete shareagonPage database
+	public void deleteThisSharePages(int schid)
 	{
 		SQLiteDatabase database = this.getWritableDatabase();
 
 		String query = "DELETE FROM " + page_shareagon_table_name + " WHERE " + KEY_SchTID
+				+ " = " + schid;
+
+		System.out.println(query);
+
+		database.execSQL(query);
+
+	}
+
+	//this is used to delete ShareagonGroup module database data.
+	public void deleteThisShareGroup(int schid)
+	{
+		SQLiteDatabase database = this.getWritableDatabase();
+
+		String query = "DELETE FROM " + group_shareagon_table_name + " WHERE " + KEY_SchTID
 				+ " = " + schid;
 
 		System.out.println(query);

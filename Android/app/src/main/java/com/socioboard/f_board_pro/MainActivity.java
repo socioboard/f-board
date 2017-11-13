@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -69,7 +70,6 @@ import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.database.util.Utilsss;
 import com.socioboard.f_board_pro.fragments.AutoLiker;
 import com.socioboard.f_board_pro.fragments.FriendsFragment;
-import com.socioboard.f_board_pro.fragments.HomeFeed_Fragment;
 import com.socioboard.f_board_pro.fragments.MyFeeds_Fragment;
 import com.socioboard.f_board_pro.fragments.Mygroup;
 import com.socioboard.f_board_pro.fragments.Pages_Fragment;
@@ -159,7 +159,11 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReferenceFromUrl("https://pushnotificationfirebase-12934.firebaseio.com/");
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefrence",Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+
         super.onCreate(savedInstanceState);
+
         FacebookSdk.sdkInitialize(MainActivity.this);
         context = getApplicationContext();
         System.out.println("Started !3");
@@ -196,31 +200,15 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar_title = (TextView)findViewById(R.id.toolbar_title);
 
-//        switchCompat = (SwitchCompat) findViewById(R.id.switchButton);
-//        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                if(isChecked)
-//                {
-//                    notificationstatus = true;
-//                    Toast.makeText(getApplicationContext(),"cheack",Toast.LENGTH_SHORT).show();
-//                    registration(notificationstatus,userid,username,useraccesstoken,android_id,getFirebaseToken);
-//                }
-//                else {
-//
-//                 notificationstatus = false;
-//                    Toast.makeText(getApplicationContext(),"Uncheack",Toast.LENGTH_SHORT).show();
-//                    registration(notificationstatus,userid,username,useraccesstoken,android_id,getFirebaseToken);
-//                }
-//            }
-//        });
+
         if (toolbar != null) {
             //toolbar.getTitle();
-            toolbar_title.setText(MainSingleTon.userFirstName);
+            toolbar_title.setText(MainSingleTon.username);
              //toolbar.setTitle(MainSingleTon.userFirstName);
             //toolbar.setTitle(mDrawerTitle);
             setSupportActionBar(toolbar);
+        }else {
+            toolbar_title.setText(MainSingleTon.username);
         }
 
         System.out.println("Started !12");
@@ -260,10 +248,10 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         System.out.println("Started !15");
         mDrawerList_Right = (ListView) findViewById(R.id.right_drawer);
 
-        for (int i = 0; i < mDrawerTitles.length; i++) {
+        for (int i = 0; i < mDrawerTitles.length; i++)
+        {
             drawerItems.add(new Items(mDrawerTitles[i], mDrawerIcons.getResourceId(i, -(i + 1))));
             System.out.println("Started !16 : 1-------"+mDrawerTitles[i]+" 2-------"+drawerItems+" 3------"+mDrawerIcons);
-
         }
 
         accountList = new ArrayList<ModelUserDatas>();
@@ -341,20 +329,36 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
             }
         });
 
+        boolean cheackvalue = sharedPreferences.getBoolean("cheackv",true);
+        if(cheackvalue)
+        {
+            System.out.println("cheackvalue=="+cheackvalue);
+            switchCompat1.setChecked(true);
+        }
+        else
+        {
+                System.out.println("cheackvalueinelse=="+cheackvalue);
+                switchCompat1.setChecked(false);
+        }
         switchCompat1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if(isChecked)
                 {
+                    editor.putBoolean("cheackv",true);
+                    editor.commit();
                     notificationstatus = true;
-                    Toast.makeText(getApplicationContext(),"cheack",Toast.LENGTH_SHORT).show();
+                    MainSingleTon.firebaseNotification = notificationstatus;
                     registration(notificationstatus,userid,username,useraccesstoken,android_id,getFirebaseToken);
                 }
                 else {
 
                     notificationstatus = false;
-                    Toast.makeText(getApplicationContext(),"Uncheack",Toast.LENGTH_SHORT).show();
+                    editor.remove("cheackv");
+                    editor.putBoolean("cheackv",false);
+                    editor.commit();
+                    MainSingleTon.firebaseNotification = notificationstatus;
                     registration(notificationstatus,userid,username,useraccesstoken,android_id,getFirebaseToken);
                 }
 
@@ -499,10 +503,13 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         System.out.println("Started !51"+"addNewAccount2");
         Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(MainActivity.this,getIntent());
         //System.out.println("Started !51"+"addNewAccount1"+targetUrl.toString());
-        if (targetUrl != null) {
+        if (targetUrl != null)
+        {
             Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
-        } else {
-            AppLinkData.fetchDeferredAppLinkData(getBaseContext(),new AppLinkData.CompletionHandler() {
+        } else
+        {
+            AppLinkData.fetchDeferredAppLinkData(getBaseContext(),new AppLinkData.CompletionHandler()
+            {
                         @Override
                         public void onDeferredAppLinkDataFetched(AppLinkData appLinkData) {
                             // process applink data
@@ -602,7 +609,8 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
 
         profileTracker = new ProfileTracker() {
             @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile)
+            {
 
                 if (profileTracker.isTracking()) {
 
@@ -650,11 +658,13 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         }
 
         @Override
-        protected void onPostExecute(String extendedAccessToken) {
+        protected void onPostExecute(String extendedAccessToken)
+        {
 
             super.onPostExecute(extendedAccessToken);
 
-            if (!MainSingleTon.userdetails.containsKey(myAccessToken.getUserId())) {
+            if (!MainSingleTon.userdetails.containsKey(myAccessToken.getUserId()))
+            {
 
                 ModelUserDatas modelUserDatas = new ModelUserDatas();
 
@@ -712,11 +722,27 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
 
                 mDrawerList_Right.setAdapter(accountAdapter);
 
+                setUser(MainSingleTon.username, MainSingleTon.userimage,MainSingleTon.userEmail);
+                toolbar_title.setText(MainSingleTon.username);
+
+                System.out.println("Started !49");
+                ProfileFragment fragment = new ProfileFragment(MainSingleTon.userid);
+                System.out.println("Started !50");
+                fragmentManager = getSupportFragmentManager();
+                System.out.println("Started !51");
+                swipeFragment(fragment);
+
                 LoginManager.getInstance().logOut();
+
+
             } else {
                 Toast.makeText(getApplicationContext(),"Users Account already exist!!", Toast.LENGTH_SHORT).show();
 
                 LoginManager.getInstance().logOut();
+
+//                Intent intent = new Intent(getApplicationContext(),	MainActivity.class);
+//                startActivity(intent);// start intent to move for home screen
+//                finish();
             }
         }
     }
@@ -825,12 +851,16 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         getFirebaseToken = FirebaseInstanceId.getInstance().getToken();
         userFirstName = MainSingleTon.userFirstName;
         Email = email;
+        notificationstatus = MainSingleTon.firebaseNotification;
         System.out.println("Data"+userid);
         System.out.println("Data"+username);
         System.out.println("Data"+useraccesstoken);
         System.out.println("Data"+android_id);
         System.out.println("Data"+getFirebaseToken);
         registration(notificationstatus,userid,username,useraccesstoken,android_id,getFirebaseToken);
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -895,49 +925,64 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
         switch (position) {
             case 0:
                 fragment = new ProfileFragment(MainSingleTon.userid);
+                //toolbar_title.setText(MainSingleTon.username);
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
+            
+//            case 1:
+//                fragment = new HomeFeed_Fragment();
+//                System.out.println("DrawerItem=="+ mDrawerTitles[position]);
+//                toolbar_title.setText(mDrawerTitles[position]);
+//                break;
+
             case 1:
-                fragment = new HomeFeed_Fragment();
+                fragment = new MyFeeds_Fragment();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 2:
-                fragment = new MyFeeds_Fragment();
+                fragment = new FriendsFragment();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 3:
-                fragment = new FriendsFragment();
+                fragment = new Pages_Fragment();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 4:
-                fragment = new Pages_Fragment();
+                fragment = new Mygroup();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 5:
                 fragment = new SearchFragment();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 6:
                 //fragment = new ChoosePage();
                 fragment = new AutoLiker();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 7:
                 fragment = new SchedulerFragment();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
             case 8:
                 fragment = new ShareagonLinks();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 9:
                 fragment = new ShareagonPage();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
             case 10:
-                fragment = new Mygroup();
-                break;
-
-            case 11:
                 fragment = new ShareagonGroup();
+                toolbar_title.setText(mDrawerTitles[position]);
                 break;
 
         }
@@ -1044,7 +1089,7 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
 
         View v = mDrawerList.getChildAt(position
                 - mDrawerList.getFirstVisiblePosition());
-        TextView someText = (TextView) v.findViewById(R.id.item_new);
+//        TextView someText = (TextView) v.findViewById(R.id.item_new);
         Resources res = getResources();
         String articlesFound = "";
 
@@ -1052,33 +1097,33 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
             case 1:
                 articlesFound = res.getQuantityString(
                         R.plurals.numberOfNewArticles, counter, counter);
-                someText.setBackgroundResource(R.drawable.new_apps);
+                //someText.setBackgroundResource(R.drawable.new_apps);
                 break;
             case 2:
                 articlesFound = res.getQuantityString(
                         R.plurals.numberOfNewArticles, counter, counter);
-                someText.setBackgroundResource(R.drawable.new_sales);
+                //someText.setBackgroundResource(R.drawable.new_sales);
                 break;
             case 3:
                 articlesFound = res.getQuantityString(
                         R.plurals.numberOfNewArticles, counter, counter);
-                someText.setBackgroundResource(R.drawable.new_blog);
+               // someText.setBackgroundResource(R.drawable.new_blog);
                 break;
             case 4:
                 articlesFound = res.getQuantityString(
                         R.plurals.numberOfNewArticles, counter, counter);
-                someText.setBackgroundResource(R.drawable.new_bookmark);
+               // someText.setBackgroundResource(R.drawable.new_bookmark);
                 break;
             case 5:
                 articlesFound = res.getQuantityString(
                         R.plurals.numberOfNewArticles, counter, counter);
-                someText.setBackgroundResource(R.drawable.new_community);
+               // someText.setBackgroundResource(R.drawable.new_community);
                 break;
         }
 
-        someText.setText(articlesFound);
-        if (visible)
-            someText.setVisibility(View.VISIBLE);
+       // someText.setText(articlesFound);
+       // if (visible)
+            //someText.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -1126,6 +1171,7 @@ public class MainActivity extends AppCompatActivity implements  MultiSwipeRefres
                         " "+MainSingleTon.userEmail+""+MainSingleTon.accesstoken);
 */              //  Toast.makeText(getApplicationContext(),"Checking:--------MainActivity--1037",Toast.LENGTH_LONG).show();
                 setUser(MainSingleTon.username, MainSingleTon.userimage,MainSingleTon.userEmail);
+                toolbar_title.setText(MainSingleTon.username);
 
             }
         });

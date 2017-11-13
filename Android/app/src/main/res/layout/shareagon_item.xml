@@ -78,7 +78,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="5dp"
             android:gravity="center"
-            android:text="likes per minute"
+            android:text="Like per minute"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/SteelBlue"
             android:textSize="16sp" />

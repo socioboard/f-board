@@ -19,24 +19,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:hint="Sign Up"
+            android:maxLines="1"
             android:textColor="#ffffff"
-            android:textSize="21dp"
+            android:textSize="18dp"
             android:layout_marginRight="50dp"
             android:textStyle="bold" />
 
-        <!--<ImageView-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@drawable/notification" />-->
-
-        <!--<android.support.v7.widget.SwitchCompat-->
-            <!--android:id="@+id/switchButton"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="10dp"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="10dp"-->
-            <!--android:layout_gravity="center" />-->
 
     </LinearLayout>
 

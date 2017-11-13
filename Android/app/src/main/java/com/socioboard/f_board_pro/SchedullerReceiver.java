@@ -1,7 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import java.io.ByteArrayOutputStream;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -21,6 +19,8 @@ import com.facebook.HttpMethod;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import java.io.ByteArrayOutputStream;
 
 public class SchedullerReceiver extends BroadcastReceiver {
 
@@ -166,7 +166,6 @@ public class SchedullerReceiver extends BroadcastReceiver {
 
 				@Override
 				public void onCompleted(GraphResponse response) {
-
 
 					System.out.println("Scheduled response="+response.getJSONObject());
 

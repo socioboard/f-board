@@ -57,7 +57,7 @@
             android:background="@color/color_light_blue_500"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:textColor="@color/black" />
+            android:textColor="@color/White" />
     </android.support.v4.view.ViewPager>
 
 

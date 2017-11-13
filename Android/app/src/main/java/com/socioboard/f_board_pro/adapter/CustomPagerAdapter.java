@@ -1,7 +1,5 @@
 package com.socioboard.f_board_pro.adapter;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -16,6 +14,8 @@ import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.ImageModel;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class CustomPagerAdapter extends PagerAdapter
 {

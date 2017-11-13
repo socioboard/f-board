@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -106,7 +105,7 @@ public class SelectAccountAdapter extends BaseAdapter implements
 			@Override
 			public void onClick(View v) {
 
-				Toast.makeText(parent.getContext(),navDrawerItems.get(position).getUserAcessToken(),Toast.LENGTH_SHORT).show();
+				//Toast.makeText(parent.getContext(),navDrawerItems.get(position).getUserAcessToken(),Toast.LENGTH_SHORT).show();
 				userFBaccesToken = navDrawerItems.get(position).getUserAcessToken();
 				if(!checkBox.isChecked())
 				{

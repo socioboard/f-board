@@ -1,5 +1,10 @@
 package com.socioboard.f_board_pro.database.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -9,11 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 /*
  * this class is used for get Json data from given web services url
@@ -87,7 +87,7 @@ public class Utilsss {
 	    long when = 0;
 	    try  
 	    {
-	        when = dateFormat.parse(utcLongDateTime).getTime();
+	        when = (dateFormat.parse(utcLongDateTime).getTime()+5*3600000+1800000);//add 5:30hr to conver GMT time zone to UTC
 	    } 
 	    catch (ParseException e) 
 	    {

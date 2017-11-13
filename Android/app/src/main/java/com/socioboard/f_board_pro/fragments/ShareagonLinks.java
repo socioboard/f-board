@@ -44,8 +44,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class ShareagonLinks extends Fragment{
 
@@ -92,7 +96,7 @@ public class ShareagonLinks extends Fragment{
 
 		schFeedArrlist = database.getAllSchedulledShares();
 
-		showpendinlinkns.setText("Show pendings links : "+schFeedArrlist.size());
+		showpendinlinkns.setText("Show pending links : "+schFeedArrlist.size());
 
 		selectDate    = (RelativeLayout) rootview.findViewById(R.id.selectDate);
 		select_time   = (RelativeLayout) rootview.findViewById(R.id.select_time);
@@ -257,7 +261,6 @@ public class ShareagonLinks extends Fragment{
 				if(MainSingleTon.shareLinks.size()==0)
 				{
 					openWarning();
-
 				}else
 				{
 					Editbox_sharesperminute.setText("1");
@@ -269,8 +272,11 @@ public class ShareagonLinks extends Fragment{
 
 						if(shares_perminute>0&&shares_perminute<=1)
 						{
-							schedulleThisPost(shares_perminute);
-							
+							try {
+								schedulleThisPost(shares_perminute);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 						}else
 						{
 							Editbox_sharesperminute.setError("value must be 1");
@@ -487,7 +493,7 @@ public class ShareagonLinks extends Fragment{
 	}
 
 
-	protected void schedulleThisPost(int shares_perminute) {
+	protected void schedulleThisPost(int shares_perminute) throws ParseException {
 
 		String arrayList = null;
 
@@ -514,69 +520,84 @@ public class ShareagonLinks extends Fragment{
 
 			if (startTime > System.currentTimeMillis()) {
 
-				for (int i = 0; i < navDrawerItems.size(); i++) {
+				if(count>0) {
 
-					if (sparseBooleanArray.get(i)) {
+					for (int i = 0; i < navDrawerItems.size(); i++) {
 
-				
-						long feedTime = startTime + i * 5000;
+						if (sparseBooleanArray.get(i)) {
 
-						SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), arrayList, feedTime, shares_perminute);
+							long feedTime = startTime + i * 5000;
 
-						database.addNewShareScheduler(schTweetModel);
+							SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), arrayList, feedTime, shares_perminute);
 
-						setAlarmThisPost(schTweetModel);
+							database.addNewShareScheduler(schTweetModel);
 
-						MainActivity.makeToast("Posts schedulled");
+							setAlarmThisPost(schTweetModel);
 
-					}else
-					{
-						//MainActivity.makeToast("Please select atleast one user !");
+							MainActivity.makeToast("Posts scheduled");
+
+						} else {
+							//MainActivity.makeToast("Please select atleast one user !");
+						}
 					}
-
+				}else
+				{
+					MainActivity.makeToast("Please select atleast one user !");
 				}
 
 
 			} else {
 			
-
-				//MainActivity.makeToast("Date & Time should be more than current Date & Time");
+				MainActivity.makeToast("Date & Time should be more than current Date & Time");
 
 			}
 
 		} else {
-			
+
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+			sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+			String date1 = textViewDate.getText().toString();
+			String tt = textViewTime.getText().toString();
+			Date date = sdf.parse(date1+""+tt);
+
+			long startTime = date.getTime()-(5*3600000+1800000);//when convert MM-dd-yyyy HH:mm to milliseceon it return 05:30 extra time so minus (5*3600000+1800000)
+
 			if (startTime > System.currentTimeMillis()) {
 
-				for (int i = 0; i < navDrawerItems.size(); i++) {
+				if(count>0) {
 
-					if (sparseBooleanArray.get(i)) {
+					for (int i = 0; i < navDrawerItems.size(); i++) {
 
-						System.out.println(i * 5000+">>>>>>>>>>>>>>TIME IN COMPOSE = "+startTime);
 
-						long feedTime = startTime + i * 5000;
+						if (sparseBooleanArray.get(i)) {
 
-						System.out.println("TIMMMMEEEEEEE ="+shares_perminute);
+							System.out.println(i * 5000 + ">>>>>>>>>>>>>>TIME IN COMPOSE = " + startTime);
 
-						SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), arrayList, feedTime, shares_perminute);
+							long feedTime = startTime + i * 5000;
 
-						database.addNewShareScheduler(schTweetModel);
+							System.out.println("TIMMMMEEEEEEE =" + shares_perminute);
 
-						setAlarmThisPost(schTweetModel);
+							SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), arrayList, feedTime, shares_perminute);
 
-						MainActivity.makeToast("Posts schedulled");
+							database.addNewShareScheduler(schTweetModel);
 
-					}else
-					{
-						//MainActivity.makeToast("Please select atleast one user !");
+							setAlarmThisPost(schTweetModel);
+
+							MainActivity.makeToast("Posts schedulled");
+
+						} else {
+							//MainActivity.makeToast("Please select atleast one user !");
+						}
+
 					}
-
+				}else {
+					MainActivity.makeToast("Please select atleast one user !");
 				}
 
 
 			} else {
 
-				//MainActivity.makeToast("Date & Time should be more than current Date & Time");
+				MainActivity.makeToast("Date & Time should be more than current Date & Time");
 			}
 
 		//	MainActivity.makeToast("please select desire date or time");
@@ -598,7 +619,7 @@ public class ShareagonLinks extends Fragment{
 		// **************************************
 		schFeedArrlist.clear();
 		schFeedArrlist = database.getAllSchedulledShares();
-		showpendinlinkns.setText("Show pendings links : "+schFeedArrlist.size());
+		showpendinlinkns.setText("Show pending links : "+schFeedArrlist.size());
 		
 	}
 

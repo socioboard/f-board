@@ -1,9 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,7 +23,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +44,13 @@ import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class SchedulleComposeActivity extends Activity {
 
@@ -81,6 +83,8 @@ public class SchedulleComposeActivity extends Activity {
 	int currenthour;
 
 	int currentminute;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -222,7 +226,11 @@ public class SchedulleComposeActivity extends Activity {
 
 				/*	if (!imagePath.isEmpty()) {*/
 
-				schedulleThisPost();
+				try {
+					schedulleThisPost();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 
 				/*}else
 				{
@@ -441,7 +449,7 @@ public class SchedulleComposeActivity extends Activity {
 
 	}
 
-	protected void schedulleThisPost() {
+	protected void schedulleThisPost() throws ParseException {
 
 		// check everything filled by user or not
 
@@ -457,46 +465,95 @@ public class SchedulleComposeActivity extends Activity {
 
 			if (startTime > System.currentTimeMillis()) {
 
-				for (int i = 0; i < navDrawerItems.size(); i++) {
+				if(count>0) {
 
-					if (sparseBooleanArray.get(i)) {
+					for (int i = 0; i < navDrawerItems.size(); i++) {
 
-						System.out.println(i * 5000+">>>>>>>>>>>>>>TIME IN COMPOSE = "+startTime);
 
-						long feedTime = startTime + i * 5000;
+						if (sparseBooleanArray.get(i)) {
 
-						myprint(i + " time = " + feedTime);
+							System.out.println(i * 5000 + ">>>>>>>>>>>>>>TIME IN COMPOSE = " + startTime);
 
-						SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(),feedString, imagePath, feedTime);
+							long feedTime = startTime + i * 5000;
 
-						myprint(schTweetModel);
+							myprint(i + " time = " + feedTime);
 
-						database.addNewSchedulledTweet(schTweetModel);
+							SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), feedString, imagePath, feedTime);
 
-						setAlarmThisPost(schTweetModel);
+							myprint(schTweetModel);
 
-						myToastS("Posts Schedulled !");
+							database.addNewSchedulledTweet(schTweetModel);
 
-						finish();
+							setAlarmThisPost(schTweetModel);
 
-					}else
-					{
-						myToastS("Please select atleast one user !");
+							myToastS("Posts Scheduled !");
+
+							finish();
+						}
+
 					}
 
+				}else {
+					myToastS("Please select atleast one user !");
 				}
 
 
-			} else {
+			}else {
 
 				myToastS("picked Date & Time should be more than current Date & Time");
 
 			}
 
-		} else {
+		} else
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+				sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+				String date1 = textViewDate.getText().toString();
+				String tt = textViewTime.getText().toString();
+				Date date = sdf.parse(date1+""+tt);
 
-			myToastS("please select desire date or time");
-		}
+				long startTime = date.getTime()-(5*3600000+1800000);//when convert MM-dd-yyyy HH:mm to milliseceon it return 05:30 extra time so minus (5*3600000+1800000)
+
+				if (startTime > System.currentTimeMillis()) {
+
+					if(count>0) {
+
+						for (int i = 0; i < navDrawerItems.size(); i++) {
+
+							if (sparseBooleanArray.get(i)) {
+
+								System.out.println(i * 5000 + ">>>>>>>>>>>>>>TIME IN COMPOSE = " + startTime);
+
+								long feedTime = startTime + i * 5000;
+
+								myprint(i + " time = " + feedTime);
+
+								SchPostModel schTweetModel = new SchPostModel(navDrawerItems.get(i).getUserid(), feedString, imagePath, feedTime);
+
+								myprint(schTweetModel);
+
+								database.addNewSchedulledTweet(schTweetModel);
+
+								setAlarmThisPost(schTweetModel);
+
+								myToastS("Posts Scheduled !");
+
+								finish();
+							}
+						}
+
+					}else {
+						myToastS("Please select atleast one user !");
+					}
+				}else {
+
+					myToastS("picked Date & Time should be more than current Date & Time");
+				}
+			}
+// else {
+//
+//			myToastS("please select desire date or time");
+//		}
 	}
 
 	void myToastS(final String toastMsg) {

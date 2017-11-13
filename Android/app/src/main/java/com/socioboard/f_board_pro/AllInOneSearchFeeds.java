@@ -19,13 +19,14 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.socioboard.f_board_pro.adapter.AllinOneSearchFeedAdapter;
+import com.socioboard.f_board_pro.adapter.HomeFeedAdapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.Utilsss;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.HomeFeedModel;
 import com.socioboard.f_board_pro.viewlibary.AccountImageView;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -40,6 +41,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +72,9 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 	
 	RelativeLayout headerRlt;
 
-	AllinOneSearchFeedAdapter allinOneSearchFeedAdapter;
+	//AllinOneSearchFeedAdapter allinOneSearchFeedAdapter;
+
+	HomeFeedAdapter homeFeedAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,9 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 		feedlistview         = (ListView) findViewById(R.id.feedlistview);
 		feedlistview.setOnScrollListener(AllInOneSearchFeeds.this);
 
-		imageLoader.DisplayImage("https://graph.facebook.com/"+MainSingleTon.pgID+"/picture?type=large", profile_pic);
+		//imageLoader.DisplayImage("https://graph.facebook.com/"+MainSingleTon.pgID+"/picture?type=large", profile_pic);
+
+		Picasso.with(getApplicationContext()).load("https://graph.facebook.com/\"+MainSingleTon.pgID+\"/picture?type=large").into(profile_pic);
 
 		feedlistview.addHeaderView(feedheaderLayout);
 
@@ -158,7 +165,6 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 		AdView mAdView = (AdView)findViewById(R.id.adView);
 		AdRequest adRequest = new AdRequest.Builder().build();
 		mAdView.loadAd(adRequest);
-
 	}
 
 	@Override
@@ -190,6 +196,7 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 			String coverUrl = "https://graph.facebook.com/" + MainSingleTon.pgID+ "?fields=cover&access_token=" + MainSingleTon.accesstoken;
 
 			System.out.println("coverUrl  "+coverUrl);
+			System.out.println("pageid  "+MainSingleTon.pgID);
 			JSONParseraa jsonParser = new JSONParseraa();
 
 			JSONObject jsonCover = jsonParser.getJSONFromUrl(coverUrl);
@@ -227,8 +234,9 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 			if(ConverULR!=null)
 			{
 				imageLoader.DisplayImage(ConverULR, cover_pic);
-				allinOneSearchFeedAdapter = new AllinOneSearchFeedAdapter(AllInOneSearchFeeds.this, arrayList);
-				feedlistview.setAdapter(allinOneSearchFeedAdapter);
+//				allinOneSearchFeedAdapter = new AllinOneSearchFeedAdapter(AllInOneSearchFeeds.this, arrayList);
+				homeFeedAdapter = new HomeFeedAdapter(AllInOneSearchFeeds.this, arrayList);
+				feedlistview.setAdapter(homeFeedAdapter);
 			}
 		}
 
@@ -240,30 +248,103 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 		@Override
 		protected String doInBackground(Void... params) {
 
-			String hitURL = "https://graph.facebook.com/"+MainSingleTon.pgID+"/feed?limit=50&access_token="+MainSingleTon.accesstoken;
+			System.out.println("page id-------"+MainSingleTon.pgID);
 
-			System.out.println("HITTTTTTMEEEEEFEED"+hitURL);
+			//String hitURL = "https://graph.facebook.com/"+MainSingleTon.pgID+"/feed?limit=50&access_token="+MainSingleTon.accesstoken;
+			String q = "feed{full_picture,permalink_url,name,created_time,from,message,likes{name,picture{url},link,username},comments{message,created_time,from,like_count,user_likes,likes{name,picture{url},username,pic_large}},story,shares,link,attachments{title},type,description}";
+
+			//String q = "feed{full_picture,permalink_url,name,created_time,from,message,likes{name,picture{url},link,username},comments{message,created_time,from,like_count,user_likes,likes{name,picture{url},username,pic_large}},story,shares,link}";
+			String hitURL = null;
+			try {
+				hitURL = "https://graph.facebook.com/"+MainSingleTon.pgID+"?fields=id,name,"+ URLEncoder.encode(q,"UTF-8")+"&"+"access_token="+MainSingleTon.accesstoken;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
+			System.out.println("HITTTTTTMEEEEEFEED123"+hitURL);
 			
 			JSONParseraa jsonParser = new JSONParseraa();
 
 	    	JSONObject jsonObject = jsonParser.getJSONFromUrl(hitURL);
 
+			System.out.println("Json data is="+jsonObject);
+
 			try {
-				JSONArray jsonArray =  jsonObject.getJSONArray("data");
+
+				JSONObject jsonObject1 = jsonObject.getJSONObject("feed");
+
+				JSONArray jsonArray =  jsonObject1.getJSONArray("data");
 
 				if(jsonArray.length()!=0)
 				{
 					for(int i = 0; i<jsonArray.length();i++)
 					{
 						HomeFeedModel feedModel = new HomeFeedModel();
-						final JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
 						if(jsonObject2.has("id"))
 						{
 							feedModel.setFeedId(jsonObject2.getString("id"));
 						}
-	
-					feedModel.setLikescount(null);
-					feedModel.setCommentscount(null);
+
+						///////////////////////////////////////////////////////////
+
+						if(jsonObject2.has("full_picture"))
+						{
+							feedModel.setPicture(jsonObject2.getString("full_picture"));
+						}
+
+						if(jsonObject2.has("name"))
+						{
+							feedModel.setFrom(jsonObject2.getString("name"));
+						}
+
+						if(jsonObject2.has("created_time"))
+						{
+							feedModel.setDateTime(Utilsss.GetLocalDateStringFromUTCString(jsonObject2.getString("created_time")));
+						}else
+						{
+
+						}
+
+						if(jsonObject2.has("from"))
+						{
+							JSONObject jsonObject3 = jsonObject2.getJSONObject("from");
+							if(jsonObject3.has("name"))
+							{
+								feedModel.setFrom(jsonObject3.getString("name"));
+							}
+							if(jsonObject3.has("id"))
+							{
+								feedModel.setFromID(jsonObject3.getString("id"));
+							}
+							feedModel.setProfilePic("https://graph.facebook.com/"+jsonObject3.getString("id")+"/picture?type=small");
+						}
+
+						if(jsonObject2.has("story"))
+						{
+							feedModel.setDescription(jsonObject2.getString("story"));
+						}
+						if(jsonObject2.has("message"))
+						{
+							feedModel.setMessage(jsonObject2.getString("message"));
+						}
+
+
+						if(jsonObject2.has("attachments"))
+						{
+							JSONObject jsonObjectdescription = jsonObject2.getJSONObject("attachments");
+							JSONArray jsonArraydescription = jsonObjectdescription.getJSONArray("data");
+							for(int k=0;k<jsonArraydescription.length();k++)
+							{
+								JSONObject jsonObjectdesc = jsonArraydescription.getJSONObject(k);
+								if(jsonObjectdesc.has("title"))
+								{
+									feedModel.setDescription(jsonObjectdesc.getString("title"));
+								}
+							}
+						}
+
+						///////////////////////////////////////////////////////////
  						
 						if(jsonObject2.has("shares"))
 						{
@@ -467,11 +548,12 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 							{
 
 							}
-							arrayList.add(feedModel);
+							//arrayList.add(feedModel);
 
 						}else
 						{
 						}
+						arrayList.add(feedModel);
 					}
 					if(jsonObject.has("paging"))
 					{
@@ -507,12 +589,16 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 
-			allinOneSearchFeedAdapter = new AllinOneSearchFeedAdapter(AllInOneSearchFeeds.this, arrayList);
-			feedlistview.setAdapter(allinOneSearchFeedAdapter);
+//			allinOneSearchFeedAdapter = new AllinOneSearchFeedAdapter(AllInOneSearchFeeds.this, arrayList);
+			homeFeedAdapter = new HomeFeedAdapter(AllInOneSearchFeeds.this, arrayList);
+			feedlistview.setAdapter(homeFeedAdapter);
 			progressBar.setVisibility(View.GONE);
 			isAlredyScrolloing =false;
 
+			System.out.println("arrayList size="+arrayList.size());
+
 			if (arrayList.isEmpty()) {
+				System.out.println("array list is empty");
 				isAlredyScrolloing =true;
 				feedlistview.setVisibility(View.INVISIBLE);
 				viewGroup.setVisibility(View.GONE);
@@ -916,8 +1002,8 @@ public class AllInOneSearchFeeds extends Activity  implements OnScrollListener{
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			allinOneSearchFeedAdapter.notifyDataSetChanged();
-
+			//allinOneSearchFeedAdapter.notifyDataSetChanged();
+			homeFeedAdapter.notifyDataSetChanged();
 			isAlredyScrolloing = false;
 
 			viewGroup.setVisibility(View.INVISIBLE);

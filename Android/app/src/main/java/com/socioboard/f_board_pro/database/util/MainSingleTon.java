@@ -57,8 +57,10 @@ public class MainSingleTon {
 	public static ArrayList<String> shareLinks = new ArrayList<String>();
 	public static ArrayList<String> pageShareagonList = new ArrayList<String>();
 	public static ArrayList<String> groupsharegonList=new ArrayList<String>();
+	public static ArrayList<String> groupsharegonNameList = new ArrayList<>();
 	public static ArrayList<String> autoLikerPageList = new ArrayList<>();
-	
+
+
 	
 	//a static method to extract the images as bitmap
 	public static Bitmap getBitmapFromURL(String image_link) {
@@ -151,5 +153,8 @@ public class MainSingleTon {
 	public static String searchKey1 =null;
 
 	public static boolean selectAdmingPage = false;
+
+	public static boolean firebaseNotification = true;
+
 
 }

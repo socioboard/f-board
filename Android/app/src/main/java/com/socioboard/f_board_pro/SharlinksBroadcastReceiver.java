@@ -1,9 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -24,6 +20,10 @@ import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.SchPostModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SharlinksBroadcastReceiver extends BroadcastReceiver {
 
 	String userFBiD =null;
@@ -35,7 +35,6 @@ public class SharlinksBroadcastReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
 
 		database = new F_Board_LocalData(context);
 		getResponseCode = intent.getIntExtra("respcode", 404);
@@ -52,7 +51,6 @@ public class SharlinksBroadcastReceiver extends BroadcastReceiver {
 			// post this post
 
 			postSharePostWall(schTweetModel, database.getUserData(schTweetModel.getUserID()).getUserAcessToken());
-
 
 			Intent intent1 = new Intent(context, SplashActivity.class);
 
@@ -89,7 +87,6 @@ public class SharlinksBroadcastReceiver extends BroadcastReceiver {
 
 			mNotificationManager.notify(schTweetModel.getFeedId(), mBuilder.build());
 
-
 		} else {
 
 			myprint("NO DATA FOUND IN TABLE FROM THAT RESPONSE CODE");
@@ -124,6 +121,8 @@ public class SharlinksBroadcastReceiver extends BroadcastReceiver {
 							int sleepInMiliseconds = (60/schPostModel.getInterval())*1000;
 
 							String dumm = links_array.getString(i);
+
+							System.out.println("dummmmmmmmm"+dumm);
 
 							//shareAsys(dumm, MYAccessToken);
 							

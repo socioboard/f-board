@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+
     <RelativeLayout
+
         android:id="@+id/scheduler"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/adView"
+
         android:layout_alignParentTop="true"
         android:layout_marginTop="15dp" >
 
@@ -31,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="Use the like scheduler feature to schedule likes to your home feeds. You can target max 5 likes per minute to keep it within limits."
+                android:text="Use the like scheduler feature to schedule likes on the feeds of the selected page. You can target max 5 likes per minute to keep it within limits."
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -176,8 +180,8 @@
                     android:textSize="10sp" />
             </RelativeLayout>
         </RelativeLayout>
-
-
+        
+        
         <RelativeLayout
             android:id="@+id/timerRLt2"
             android:layout_width="fill_parent"
@@ -201,11 +205,22 @@
                 android:textSize="18sp" >
             </TextView>
         </RelativeLayout>
+
+        <!--<com.google.android.gms.ads.AdView-->
+            <!--android:id="@+id/adView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--ads:adSize="BANNER"-->
+            <!--ads:adUnitId="@string/banner_ad_unit_id">-->
+        <!--</com.google.android.gms.ads.AdView>-->
+
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/service_running"
-        android:layout_above="@+id/adView"
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#DD000000"
@@ -347,15 +362,10 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
+
+
+
+
 
     <RelativeLayout
         android:id="@+id/unkonw_user"
@@ -457,14 +467,17 @@
                 android:textStyle="italic" />
         </RelativeLayout>
 
+
         <RelativeLayout
+
             android:id="@+id/footer"
+            android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:visibility="gone"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="25dp"
-            android:padding="5dp" >
+            android:layout_marginBottom="5dp"
+            android:padding="2dp" >
 
             <TextView
                 android:id="@+id/txt1"
@@ -485,12 +498,16 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:autoLink="all"
+
                 android:background="@drawable/buttoncolor"
                 android:gravity="center"
                 android:text="https://www.facebook.com/groups/621124567991195/"
                 android:textColor="@android:color/holo_blue_dark" />
         </RelativeLayout>
 
+
     </RelativeLayout>
+
+
 
 </RelativeLayout>

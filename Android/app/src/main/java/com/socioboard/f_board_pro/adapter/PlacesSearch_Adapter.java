@@ -1,11 +1,6 @@
 package com.socioboard.f_board_pro.adapter;
 //adapter for setting pages 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -21,6 +16,12 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.socioboard.f_board_pro.models.PagesSearch_Model;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class PlacesSearch_Adapter  extends BaseAdapter
 {
@@ -100,7 +101,7 @@ public class PlacesSearch_Adapter  extends BaseAdapter
 
 	public void setDetails(final String pageID, final TextView counterTxtView ,final TextView werehereTxtV ,final int postion)
 	{
-		
+
 		new Thread(new Runnable() {
 
 			@Override
@@ -139,14 +140,21 @@ public class PlacesSearch_Adapter  extends BaseAdapter
 									num = 	formatter.format(countertext);
 									pageslist.get(postion).setLikesCount(num);
 									counterTxtView.setText(num+" like this");
-									//System.out.println("counterText===="+counterText);
+									System.out.println("counterText===="+counterText);
 								}
 
 							}
 						});
 					}else
 					{
-						counterTxtView.setText("0 like this");
+						((Activity)context).runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+
+								counterTxtView.setText("0 like this");
+							}
+						});
+
 					}
 					
 					if(jsonObject2.has("were_here_count"))
@@ -180,7 +188,14 @@ public class PlacesSearch_Adapter  extends BaseAdapter
 					
 					}else
 					{
-						werehereTxtV.setText("0 were here");
+						((Activity)context).runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+
+								werehereTxtV.setText("0 were here");
+							}
+						});
+
 					}
 
 

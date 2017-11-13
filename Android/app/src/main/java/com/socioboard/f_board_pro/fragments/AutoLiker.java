@@ -33,9 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.socioboard.f_board_pro.LikeSchedulerReciever;
 import com.socioboard.f_board_pro.R;
 import com.socioboard.f_board_pro.adapter.CustomChoosePageLikeAdapter;
@@ -85,6 +82,7 @@ public class AutoLiker extends Fragment
 	public Timer timersa, refreshTmer = new Timer();
 	public SparseBooleanArray sparseBooleanArray;
 	int count = 0;
+	int countadminpage;
 	RelativeLayout account_Rlt;
 
 
@@ -102,11 +100,13 @@ public class AutoLiker extends Fragment
 
 		rooview = inflater.inflate(R.layout.liker_layout, container, false);
 
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
 		adapter = new CustomChoosePageLikeAdapter(AutoLiker.this,likePageList);
 
 		userFBaccesToken = MainSingleTon.accesstoken;
 
-		LoadAd();
+		//LoadAd();
 
 		database = new F_Board_LocalData(getActivity());
 		unkonw_user = (RelativeLayout) rooview.findViewById(R.id.unkonw_user);
@@ -350,14 +350,14 @@ public class AutoLiker extends Fragment
 		service_runningRlt.setVisibility(View.INVISIBLE);
 	}
 
-	void LoadAd()
-	{
-		MobileAds.initialize(getActivity(), getString(R.string.adMob_app_id));
-		AdView mAdView = (AdView) rooview.findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().build();
-		mAdView.loadAd(adRequest);
-
-	}
+//	void LoadAd()
+//	{
+//		MobileAds.initialize(getActivity(), getString(R.string.adMob_app_id));
+//		AdView mAdView = (AdView) rooview.findViewById(R.id.adView);
+//		AdRequest adRequest = new AdRequest.Builder().build();
+//		mAdView.loadAd(adRequest);
+//
+//	}
 
 	public void selectAdminPage()
 	{
@@ -371,7 +371,7 @@ public class AutoLiker extends Fragment
 
 		dialog.setContentView(R.layout.choosepage_fragment);
 
-		ListView listData = (ListView)dialog.findViewById(R.id.list);
+		final ListView listData = (ListView)dialog.findViewById(R.id.list);
 		listData.setAdapter(adapter);
 
 		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -389,6 +389,7 @@ public class AutoLiker extends Fragment
 		dialog.setCancelable(true);
 
 		listData.setClickable(true);
+
 		listData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -405,15 +406,21 @@ public class AutoLiker extends Fragment
 		});
 
 
-		new Handler().post(new Runnable() {
+		new Handler().postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
 
 				dialog.show();
 
+				System.out.println("dfdfsfsfs======"+likePageList.size());
+				if(likePageList.size()==0)
+				{
+					Toast.makeText(getContext(),"There is no Admin Page",Toast.LENGTH_SHORT).show();
+				}
+
 			}
-		});
+		},1000);
 	}
 
 	public class getAdminPage extends AsyncTask<String,Void,String>
@@ -431,7 +438,7 @@ public class AutoLiker extends Fragment
 			//String tokenURL = "https://graph.facebook.com/me/likes?access_token=" + userFBaccesToken;
 			String tokenURL = "https://graph.facebook.com/me/accounts?access_token=" + userFBaccesToken;
 
-			System.out.println("GetAdminPage url= " + tokenURL);
+			System.out.println("GetAdminPage url=1234 " + tokenURL);
 
 
 			//This Volly is use to access only admin page of facebook
@@ -460,7 +467,7 @@ public class AutoLiker extends Fragment
 							likePageList.add(choosePageLikeModel);
 
 						}
-						System.out.println("AdminAccessTokenPage====" + AdminAccessTokenPage);
+						System.out.println("AdminAccessTokenPage====1234" + AdminAccessTokenPage);
 
 						adapter.notifyDataSetChanged();
 

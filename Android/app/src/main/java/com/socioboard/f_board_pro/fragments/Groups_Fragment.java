@@ -1,12 +1,6 @@
 package com.socioboard.f_board_pro.fragments;
 
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,6 +25,12 @@ import com.socioboard.f_board_pro.adapter.GroupListAdapter;
 import com.socioboard.f_board_pro.database.util.JSONParseraa;
 import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.models.GroupModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class Groups_Fragment extends Fragment implements OnScrollListener
 {
@@ -78,7 +78,6 @@ public class Groups_Fragment extends Fragment implements OnScrollListener
 				i.setData(Uri.parse(url));
 				startActivity(i);
 
-				
 			}
 		});
 		unkonw_user = (RelativeLayout) rootView.findViewById(R.id.unkonw_user);

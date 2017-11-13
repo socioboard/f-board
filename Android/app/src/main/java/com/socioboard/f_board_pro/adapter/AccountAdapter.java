@@ -1,7 +1,5 @@
 package com.socioboard.f_board_pro.adapter;
 
-import java.util.ArrayList;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +27,8 @@ import com.socioboard.f_board_pro.database.util.MainSingleTon;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.imagelib.ImageLoader;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 //adapter for setting accounts
 public class AccountAdapter extends BaseAdapter
@@ -198,7 +198,6 @@ public class AccountAdapter extends BaseAdapter
 
 				handler.post(new Runnable() {
 
-
 					Bitmap pfofile  = MainSingleTon.getBitmapFromURL(navDrawerItems.get(position).getUserimage());
 					@Override
 					public void run() {
@@ -207,7 +206,6 @@ public class AccountAdapter extends BaseAdapter
 						profilePic.setImageBitmap((pfofile));
 					}
 				});
-
 
 			}
 		}).start();

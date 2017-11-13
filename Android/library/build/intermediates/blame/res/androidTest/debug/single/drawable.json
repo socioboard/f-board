@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_icn_plus_pressed.png",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_icn_plus_pressed.png"
+    },
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_icn_plus_normal.png",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_icn_plus_normal.png"
+    },
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_button.xml",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_button.xml"
+    },
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_button_pressed.png",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_button_pressed.png"
+    },
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_icn_plus.xml",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_icn_plus.xml"
+    },
+    {
+        "merged": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\composer_button_normal.png",
+        "source": "D:\\Fboardpro App3\\FboardProApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable\\composer_button_normal.png"
+    }
+]

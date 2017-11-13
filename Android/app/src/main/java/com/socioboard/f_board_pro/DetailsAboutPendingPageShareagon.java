@@ -1,7 +1,5 @@
 package com.socioboard.f_board_pro;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,17 +9,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.socioboard.f_board_pro.adapter.ShareagonAdapter;
+import com.socioboard.f_board_pro.adapter.SharegonPageAdapter;
 import com.socioboard.f_board_pro.database.util.F_Board_LocalData;
 import com.socioboard.f_board_pro.database.util.ModelUserDatas;
 import com.socioboard.f_board_pro.models.SchPostModel;
+
+import java.util.ArrayList;
 
 public class DetailsAboutPendingPageShareagon extends Activity {
 	
 	F_Board_LocalData database;
 	ArrayList<ModelUserDatas> navDrawerItems;
 	ArrayList<SchPostModel> schFeedArrlist = new ArrayList<SchPostModel>();
-	ShareagonAdapter shareagonAdapter;
+	SharegonPageAdapter shareagonAdapter;
 	
 	ImageView backImage ;
 	ListView listView1;
@@ -43,7 +43,7 @@ public class DetailsAboutPendingPageShareagon extends Activity {
 
 		schFeedArrlist = database.getAllSchedulledPageShareagon();
 
-		shareagonAdapter = new ShareagonAdapter(DetailsAboutPendingPageShareagon.this, schFeedArrlist);
+		shareagonAdapter = new SharegonPageAdapter(DetailsAboutPendingPageShareagon.this, schFeedArrlist);
 		
 		System.out.println("###################LIST ="+schFeedArrlist.size());
 		
@@ -55,7 +55,6 @@ public class DetailsAboutPendingPageShareagon extends Activity {
 		}else
 		{
 			no_items.setVisibility(View.INVISIBLE);
-
 		}
 		
 		listView1.setAdapter(shareagonAdapter);
